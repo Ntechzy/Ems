@@ -10,7 +10,9 @@ module.exports = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        button_blue: "#1d6ba3"
       },
+
     },
   },
   plugins: [],

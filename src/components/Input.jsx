@@ -13,7 +13,7 @@ const Input = ({ label, handleChange, value, name }) => {
             />
             <label
                 htmlFor={label}
-                className=" absolute -top-[11px] text-sm transition-all left-3 peer-placeholder-shown:top-3.5 text-black  bg-white -z-1 peer-placeholder-shown:bg-transparent"
+                className="absolute -top-[11px] text-sm transition-all left-3 peer-placeholder-shown:top-3.5 text-blue-500 bg-white -z-1 peer-placeholder-shown:bg-transparent"
             >
                 {name}
             </label>

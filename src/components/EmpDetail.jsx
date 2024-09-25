@@ -1,6 +1,6 @@
 "use client";
 import Input from "@/components/Input";
-import { first, second } from "@/data/form_field"; // Assuming you have a second data set for the next fields
+import { first, second } from "@/data/form_field";
 import { basicDetailsSchema, moreDetailsSchema } from "@/Validation/EmpValid";
 import { useState } from "react";
 
@@ -30,30 +30,22 @@ const EmpDetail = () => {
     try {
       if (step === 0) {
         await basicDetailsSchema.validate(data, { abortEarly: false });
-        console.log("ok");
+        return true;
       } else if (step === 1) {
         await moreDetailsSchema.validate(data, { abortEarly: false });
+        return true;
       }
-      setErrors({});
     } catch (error) {
-      console.log("Arrive");
-
       const newErrors = {};
-
       error.inner.forEach((err) => {
         newErrors[err.path] = err.message;
       });
       setErrors(newErrors);
-      console.log(errors);
-
       return false;
     }
   };
 
-  const handleNext = async (e) => {
-    e.preventDefault();
-    console.log(data);
-
+  const handleNext = async () => {
     const isValid = await validateStep();
     if (isValid) {
       setStep(step + 1);
@@ -66,108 +58,98 @@ const EmpDetail = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const isValid = await moreDetailsSchema.validate(data, {
-      abortEarly: false,
-    });
+    const isValid = await validateStep();
     if (isValid) {
       console.log("Form data submitted", data);
+      setData({
+        father_name: "",
+        DOB: "",
+        permanent_address: "",
+        correspondence_address: "",
+        blood_group: "",
+        marital_status: "",
+        highest_qualification: "",
+        aadhaar_no: "",
+        pan_card_no: "",
+        date_of_joining: "",
+      });
+      alert("Form submitted successfully");
     }
   };
 
   const renderFields = () => {
-    if (step === 0) {
-      return first.map((item, i) => (
-        <div key={i}>
-          <Input
-            name={item.name}
-            label={item.label}
-            handleChange={handleChange}
-            value={data.label}
-            type={item.type}
-          />
-          {errors[item.label] && (
-            <div className="text-red-500 text-sm">{errors[item.label]}</div>
-          )}
-        </div>
-      ));
-    } else if (step === 1) {
-      return second.map((item, i) => (
-        <div key={i}>
-          <Input
-            name={item.name}
-            label={item.label}
-            handleChange={handleChange}
-            value={data[item.field]}
-            type={item.type}
-          />
-          {errors[item.field] && (
-            <div className="text-red-500 text-sm">{errors[item.field]}</div>
-          )}
-        </div>
-      ));
-    }
+    const fieldData = step === 0 ? first : second;
+    return fieldData.map((item, i) => (
+      <div key={i} className="mb-4">
+        <Input
+          name={item.name}
+          label={item.label}
+          handleChange={handleChange}
+          value={data[item.label]}
+          type={item.type}
+        />
+        {errors[item.label] && (
+          <div className="text-red-500 text-sm">{errors[item.label]}</div>
+        )}
+      </div>
+    ));
   };
 
   return (
-    <div className="text-center">
-      <div className="flex justify-center p-5 font-bold text-4xl w-[50%] text-center m-auto">
+    <div className="flex flex-col items-center p-6">
+      <h1 className="text-2xl md:text-4xl font-bold text-center mb-6">
         Ntechzy People Portal – Innovating Employee Experience!
-      </div>
+      </h1>
 
-      <div className="bg-[#e2e8f0] flex justify-center shadow-lg shadow-slate-400 items-center m-auto md:w-[40%] w-[60%] flex-col p-3 gap-11 h-[600px]">
-        <div className="flex justify-center gap-11  mt-11 w-[50%] items-center  ">
-          <div
-            className={
-              step === 1
-                ? "rounded-full shadow-lg border-2  p-4"
-                : "rounded-full shadow-lg bg-slate-600 text-white   p-3"
-            }
-          >
-            Basic Details
-          </div>
-          <div className="p-3">_________________________</div>
-          <div
-            className={
+      <div className="bg-white shadow-lg rounded-lg p-6 md:p-10 w-full max-w-2xl space-y-8">
+        {/* Progress Indicator */}
+        <div className="flex justify-between items-center mb-6">
+          <div onClick={handlePrev}
+            className={`${
               step === 0
-                ? "rounded-full shadow-lg border-2  p-4"
-                : "rounded-full shadow-lg bg-slate-600 text-white  p-3"
-            }
+                ? "bg-blue-600 text-white"
+                : "bg-gray-200 text-gray-600"
+            } rounded-full p-4 w-12 h-12 flex items-center justify-center font-bold`}
           >
-            More Details
+            1
+          </div>
+          <div className="flex-grow h-1 bg-gray-300 mx-4"></div>
+          <div
+            className={`${
+              step === 1
+                ? "bg-blue-600 text-white"
+                : "bg-gray-200 text-gray-600"
+            } rounded-full p-4 w-12 h-12 flex items-center justify-center font-bold`}
+          >
+            2
           </div>
         </div>
 
-        <form
-          onSubmit={handleSubmit}
-          style={{ width: "500px", height: "500px" }}
-        >
-          <div className="w-full">{renderFields()}</div>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>{renderFields()}</div>
 
-          <div className="flex justify-between mt-5">
+          <div className="flex justify-between">
             {step > 0 && (
               <button
                 type="button"
-                className="bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded"
                 onClick={handlePrev}
+                className="bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded transition duration-300"
               >
                 Previous
               </button>
             )}
-
-            {step < 1 && (
+            {step < 1 ? (
               <button
                 type="button"
-                className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded"
                 onClick={handleNext}
+                className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded transition duration-300"
               >
                 Next
               </button>
-            )}
-
-            {step === 1 && (
+            ) : (
               <button
                 type="submit"
-                className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded"
+                className="bg-green-500 hover:bg-green-700 text-white py-2 px-4 rounded transition duration-300"
               >
                 Submit
               </button>

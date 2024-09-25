@@ -50,7 +50,7 @@ export const first=[
     {
         "label": "pan_card_no",
         "name": "PAN Card Number",
-         "type": "Password"
+         "type": "text"
       },
      
       {

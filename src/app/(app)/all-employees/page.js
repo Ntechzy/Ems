@@ -19,15 +19,16 @@ const page = () => {
 
     const [isModal, setisModal] = useState(false)
     return (
-        // #1d6ba3
-        <div className='p-10'>
-            <Table data={tableData} handleSearchChange={handleSearch} isModal={setisModal} />
+        <>
+            <div className='p-10'>
+                <Table data={tableData} handleSearchChange={handleSearch} isModal={setisModal} />
+            </div>
             {isModal &&
                 <div className='fixed top-0 left-0 w-full h-full bg-black/50 z-10'>
                     <Registration close={setisModal} />
                 </div>
             }
-        </div>
+        </>
     )
 }
 

@@ -27,10 +27,10 @@ const Registration = ({ close }) => {
     }
 
     const genrate = (e) => {
-        e.preventDefault()
         const newPassword = genratePassword(16)
         setValue({ ...value, ["password"]: newPassword });
     };
+
 
     return (
         <div className='h-auto my-2 flex flex-col sm:w-[80%] md:w-[50%] bg-white justify-center m-auto py-3 rounded-2xl'>
@@ -54,14 +54,14 @@ const Registration = ({ close }) => {
                 }
                 <div className='flex md:flex-row flex-col gap-3 my-3'>
                     <input
-                        defaultValue={value.password}
+                        value={value.password}  
                         name="password"
                         type="text"
-                        aria-label="password"
-                        disabled
+                        readOnly  
+                        aria-label="Generated Password"
                         className=" p-2 focus:border-blue-500 w-full placeholder-transparent rounded-md text-blue-900 border-2 outline-none peer border-gray-400 "
                     />
-                    <button className='bg-button_blue p-2 md:w-[20%] flex justify-center items-center m-auto rounded-xl text-white text-lg' onClick={genrate}>Generate</button>
+                    <button className='bg-button_blue p-2 md:w-[20%] flex justify-center items-center m-auto rounded-xl text-white text-lg' onClick={() => genrate()}>Generate</button>
 
                 </div>
 

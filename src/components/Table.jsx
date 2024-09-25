@@ -15,7 +15,7 @@ const FilterComponent = ({ filters, handleFilterChange, handleClearFilters }) =>
                 <h2 className="text-lg font-semibold">Filter</h2>
                 <button className="text-red-500 font-semibold" onClick={handleClearFilters}>CLEAR</button>
             </div>
-            
+
             {/* Location Filter */}
             <div className="mb-4">
                 <button className="w-full flex justify-between items-center py-2" onClick={() => setLocationOpen(!isLocationOpen)}>
@@ -26,9 +26,9 @@ const FilterComponent = ({ filters, handleFilterChange, handleClearFilters }) =>
                     filters.locations.map((location, i) => (
                         <div className="mt-2 ml-2 flex justify-between text-gray-500" key={i}>
                             {location}
-                            <input 
-                                type="checkbox" 
-                                className="size-4 cursor-pointer checked:bg-blue-400" 
+                            <input
+                                type="checkbox"
+                                className="size-4 cursor-pointer checked:bg-blue-400"
                                 name="location"
                                 value={location}
                                 onChange={handleFilterChange}
@@ -47,10 +47,10 @@ const FilterComponent = ({ filters, handleFilterChange, handleClearFilters }) =>
                 </button>
                 {isDepartmentOpen && (
                     <div className="mt-2 ml-2">
-                        <select 
-                            name="department" 
-                            className="w-full p-2 border border-gray-300 rounded" 
-                            value={filters.department} 
+                        <select
+                            name="department"
+                            className="w-full p-2 border border-gray-300 rounded"
+                            value={filters.department}
                             onChange={handleFilterChange}>
                             <option value="">Select Department</option>
                             {filters.departments.map((dept, i) => (
@@ -69,8 +69,8 @@ const FilterComponent = ({ filters, handleFilterChange, handleClearFilters }) =>
                 </button>
                 {isDateOfJoiningOpen && (
                     <div className="mt-2 ml-2">
-                        <input 
-                            type="date" 
+                        <input
+                            type="date"
                             name="dateOfJoining"
                             value={filters.dateOfJoining}
                             onChange={handleFilterChange}
@@ -83,14 +83,14 @@ const FilterComponent = ({ filters, handleFilterChange, handleClearFilters }) =>
     );
 };
 
-const Table = ({ data, title = "Employees", subtitle = "Manage all your full-time, part-time & contractor employees.", addBtnTitle = "EMPLOYEE", handleSearchChange = () => {} }) => {
+const Table = ({ isModal, data, title = "Employees", subtitle = "Manage all your full-time, part-time & contractor employees.", addBtnTitle = "EMPLOYEE", handleSearchChange = () => { } }) => {
     const [searchVal, setSeachVal] = useState('');
     const [showModal, setShowModal] = useState(false);
     const [filters, setFilters] = useState({
         location: ["Kanpur", "Noida"], // List of selected locations
         locations: ["Kanpur", "Noida", "Delhi", "Mumbai"], // Available locations
         department: '',
-        departments: ["IT","HR", "Engineering", "Finance", "Marketing"], // Available departments
+        departments: ["IT", "HR", "Engineering", "Finance", "Marketing"], // Available departments
         dateOfJoining: ''
     });
 
@@ -117,7 +117,7 @@ const Table = ({ data, title = "Employees", subtitle = "Manage all your full-tim
             location: [],
             locations: ["Kanpur", "Noida", "Delhi", "Mumbai"],
             department: '',
-            departments: ["IT","HR", "Engineering", "Finance", "Marketing"],
+            departments: ["IT", "HR", "Engineering", "Finance", "Marketing"],
             dateOfJoining: ''
         });
     };
@@ -125,20 +125,20 @@ const Table = ({ data, title = "Employees", subtitle = "Manage all your full-tim
     const filteredData = data.filter((employee) => {
         const isLocationMatch = filters.location.length === 0 || filters.location.includes(employee.location);
         const isDepartmentMatch = filters.department === '' || employee.department === filters.department;
-    
+
         const [day, month, year] = employee.joiningDate.split('-');
-        const formattedEmployeeDate = `${year}-${month}-${day}`; 
-        const employeeDate = new Date(formattedEmployeeDate); 
-    
-        const filterDate = new Date(filters.dateOfJoining); 
-    
+        const formattedEmployeeDate = `${year}-${month}-${day}`;
+        const employeeDate = new Date(formattedEmployeeDate);
+
+        const filterDate = new Date(filters.dateOfJoining);
+
         const isDateMatch = filters.dateOfJoining === '' || employeeDate <= filterDate;
-    
+
         return isLocationMatch && isDepartmentMatch && isDateMatch;
     });
-    
 
-    
+
+
 
     return (
         <div className="container mx-auto p-4">
@@ -147,7 +147,7 @@ const Table = ({ data, title = "Employees", subtitle = "Manage all your full-tim
                     <h1 className="text-2xl font-bold">{title}</h1>
                     <p className="text-gray-500">{subtitle}</p>
                 </div>
-                <button className="bg-[#1d6ba3] text-white px-4 py-2 rounded">+ {addBtnTitle}</button>
+                <button onClick={() => isModal(true)} className="bg-[#1d6ba3] text-white px-4 py-2 rounded">+ {addBtnTitle}</button>
             </div>
             <div className="mb-4 flex justify-between">
                 <div className="">
@@ -177,7 +177,7 @@ const Table = ({ data, title = "Employees", subtitle = "Manage all your full-tim
                             <tr key={index} className="border-t">
                                 <td className="py-2 px-4 border">{employee.id}</td>
                                 <td className="py-2 px-4 border">
-                                    <Link href={employee.link || "#"} className="flex items-center">
+                                    <Link href={employee.link || "#"} className="flex flex-col md:flex-row items-center">
                                         <img src="https://placehold.co/32x32" alt={`Profile of ${employee.name}`} className="w-8 h-8 rounded-full mr-2" />
                                         <div>
                                             <div className="font-bold">{employee.name}</div>
@@ -191,12 +191,12 @@ const Table = ({ data, title = "Employees", subtitle = "Manage all your full-tim
                                     <span className="inline-block bg-gray-200 text-gray-700 text-xs px-2 py-1 rounded">{employee.joiningDate}</span>
                                 </td>
                                 <td className="py-2 px-4 border">
-                                    <div className={`inline-block px-2 py-1 text-xs rounded-full text-white ${employee.status === "Active" ? "bg-green-500" : employee.status === "Pending" ? "bg-blue-500": "bg-red-500"}`}>
+                                    <div className={`inline-block px-2 py-1 text-xs rounded-full text-white ${employee.status === "Active" ? "bg-green-500" : employee.status === "Pending" ? "bg-blue-500" : "bg-red-500"}`}>
                                         {employee.status}
                                     </div>
                                 </td>
                             </tr>
-                        )):
+                        )) :
                             <tr className="text-center" >
                                 <td colSpan={6} className="p-4 text-gray-500  ">No Data</td>
                             </tr>

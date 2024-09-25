@@ -3,7 +3,9 @@ import { fields } from './RegistrationData'
 import Input from '../Input'
 import { useState } from 'react'
 import { genratePassword } from '@/lib/GenratePassword'
-const Registration = () => {
+import { IoCloseCircle } from "react-icons/io5";
+
+const Registration = ({ close }) => {
     const [value, setValue] = useState({
         employee_id: "",
         name: "",
@@ -26,13 +28,20 @@ const Registration = () => {
 
     const genrate = (e) => {
         e.preventDefault()
-        const newPassword = genratePassword(8)
+        const newPassword = genratePassword(16)
         setValue({ ...value, ["password"]: newPassword });
     };
+
     return (
-        <div className='h-auto my-2 flex flex-col w-[50%] bg-white justify-center m-auto py-3 rounded-2xl'>
-            <div className='capitalize text-center text-3xl font-bold text-button_blue'>
-                Register an employee
+        <div className='h-auto my-2 flex flex-col sm:w-[80%] md:w-[50%] bg-white justify-center m-auto py-3 rounded-2xl'>
+            <div className='flex justify-between mx-5 items-center'>
+                <div className='capitalize text-center text-3xl font-bold text-button_blue'>
+                    Register an employee
+                </div>
+
+                <div onClick={() => close(false)} className=' text-button_blue text-2xl'>
+                    <IoCloseCircle />
+                </div>
             </div>
 
             {/* form started here */}
@@ -43,7 +52,7 @@ const Registration = () => {
                         <Input key={i} label={obj.label} handleChange={handleChange} value={value.field} name={obj.name} type={obj.type} />
                     ))
                 }
-                <div className='flex gap-3 my-3'>
+                <div className='flex md:flex-row flex-col gap-3 my-3'>
                     <input
                         defaultValue={value.password}
                         name="password"
@@ -52,7 +61,7 @@ const Registration = () => {
                         disabled
                         className=" p-2 focus:border-blue-500 w-full placeholder-transparent rounded-md text-blue-900 border-2 outline-none peer border-gray-400 "
                     />
-                    <button className='bg-button_blue p-2 w-[20%] flex justify-center items-center m-auto rounded-xl text-white text-lg' onClick={genrate}>Genrate</button>
+                    <button className='bg-button_blue p-2 md:w-[20%] flex justify-center items-center m-auto rounded-xl text-white text-lg' onClick={genrate}>Generate</button>
 
                 </div>
 
@@ -66,7 +75,7 @@ const Registration = () => {
                     </select>
                 </div>
 
-                <button className='bg-button_blue p-2 w-[20%] flex justify-center items-center m-auto rounded-xl text-white text-lg'>Submit</button>
+                <button className='bg-button_blue p-2 md:w-[20%] flex justify-center items-center m-auto rounded-xl text-white text-lg'>Submit</button>
             </form>
         </div >
     )

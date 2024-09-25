@@ -19,13 +19,6 @@ export const fields = [
         "placeholder": "Enter Email",
 
     },
-    // {
-    //     "name": "Password",
-    //     "label": "password",
-    //     "type": "password",
-    //     "placeholder": "Enter Password",
-
-    // },
     {
         "name": "Mobile No",
         "label": "mobile_no",

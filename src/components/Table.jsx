@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Input from "./Input";
 import { FaFilter } from "react-icons/fa";
 import { IoIosArrowDown } from "react-icons/io";
+import Link from "next/link";
 
 const FilterComponent = ({ filters, handleFilterChange, handleClearFilters }) => {
     const [isLocationOpen, setLocationOpen] = useState(false);
-    const [isWorkAllocationOpen, setWorkAllocationOpen] = useState(false);
-    const [isStatusOpen, setStatusOpen] = useState(false);
+    const [isDepartmentOpen, setDepartmentOpen] = useState(false);
+    const [isDateOfJoiningOpen, setDateOfJoiningOpen] = useState(false);
 
     return (
         <div className="absolute top-14 p-4 w-[350px] bg-gray-100 shadow-2xl rounded-lg border-2">
@@ -14,48 +15,67 @@ const FilterComponent = ({ filters, handleFilterChange, handleClearFilters }) =>
                 <h2 className="text-lg font-semibold">Filter</h2>
                 <button className="text-red-500 font-semibold" onClick={handleClearFilters}>CLEAR</button>
             </div>
+            
+            {/* Location Filter */}
             <div className="mb-4">
                 <button className="w-full flex justify-between items-center py-2" onClick={() => setLocationOpen(!isLocationOpen)}>
                     <span>Location</span>
                     <IoIosArrowDown className={`transform ${isLocationOpen ? 'rotate-180' : ''}`} />
                 </button>
                 {isLocationOpen && (
-                    filters.location.map((item, i) => {
-
-                        return (
-                            <div className="mt-2 ml-2 flex justify-between text-gray-500" key={i}>
-                                {item}
-                                <input type="checkbox" className="size-4 cursor-pointer checked:bg-blue-400" />
-                            </div>
-                        )
-                    }))}
-            </div>
-            <div className="mb-4">
-                <button className="w-full flex justify-between items-center py-2" onClick={() => setWorkAllocationOpen(!isWorkAllocationOpen)}>
-                    <span>Work Allocation</span>
-                    <IoIosArrowDown className={`transform ${isWorkAllocationOpen ? 'rotate-180' : ''}`} />
-                </button>
-                {isWorkAllocationOpen && (
-                    <div className="mt-2">
-                        {/* <Input label="Work Allocation" value={filters.workAllocation} name="workAllocation" handleChange={handleFilterChange} /> */}
-                        <div className="relative">
-                            <input type="range" className="w-full"/>
-                            <div className="flex justify-between absolute right-0 left-0 top-4 text-gray-500">
-                                <p>Bench</p>
-                                <p>40Hrs</p>
-                            </div>
+                    filters.locations.map((location, i) => (
+                        <div className="mt-2 ml-2 flex justify-between text-gray-500" key={i}>
+                            {location}
+                            <input 
+                                type="checkbox" 
+                                className="size-4 cursor-pointer checked:bg-blue-400" 
+                                name="location"
+                                value={location}
+                                onChange={handleFilterChange}
+                                checked={filters.location.includes(location)}
+                            />
                         </div>
+                    ))
+                )}
+            </div>
+
+            {/* Department Filter */}
+            <div className="mb-4">
+                <button className="w-full flex justify-between items-center py-2" onClick={() => setDepartmentOpen(!isDepartmentOpen)}>
+                    <span>Department</span>
+                    <IoIosArrowDown className={`transform ${isDepartmentOpen ? 'rotate-180' : ''}`} />
+                </button>
+                {isDepartmentOpen && (
+                    <div className="mt-2 ml-2">
+                        <select 
+                            name="department" 
+                            className="w-full p-2 border border-gray-300 rounded" 
+                            value={filters.department} 
+                            onChange={handleFilterChange}>
+                            <option value="">Select Department</option>
+                            {filters.departments.map((dept, i) => (
+                                <option key={i} value={dept}>{dept}</option>
+                            ))}
+                        </select>
                     </div>
                 )}
             </div>
+
+            {/* Date of Joining Filter */}
             <div className="mb-4">
-                <button className="w-full flex justify-between items-center py-2" onClick={() => setStatusOpen(!isStatusOpen)}>
-                    <span>Status</span>
-                    <IoIosArrowDown className={`transform ${isStatusOpen ? 'rotate-180' : ''}`} />
+                <button className="w-full flex justify-between items-center py-2" onClick={() => setDateOfJoiningOpen(!isDateOfJoiningOpen)}>
+                    <span>Date of Joining</span>
+                    <IoIosArrowDown className={`transform ${isDateOfJoiningOpen ? 'rotate-180' : ''}`} />
                 </button>
-                {isStatusOpen && (
-                    <div className="mt-2">
-                        <Input label="Status" value={filters.status} name="status" handleChange={handleFilterChange} />
+                {isDateOfJoiningOpen && (
+                    <div className="mt-2 ml-2">
+                        <input 
+                            type="date" 
+                            name="dateOfJoining"
+                            value={filters.dateOfJoining}
+                            onChange={handleFilterChange}
+                            className="w-full p-2 border border-gray-300 rounded"
+                        />
                     </div>
                 )}
             </div>
@@ -63,10 +83,16 @@ const FilterComponent = ({ filters, handleFilterChange, handleClearFilters }) =>
     );
 };
 
-const Table = ({ data, title = "Employees", subtitle = "Manage all your full-time, part-time & contractor employees.", addBtnTitle = "EMPLOYEE", handleSearchChange = () => { } }) => {
+const Table = ({ data, title = "Employees", subtitle = "Manage all your full-time, part-time & contractor employees.", addBtnTitle = "EMPLOYEE", handleSearchChange = () => {} }) => {
     const [searchVal, setSeachVal] = useState('');
     const [showModal, setShowModal] = useState(false);
-    const [filters, setFilters] = useState({ location: ["Kanpur", "Noida"], workAllocation: '', status: '' });
+    const [filters, setFilters] = useState({
+        location: ["Kanpur", "Noida"], // List of selected locations
+        locations: ["Kanpur", "Noida", "Delhi", "Mumbai"], // Available locations
+        department: '',
+        departments: ["IT","HR", "Engineering", "Finance", "Marketing"], // Available departments
+        dateOfJoining: ''
+    });
 
     const handleSearchSubmit = (e) => {
         setSeachVal(e.target.value);
@@ -74,21 +100,45 @@ const Table = ({ data, title = "Employees", subtitle = "Manage all your full-tim
     };
 
     const handleFilterChange = (e) => {
-        setFilters({ ...filters, [e.target.name]: e.target.value });
+        const { name, value, type, checked } = e.target;
+
+        if (name === "location") {
+            const updatedLocations = checked
+                ? [...filters.location, value]
+                : filters.location.filter(loc => loc !== value);
+            setFilters({ ...filters, location: updatedLocations });
+        } else {
+            setFilters({ ...filters, [name]: value });
+        }
     };
 
     const handleClearFilters = () => {
-        setFilters({ location: ["Kanpur", "Noida"], workAllocation: '', status: '' });
+        setFilters({
+            location: [],
+            locations: ["Kanpur", "Noida", "Delhi", "Mumbai"],
+            department: '',
+            departments: ["IT","HR", "Engineering", "Finance", "Marketing"],
+            dateOfJoining: ''
+        });
     };
 
     const filteredData = data.filter((employee) => {
-        return (
-            // (filters.location === '' || employee.location.includes(filters.location)) &&
-            // (filters.workAllocation === '' || employee.workAllocation.includes(filters.workAllocation)) &&
-            // (filters.status === '' || employee.status === filters.status)
-            true
-        );
+        const isLocationMatch = filters.location.length === 0 || filters.location.includes(employee.location);
+        const isDepartmentMatch = filters.department === '' || employee.department === filters.department;
+    
+        const [day, month, year] = employee.joiningDate.split('-');
+        const formattedEmployeeDate = `${year}-${month}-${day}`; 
+        const employeeDate = new Date(formattedEmployeeDate); 
+    
+        const filterDate = new Date(filters.dateOfJoining); 
+    
+        const isDateMatch = filters.dateOfJoining === '' || employeeDate <= filterDate;
+    
+        return isLocationMatch && isDepartmentMatch && isDateMatch;
     });
+    
+
+    
 
     return (
         <div className="container mx-auto p-4">
@@ -117,53 +167,47 @@ const Table = ({ data, title = "Employees", subtitle = "Manage all your full-tim
                             <th className="py-2 px-4 border">ID</th>
                             <th className="py-2 px-4 border">Name</th>
                             <th className="py-2 px-4 border">Location</th>
-                            <th className="py-2 px-4 border">Work Allocation</th>
-                            <th className="py-2 px-4 border">Skills</th>
+                            <th className="py-2 px-4 border">Department</th>
+                            <th className="py-2 px-4 border">Date of Joining</th>
                             <th className="py-2 px-4 border">Status</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredData.map((employee, index) => (
+                        {filteredData?.length ? filteredData.map((employee, index) => (
                             <tr key={index} className="border-t">
                                 <td className="py-2 px-4 border">{employee.id}</td>
                                 <td className="py-2 px-4 border">
-                                    <div className="flex items-center">
+                                    <Link href={employee.link || "#"} className="flex items-center">
                                         <img src="https://placehold.co/32x32" alt={`Profile of ${employee.name}`} className="w-8 h-8 rounded-full mr-2" />
                                         <div>
                                             <div className="font-bold">{employee.name}</div>
                                             <div className="text-gray-500 text-sm">{employee.title}</div>
                                         </div>
-                                    </div>
+                                    </Link>
                                 </td>
                                 <td className="py-2 px-4 border">{employee.location}</td>
-                                <td className="py-2 px-4 border font-bold">{employee.workAllocation}</td>
-                                <td className="py-2 px-4 border">
-                                    {employee.skills.map((skill, i) => (
-                                        <span key={i} className="inline-block bg-gray-200 text-gray-700 text-xs px-2 py-1 rounded mr-1">{skill}</span>
-                                    ))}
+                                <td className="py-2 px-4 border font-bold text-center">{employee.department}</td>
+                                <td className="py-2 px-4 border text-center">
+                                    <span className="inline-block bg-gray-200 text-gray-700 text-xs px-2 py-1 rounded">{employee.joiningDate}</span>
                                 </td>
                                 <td className="py-2 px-4 border">
-                                    <span className={`inline-block px-2 py-1 rounded text-xs ${employee.status === 'Active' ? 'bg-green-100 text-green-700' : employee.status === 'Pending' ? 'bg-blue-100 text-blue-700' : 'bg-red-100 text-red-700'}`}>
+                                    <div className={`inline-block px-2 py-1 text-xs rounded-full text-white ${employee.status === "Active" ? "bg-green-500" : employee.status === "Pending" ? "bg-blue-500": "bg-red-500"}`}>
                                         {employee.status}
-                                    </span>
+                                    </div>
                                 </td>
                             </tr>
-                        ))}
+                        )):
+                            <tr className="text-center" >
+                                <td colSpan={6} className="p-4 text-gray-500  ">No Data</td>
+                            </tr>
+                        }
                     </tbody>
                 </table>
-            </div>
-            <div className="flex justify-between items-center mt-4">
-                <div>
-                    Rows per page:
-                    <select>
-                        <option value="10">10</option>
-                        <option value="20">20</option>
-                    </select>
-                </div>
-                <div>1-5 of {filteredData.length}</div>
             </div>
         </div>
     );
 };
+
+
 
 export default Table;

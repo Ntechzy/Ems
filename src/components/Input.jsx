@@ -1,8 +1,6 @@
 const Input = ({ label, handleChange, value, name }) => {
-    console.log(label);
-
     return (
-        <div className="relative m-3 flex justify-center items-center">
+        <div className="relative my-3 flex justify-center items-center">
             <input
                 id={label}
                 value={value}

@@ -5,8 +5,8 @@ import React, { useState } from 'react'
 
 const page = () => {
     const employees = [
-        { id: 'A081C058', name: 'Vikas Kumar', title: 'Tech Lead', location: 'Kanpur', department: 'IT', skills: ['Dev Ops', 'Server', 'backend', '2+'], status: 'Active', joiningDate: "28-01-2023", link: "#" },
-        { id: 'A081C039', name: 'Pankaj Upadhyay', title: 'Software Engineer', location: 'Noida', department: 'IT', skills: ['Full stack', 'NodeJS', '3+'], status: 'Pending', joiningDate: "28-02-2024", link: "/" },
+        { id: 'A081C058', name: 'Vikas Kumar', title: 'Tech Lead', location: 'Kanpur', department: 'IT', skills: ['Dev Ops', 'Server', 'backend', '2+'], status: 'Active',joiningDate:"28-01-2023",link:"/employee/lfjsd" },
+        { id: 'A081C039', name: 'Pankaj Upadhyay', title: 'Software Engineer', location: 'Noida', department: 'IT', skills: ['Full stack', 'NodeJS', '3+'], status: 'Pending',joiningDate:"28-02-2024" ,link:"/employee/lfjsd"},
     ];
     const [tableData, setTableData] = useState(employees);
     const handleSearch = (searchVal) => {

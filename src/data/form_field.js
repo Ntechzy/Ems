@@ -58,5 +58,10 @@ export const first=[
         "name": "Date of Joining",
          "type": "date"
       },
+      {
+        "label": "salary_slot",
+        "name": "Salary Slot",
+         "type": "text"
+      },
     
 ]

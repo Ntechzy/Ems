@@ -16,6 +16,7 @@ const EmpDetail = () => {
     aadhaar_no: "",
     pan_card_no: "",
     date_of_joining: "",
+    salary_slot:"",
   });
 
   const [errors, setErrors] = useState({});
@@ -72,6 +73,7 @@ const EmpDetail = () => {
         aadhaar_no: "",
         pan_card_no: "",
         date_of_joining: "",
+        salary_slot: "",
       });
       alert("Form submitted successfully");
     }
@@ -104,7 +106,7 @@ const EmpDetail = () => {
       <div className="bg-white shadow-lg rounded-lg p-6 md:p-10 w-full max-w-2xl space-y-8">
         {/* Progress Indicator */}
         <div className="flex justify-between items-center mb-6">
-          <div onClick={handlePrev}
+          <div
             className={`${
               step === 0
                 ? "bg-blue-600 text-white"
@@ -114,7 +116,7 @@ const EmpDetail = () => {
             1
           </div>
           <div className="flex-grow h-1 bg-gray-300 mx-4"></div>
-          <div
+          <div 
             className={`${
               step === 1
                 ? "bg-blue-600 text-white"

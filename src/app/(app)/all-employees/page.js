@@ -1,6 +1,6 @@
 'use client'
 import Registration from '@/components/EmplRegister/Registration';
-import Table from '@/components/Table'; 
+import Table from '@/components/Table';
 import React, { useState } from 'react'
 
 const page = () => {
@@ -24,7 +24,7 @@ const page = () => {
                 <Table data={tableData} handleSearchChange={handleSearch} isModal={setisModal} />
             </div>
             {isModal &&
-                <div className='fixed top-0 left-0 w-full h-full bg-black/50 z-10'>
+                <div className='fixed top-0 left-0 w-full h-full overflow-auto bg-black/50 z-10'>
                     <Registration close={setisModal} />
                 </div>
             }

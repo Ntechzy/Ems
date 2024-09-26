@@ -18,7 +18,8 @@ const Registration = ({ close }) => {
         designation: "",
         department: "",
         alloted_hardwares: "",
-        alloted_softwares: ""
+        alloted_softwares: "",
+        associated_with: ""
     })
 
     const handleChange = (e) => {
@@ -41,9 +42,9 @@ const Registration = ({ close }) => {
         }
     }
 
-    console.log(value);
-
     const genrate = (e) => {
+        e.preventDefault()
+        e.stopPropagation()
         const newPassword = genratePassword(16)
         setValue({ ...value, ["password"]: newPassword });
     };
@@ -83,11 +84,18 @@ const Registration = ({ close }) => {
                         aria-label="Generated Password"
                         className=" p-2 focus:border-blue-500 w-full placeholder-transparent rounded-md text-blue-900 border-2 outline-none peer border-gray-400 "
                     />
-                    <button className='bg-button_blue p-2 md:w-[20%] flex justify-center items-center m-auto rounded-xl text-white text-lg' onClick={() => genrate()}>Generate</button>
+                    <button className='bg-button_blue p-2 md:w-[20%] flex justify-center items-center m-auto rounded-xl text-white text-lg' onClick={genrate}>Generate</button>
 
                 </div>
 
                 <div className='flex gap-3 my-3'>
+
+                    <select name="associated_with" id="associated_with" className=" p-2 focus:border-blue-500 w-full placeholder-transparent rounded-md text-blue-900 border-2 outline-none peer border-gray-400" onChange={handleChange}>
+
+                        <option value="option from db" >associated_with</option>
+
+                    </select>
+
                     <select name="designation" id="designation" className=" p-2 focus:border-blue-500 w-full placeholder-transparent rounded-md text-blue-900 border-2 outline-none peer border-gray-400" onChange={handleChange}>
                         <option value="option from db" >opetion from db</option>
                     </select>
@@ -110,7 +118,7 @@ const Registration = ({ close }) => {
                 </div>
 
 
-                <button className='bg-button_blue p-2 md:w-[20%] flex justify-center items-center m-auto rounded-xl text-white text-lg'>Submit</button>
+                <button type='submit' className='bg-button_blue p-2 md:w-[20%] flex justify-center items-center m-auto rounded-xl text-white text-lg'>Submit</button>
             </form>
         </div >
     )

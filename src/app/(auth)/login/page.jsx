@@ -1,5 +1,6 @@
 'use client'
 import Input from '@/components/Input';
+import { sinInValidate } from '@/Validation/AuthValidation';
 import { useState } from 'react';
 
 const Page = () => {
@@ -7,10 +8,21 @@ const Page = () => {
         username: "",
         password: ""
     })
-
-
-    const handleSubmit = (event) => {
+    const [err, seterr] = useState()
+    const handleSubmit = async (event) => {
         event.preventDefault();
+        try {
+            await sinInValidate.validate(value, { abortEarly: false })
+            seterr(null)
+        } catch (error) {
+            const newError = {};
+            error.inner.forEach(elem => {
+                newError[elem.path] = elem.message
+
+            });
+            console.log(newError);
+            seterr(newError)
+        }
     };
     const handleChange = (e) => {
         e.preventDefault();
@@ -40,10 +52,12 @@ const Page = () => {
 
                     <div className="mb-6">
                         <Input label="username" handleChange={handleChange} value={value.username} name={"Enter your User name"} />
+                        {err && <div className='text-red-700 text-center'> {err["username"]}</div>}
                     </div>
 
                     <div className="mb-6">
                         <Input label="password" handleChange={handleChange} value={value.password} name={"Enter your password"} />
+                        {err && <div className='text-red-700 text-center'> {err["password"]}</div>}
                     </div>
 
                     <button

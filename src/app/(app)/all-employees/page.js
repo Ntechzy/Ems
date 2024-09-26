@@ -1,6 +1,7 @@
 'use client'
 import Registration from '@/components/EmplRegister/Registration';
 import Table from '@/components/Table';
+import dbconn from '@/lib/dbconn';
 import React, { useState } from 'react'
 
 const page = () => {

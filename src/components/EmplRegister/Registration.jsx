@@ -4,8 +4,9 @@ import Input from '../Input'
 import { useState } from 'react'
 import { genratePassword } from '@/lib/GenratePassword'
 import { IoCloseCircle } from "react-icons/io5";
-
+import { RegistrationValidate } from '@/Validation/RegistrationValidation'
 const Registration = ({ close }) => {
+
     const [value, setValue] = useState({
         employee_id: "",
         name: "",
@@ -22,8 +23,19 @@ const Registration = ({ close }) => {
         setValue({ ...value, [e.target.id]: e.target.value })
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
+        try {
+            await RegistrationValidate.validate(value, { abortEarly: false })
+            seterr(null)
+        } catch (error) {
+            const newError = {};
+            error.inner.forEach(elem => {
+                newError[elem.path] = elem.message
+            });
+            console.log(newError);
+
+        }
     }
 
     const genrate = (e) => {
@@ -39,7 +51,7 @@ const Registration = ({ close }) => {
                     Register an employee
                 </div>
 
-                <div onClick={() => close(false)} className=' text-button_blue text-2xl'>
+                <div onClick={() => close(false)} className='text-button_blue text-2xl cursor-pointer'>
                     <IoCloseCircle />
                 </div>
             </div>
@@ -54,10 +66,10 @@ const Registration = ({ close }) => {
                 }
                 <div className='flex md:flex-row flex-col gap-3 my-3'>
                     <input
-                        value={value.password}  
+                        value={value.password}
                         name="password"
                         type="text"
-                        readOnly  
+                        readOnly
                         aria-label="Generated Password"
                         className=" p-2 focus:border-blue-500 w-full placeholder-transparent rounded-md text-blue-900 border-2 outline-none peer border-gray-400 "
                     />

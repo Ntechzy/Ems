@@ -5,11 +5,21 @@ const hardwareSchema = new mongoose.Schema({
         type: String,
         required: [true, "name is Required"],
     },
+    value: {
+        type: String,
+        required: [true , "Hardware value is Required"]
+    },
     logo: {
-        type: Object,
-        required: [true, "logo is Required"],
+        url: {
+            type: String,
+            required: [true, "Logo URL is required"],
+        },
+        client_id: {
+            type: String,
+            required: [true, "Client ID is required"],
+        },
     },
 });
 
-const hardwareModel = (mongoose.model.Hardware) || mongoose.model("Hardware", hardwareSchema)
+const hardwareModel = (mongoose.models.Hardware) || mongoose.model("Hardware", hardwareSchema)
 export default hardwareModel;

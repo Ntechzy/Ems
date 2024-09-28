@@ -25,7 +25,6 @@ const EmployeeProfile = () => {
         type: "user", // admin
         jobTitle: 'Tech Lead',
         email: 'vikas@ntechzy.in',
-        description: "He is a Tech Lead Intern in the company",
         location: 'Noida',
         manager: 'Nikhil Sachan',
         department: 'IT',
@@ -37,6 +36,7 @@ const EmployeeProfile = () => {
         employeeID: 'THMP2C0012',
         employeeType: 'Permanent',
         startDate: 'July 20, 2007',
+        salarySlot: '7',
         dob: "Aug 1, 2002",
         accountDetails: {
             holderName: "Vikas Kumar",
@@ -158,7 +158,7 @@ const EmployeeProfile = () => {
         <div className="bg-gray-100 min-h-screen p-6 ">
             {/* Profile Header */}
             <div className="bg-white p-6 rounded-lg shadow-md mb-6">
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-center flex-col gap-4 md:gap-0 md:flex-row">
                     {/* Profile Info */}
                     <div className="flex items-center">
                         <img
@@ -173,20 +173,20 @@ const EmployeeProfile = () => {
                             <p className="text-gray-500">Location: {employee.location}</p>
                         </div>
                     </div>
-                    {employee.type === "admin" && <button className="bg-red-500 text-white py-2 px-4 rounded">Discontinue</button>}
-                    <div className="flex ">
-                        <button onClick={toggleLeaveModal} className="bg-button_blue text-white py-2 px-4 rounded mr-4 flex gap-2 items-center">
+                    {employee.type === "admin" && <button className="bg-red-500 text-white py-1 md:py-2 px-3 md:px-4 rounded">Discontinue</button>}
+                    <div className="flex text-sm md:text-base">
+                        <button onClick={toggleLeaveModal} className="bg-button_blue text-white py-1 md:py-2 px-3 md:px-4 rounded mr-4 flex gap-2 items-center">
                             <FaRegCalendarAlt />
                             Apply Leave
                         </button>
-                        <button onClick={toggleTicketModal} className="bg-yellow-600 text-white py-2 px-4 rounded flex gap-2 items-center">
+                        <button onClick={toggleTicketModal} className="bg-yellow-600 text-white py-1 md:py-2 px-3 md:px-4 rounded flex gap-2 items-center">
                             <FaTicketAlt />
                             Raise Ticket
                         </button>
                     </div>
                 </div>
                 {/* Manager, Department, and Status */}
-                <div className="mt-4 flex space-x-4">
+                <div className="mt-4 flex space-x-4 text-sm md:text-base">
                     <div>
                         <span className="text-gray-600">Manager: </span>
                         <span className="font-semibold">{employee.manager}</span>
@@ -197,7 +197,7 @@ const EmployeeProfile = () => {
                     </div>
                     <div>
                         <span className="text-gray-600">Status: </span>
-                        <span className={`text-white font-semibold p-2 rounded ${employee.status === 'Active' ? 'bg-green-500' : 'bg-red-500'}`}>
+                        <span className={`text-white font-semibold p-1  md:mt-0 md:p-2 rounded ${employee.status === 'Active' ? 'bg-green-500' : 'bg-red-500'}`}>
                             {employee.status}
                         </span>
                     </div>
@@ -208,7 +208,7 @@ const EmployeeProfile = () => {
 
             {/* Tabs */}
             <div className="bg-white rounded-lg shadow-md mb-6 p-4">
-                <ul className="flex border-b">
+                <ul className="flex border-b overflow-auto">
                     {['Employees', 'Hardware', 'Software'].map(tab => (
                         <li key={tab} className="mr-6">
                             <button
@@ -288,8 +288,8 @@ const EmployeeProfile = () => {
                                     <p>{employee.department}</p>
                                 </div>
                                 <div>
-                                    <p className="text-gray-500">Description</p>
-                                    <p>{employee.description}</p>
+                                    <p className="text-gray-500">Salary Slot</p>
+                                    <p>{employee.salarySlot}</p>
                                 </div>
                             </div>
                         </div>
@@ -356,7 +356,7 @@ const EmployeeProfile = () => {
                  onClick={toggleLeaveModal}
              >
                  <div
-                     className="bg-white p-6 rounded-lg shadow-md absolute top-[50vh] translate-y-[-50%] w-[40%]"
+                     className="bg-white p-6 rounded-lg shadow-md absolute top-[50vh] translate-y-[-50%] w-[90%] md:w-[40%]"
                      onClick={(e) => e.stopPropagation()}
                  >
                      <h2 className="text-xl font-semibold mb-4">Apply Leave</h2>
@@ -444,7 +444,7 @@ const EmployeeProfile = () => {
             {/* Raise Ticket Modal */}
             {isTicketModalOpen && (
                 <div className="absolute top-0 bottom-0 left-0 right-0 flex items-center justify-center z-50 bg-[#00000088]" onClick={toggleTicketModal}>
-                    <div className="bg-white p-6 rounded-lg shadow-md absolute top-[50vh] translate-y-[-50%] w-[40%]" onClick={(e) => e.stopPropagation()}>
+                    <div className="bg-white p-6 rounded-lg shadow-md absolute top-[50vh] translate-y-[-50%] w-[90%] md:w-[40%]" onClick={(e) => e.stopPropagation()}>
                         <h2 className="text-xl font-semibold mb-4">Raise Ticket</h2>
                         {/* Ticket Form */}
                         <form onSubmit={handleRaiseTicket}>
@@ -482,7 +482,7 @@ const EmployeeProfile = () => {
             {/* Edit Details Modal */}
             {isDetailsModalOpen && (
                 <div className="absolute top-0 bottom-0 left-0 right-0 flex items-center justify-center z-50 bg-[#00000088]" onClick={toggleDetailsModal}>
-                    <div className="bg-white p-4 my-2 rounded-lg shadow-md w-full max-w-md sm:max-w-lg" onClick={(e) => e.stopPropagation()} style={{ maxHeight: '90vh' }}>
+                    <div className="bg-white p-4 my-2 rounded-lg shadow-md w-[90%] md:w-[40%]" onClick={(e) => e.stopPropagation()} style={{ maxHeight: '90vh' }}>
                         <h2 className="text-2xl font-semibold mb-3">Edit Basic Details</h2>
                         <hr />
                         {/* Form for Basic Details */}
@@ -622,7 +622,7 @@ const EmployeeProfile = () => {
             {/* Account Details Modal */}
             {isAccountDetailsModalOpen && (
                 <div className="absolute top-0 bottom-0 left-0 right-0 flex items-center justify-center z-50 bg-[#00000088]" onClick={toggleAccountModal}>
-                    <div className="bg-white p-4 my-2 rounded-lg shadow-md w-full max-w-md sm:max-w-lg" onClick={(e) => e.stopPropagation()} style={{ maxHeight: '90vh' }}>
+                    <div className="bg-white p-4 my-2 rounded-lg shadow-md w-[90%] md:w-[40%]" onClick={(e) => e.stopPropagation()} style={{ maxHeight: '90vh' }}>
                         <h2 className="text-2xl font-semibold mb-3">Edit Account Details</h2>
                         <hr />
                         {/* Form for Account Details */}

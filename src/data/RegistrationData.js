@@ -1,14 +1,21 @@
 export const fields = [
-    {
-        "name": "Employee ID",
-        "label": "employee_id",
-        "type": "text",
-        "placeholder": "Enter Employee ID",
-    },
+    // {
+    //     "name": "Employee ID",
+    //     "label": "employee_id",
+    //     "type": "text",
+    //     "placeholder": "Enter Employee ID",
+    // },
     {
         "name": "Name",
         "label": "name",
         "type": "text",
+        "placeholder": "Enter Name",
+
+    },
+    {
+        "name": "Salary",
+        "label": "salary ",
+        "type": "number",
         "placeholder": "Enter Name",
 
     },
@@ -25,13 +32,7 @@ export const fields = [
         "type": "text",
         "placeholder": "Enter Mobile Number",
 
-    },
-    {
-        "name": "Location",
-        "label": "location",
-        "type": "text",
-        "placeholder": "Enter Location",
-    },
+    },  
 ]
 
 

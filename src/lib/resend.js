@@ -1,7 +1,7 @@
 import { Resend } from 'resend';
 import { OnBoarding } from '../../email/Onboarding';
 
-const resend = new Resend('re_K3cbPn5j_B7m3mi6nDMyZEhs2dWYtgLKi');
+const resend = new Resend(process.env.API_KEY);
 
 export const sendOnboarding = async (name, email, employee_id, password, link) => {
     try {

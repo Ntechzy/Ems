@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose";
+import bcrypt from "bcrypt";
 
 const userSchema = new mongoose.Schema({
     employee_id: {
@@ -40,19 +41,18 @@ const userSchema = new mongoose.Schema({
         required: [true, "designation is required"],
     },
     department: {
-        type: Schema.Types.ObjectId,
-        ref: "Departments"
+        type: "string",
+        required: [true, "department is required"],
     }
 }, { timestamps: true });
 
-userSchema.pre('save', async function (next) {
-    if (!this.isModified('password')) {
-        return next();
+userSchema.pre("save", async function (next) {
+    if (!this.isModified("password")) {
+        next();
     } else {
-        this.password = await bcrypt.hash(this.password, 10);
+        this.password = await bcrypt.hash(this.password, 10)
     }
-    next();
-});
+})
 
 
 const userModel = (mongoose.models.User) || mongoose.model("User", userSchema)

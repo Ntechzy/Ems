@@ -5,7 +5,7 @@ import userModel from "@/modal/user";
 import mongoose from "mongoose";
 
 export async function POST(req) {
-    await dbconn();
+    await dbconn(); 
 
     try {
         const {

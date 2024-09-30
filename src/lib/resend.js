@@ -1,5 +1,6 @@
 import { Resend } from 'resend';
 import { OnBoarding } from '../../email/Onboarding';
+ 
 
 const resend = new Resend(process.env.API_KEY);
 

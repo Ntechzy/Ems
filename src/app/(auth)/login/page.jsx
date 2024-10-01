@@ -1,9 +1,12 @@
 'use client'
+import { useRouter } from 'next/navigation';
 import Input from '@/components/Input';
 import { sinInValidate } from '@/Validation/AuthValidation';
+import { signIn } from 'next-auth/react';
 import { useState } from 'react';
 
 const Page = () => {
+    const router = useRouter()
     const [value, setValue] = useState({
         username: "",
         password: ""
@@ -14,6 +17,18 @@ const Page = () => {
         try {
             await sinInValidate.validate(value, { abortEarly: false })
             seterr(null)
+            const data = await signIn('credentials', {
+                redirect: false,
+                username: value.username,
+                password: value.password,
+            })
+            if (data.error) {
+                console.log(data.error);
+                // alert(data.error)
+            }
+            else {
+                router.replace("/all-employees")
+            }
         } catch (error) {
             const newError = {};
             error.inner.forEach(elem => {

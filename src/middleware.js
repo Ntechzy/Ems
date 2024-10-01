@@ -11,13 +11,10 @@ export async function middleware(request) {
         return NextResponse.redirect(new URL('/', request.url));
     }
 
-    if (!token && (url.pathname.startsWith('/all-employees') || url.pathname.startsWith('/'))) {
-        return NextResponse.redirect(new URL('/login', request.url));
-    }
 
     return NextResponse.next();
 }
 
 export const config = {
-    matcher: ['/login', '/all-employees', '/'],
+    matcher: ['/login'],
 };

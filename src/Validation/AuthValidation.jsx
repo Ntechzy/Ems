@@ -24,8 +24,8 @@ export const RegistrationValidate = Yup.object({
 
 export const sinInValidate = Yup.object({
 
-    username: Yup.string().email("* Invalid email adress").required("* Email is required"),
+    username: Yup.string().required("* employee id is required"),
 
-    password: Yup.string().required("* Enter Your password").matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/, "* password should be of minimum 8 characters, at least 1 uppercase letter, 1 lowercase letter, 1 number and 1 special character"),
+    password: Yup.string().required("* Enter Your password"),
 
 }) 

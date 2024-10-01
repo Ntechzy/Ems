@@ -1,5 +1,5 @@
 import NextAuth from "next-auth"
-import Option from "./option"
+import { Option } from "./option"
 
 const handler = NextAuth(Option)
 

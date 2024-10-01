@@ -5,7 +5,7 @@ import userModel from "@/modal/user";
 import mongoose from "mongoose";
 
 export async function POST(req) {
-    await dbconn(); 
+    await dbconn();
 
     try {
         const {
@@ -19,6 +19,7 @@ export async function POST(req) {
         const softwareObjectIds = alloted_softwares.map(id => (typeof id === 'string' ? new mongoose.Types.ObjectId(id) : id));
         const interview_done_by_Ids = (typeof interview_done_by === "string" ? new mongoose.Types.ObjectId(interview_done_by) : interview_done_by);
         const who_finalize_salary_Ids = (typeof who_finalize_salary === "string" ? new mongoose.Types.ObjectId(who_finalize_salary) : who_finalize_salary);
+      
 
         const employee_id = name.slice(0, 4) + mobile_no.slice(5, 10) + email.slice(0, 4);
         const isUser = await userModel.findOne({ email, mobile_no });
@@ -39,6 +40,7 @@ export async function POST(req) {
                 );
             }
 
+
             employee = await employeeModel.create({
                 user_id: isUser._id,
                 alloted_hardwares: hardwareObjectIds,
@@ -58,7 +60,7 @@ export async function POST(req) {
                 role,
                 designation,
                 department
-            });
+            }); 
 
             employee = await employeeModel.create({
                 user_id: user._id,
@@ -66,7 +68,7 @@ export async function POST(req) {
                 alloted_softwares: softwareObjectIds,
                 salary,
                 interview_done_by: interview_done_by_Ids,
-                who_finalize_salary: who_finalize_salary_Ids
+                who_finalized_salary: who_finalize_salary_Ids
             });
         }
 

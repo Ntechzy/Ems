@@ -1,3 +1,5 @@
+import { FilterData } from "../helper/FilterData";
+
 export class BaseService {
     #repository;
     constructor(repository) {
@@ -13,6 +15,13 @@ export class BaseService {
         const all_items = await this.#repository.GetAll();
         return all_items;
 
+    }
+
+    async GetWithFields(fields){
+        let all_items = await this.#repository.GetAll();
+        const filterClass = new FilterData(all_items);
+        all_items = filterClass.filterByFields(fields);
+        return all_items; 
     }
 
     async Get(filter) {

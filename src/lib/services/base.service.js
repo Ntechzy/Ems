@@ -1,4 +1,6 @@
+import { AppError } from "../errors/AppError";
 import { FilterData } from "../helper/FilterData";
+import { isUserAuthenticated } from "../helper/ValidateUser";
 
 export class BaseService {
     #repository;
@@ -24,9 +26,14 @@ export class BaseService {
         return all_items; 
     }
 
-    async Get(filter) {
-        const item = await this.#repository.Get(filter);
-        return item;
+    async GetById(id , req , res) {
+        const sessionUser = await isUserAuthenticated(req , res);
+        if((id != sessionUser.id )&& sessionUser.role == "user"){
+            throw new AppError("You are not allowed to access this resource" , 401);
+        }else{
+            const item = await this.#repository.Get({_id : id});
+            return item;
+        }
     }
 
     async Delete(id){

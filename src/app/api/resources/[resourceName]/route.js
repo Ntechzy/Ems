@@ -1,4 +1,6 @@
 import dbconn from "@/lib/dbconn";
+import { AppError } from "@/lib/errors/AppError";
+import { AppResponse } from "@/lib/helper/responseJson";
 import { Hardware, Software,Department, BirthDay, Ticket } from "@/lib/repositories";
 import { BirthDayService, DepartmentService, HardwareService, SoftwareService, TicketService } from "@/lib/services";
 
@@ -13,8 +15,11 @@ const birthdayService = new BirthDayService(birthdayRepo);
 const ticketRepo = new Ticket();
 const ticketService = new TicketService(ticketRepo);
 
+let appResponse;
+
 export async function GET(req, { params }) {
     try {
+        appResponse = new AppResponse();
         await dbconn();
         const resourceName = params.resourceName;
         const searchParams = req.nextUrl.searchParams;
@@ -28,11 +33,10 @@ export async function GET(req, { params }) {
             }else{
                 all_hardwares = await hardwareService.GetAll();
             }
-            return Response.json({
-                success: true,
-                message: "Data Fetched Successfully",
-                data: all_hardwares
-            })
+
+            appResponse.data = all_hardwares;
+
+            return Response.json(appResponse.getResponse(),{status:200});
         }
 
 
@@ -44,71 +48,64 @@ export async function GET(req, { params }) {
             }else{
                 all_softwares = await softwareService.GetAll();
             }
-            return Response.json({
-                success: true,
-                message: "Data Fetched Successfully",
-                data: all_softwares
-            })
+            appResponse.data = all_softwares;
+
+            return Response.json(appResponse.getResponse(),{status:200});
         }
 
 
         else if (resourceName.toLowerCase() == "department") {
             
             const all_departments = await departmentService.GetAll();
-            return Response.json({
-                success: true,
-                message: "Data Fetched Successfully",
-                data: all_departments
-            })
+            appResponse.data = all_departments;
+
+            return Response.json(appResponse.getResponse(),{status:200});
         }
 
 
         else if(resourceName.toLowerCase() == "birthday"){
            
             const all_birthdays = await birthdayService.GetAll();
-            return Response.json({
-                success: true,
-                message: "Data Fetched Successfully",
-                data: all_birthdays
-            })
+            appResponse.data = all_birthdays;
+
+            return Response.json(appResponse.getResponse(),{status:200});
         }
 
 
         else if(resourceName.toLowerCase() == "ticket"){
           
             const all_tickets = await ticketService.GetAll();
-            return Response.json({
-                success: true,
-                message: "Data Fetched Successfully",
-                data: all_tickets
-            })
+            appResponse.data = all_tickets;
+
+            return Response.json(appResponse.getResponse(),{status:200});
         }
 
 
         else {
-            return Response.json({
-                success: false,
-                message: "Some Error Occurred",
-            }, {
+            appResponse.status = false;
+            appResponse.message = "No Data for this resource";
+            appResponse.error = {message:"This Resource is not allowed"};
+
+            return Response.json(appResponse.getResponse(), {
                 status: 400
             })
         }
 
 
     } catch (err) {
-
+        appResponse = new AppResponse();
         console.log("Error While Getting items ", err)
-        return Response.json(
-            {
-                sucess: false,
-                message: "Error While Getting Items",
-                error: err.message
+        if(err instanceof AppError){
+            appResponse.message = err.message;
+            appResponse.status = false;
+            return Response.json(appResponse.getResponse(),{status:err.statusCode});
+        }
 
-            },
-            {
-                status: 500,
-            }
-        )
+        appResponse.status = false;
+        appResponse.message = "Error While Getting Items";
+        appResponse.error = {message:err.message};
+
+        return Response.json(appResponse.getResponse(),{status: 500});
     }
 }
 
@@ -116,13 +113,15 @@ export async function GET(req, { params }) {
 
 export async function POST(req, { params }) {
     try {
+        appResponse = new AppResponse();
         const resourceName = params.resourceName;
         const reqBody = await req.json();
-        
+
         if (!reqBody.name || !reqBody.value) {
-            return Response.json({
-                message: "Please provide all data"
-            }, {
+            appResponse.status = false;
+            appResponse.message = "Please provide all data";
+
+            return Response.json(appResponse.getResponse(), {
                 status: 400
             })
         }
@@ -141,38 +140,38 @@ export async function POST(req, { params }) {
             console.log("inside hardware..")
             data.value = reqBody.value;
             const resData = await hardwareService.Create(data);
-            return Response.json({
-                status: "Success",
-                message: "Successfully created Software",
-                data: resData
-            }, { status: 201 })
+            appResponse.status = true;
+            appResponse.message = "Successfully created Hardware";
+            appResponse.data = resData;
+
+            return Response.json(appResponse.getResponse(), { status: 201 })
         } 
         
         else if (resourceName.toLowerCase() == "software") {
             console.log("inside software..")
             data.version = reqBody.value;
             const resData = await softwareService.Create(data);
-            return Response.json({
-                status: "Success",
-                message: "Successfully created Software",
-                data: resData
-            }, { status: 201 })
+
+            appResponse.status = true;
+            appResponse.message = "Successfully created Software";
+            appResponse.data = resData;
+
+            return Response.json(appResponse.getResponse(), { status: 201 })
         }
 
-        return Response.json({
-            message: "Wrong Input",
-        }, { status: 400 })
+        appResponse.status = false;
+        appResponse.message = "Wrong Input";
+
+        return Response.json(appResponse.getResponse(), { status: 400 })
 
 
     } catch (err) {
+        appResponse = new AppResponse();
+        appResponse.status = false;
+        appResponse.message = "Error While Creating Items";
+        appResponse.error = err.message;
 
-        return Response.json(
-            {
-                sucess: false,
-                message: "Error While Creating Items",
-                error: err.message
-
-            },
+        return Response.json(appResponse.getResponse(),
             {
                 status: 500,
             }

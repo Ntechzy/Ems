@@ -38,9 +38,7 @@ const employeeSchema = new mongoose.Schema({
         default: null
     },
     date_of_joining: {
-        type: Date,
-        // required: true
-        default: Date.now()
+         type: Date, 
     },
     salary: {
         type: String,

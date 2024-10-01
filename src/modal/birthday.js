@@ -3,11 +3,10 @@ import mongoose from "mongoose";
 const dobSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true,
-        trim: true,
+        required: true, 
     },
     date: {
-        type: Date,
+        type: String,
         required: true,
         trim: true
     },

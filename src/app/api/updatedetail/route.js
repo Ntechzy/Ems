@@ -103,17 +103,17 @@ export async function PUT(req) {
         }
       );
     } else {
-      return new Response(
-        JSON.stringify({
+      return Response.json(
+        {
           success: false,
           message: "Please Login",
         }),
         { status: 401, headers: { "Content-Type": "application/json" } }
-      );
+      
     }
   } catch (error) {
     console.error("Error while processing request:", error);
-    return new Response(
+    return Response(
       JSON.stringify({
         success: false,
         message: "Error While Updating the Details",

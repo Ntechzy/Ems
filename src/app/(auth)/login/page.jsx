@@ -25,11 +25,11 @@ const Page = () => {
                 password: value.password,
             })
             if (data.error) {
-                console.log(data.error); 
+                console.log(data.error);
             }
             else {
                 console.log("login sucessfull");
-                { session?.user.isFormCompleted ? router.replace(`/employee/${session.user.id}`) : router.replace(`/`) }
+                router.push('/')
             }
         } catch (error) {
             const newError = {};

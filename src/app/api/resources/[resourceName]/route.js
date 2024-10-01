@@ -24,7 +24,6 @@ export async function GET(req, { params }) {
         const resourceName = params.resourceName;
         const searchParams = req.nextUrl.searchParams;
 
-
         if (resourceName.toLowerCase() == "hardware") {
             let all_hardwares;
             if(searchParams.get("filter")){
@@ -137,7 +136,7 @@ export async function POST(req, { params }) {
 
 
         if (resourceName.toLowerCase() == "hardware") {
-            console.log("inside hardware..")
+         
             data.value = reqBody.value;
             const resData = await hardwareService.Create(data);
             appResponse.status = true;

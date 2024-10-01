@@ -41,6 +41,7 @@ export const Option = {
                 token.id = user._id?.toString()
                 token.role = user.role
                 token.username = user.name
+                token.isFormCompleted = false
             }
             return token
         },
@@ -49,7 +50,8 @@ export const Option = {
                 session.user = {
                     id: token.id?.toString(),
                     role: token.role,
-                    username: token.username
+                    username: token.username,
+                    isFormCompleted: token.isFormCompleted
                 };
             }
             return session

@@ -2,7 +2,7 @@
 import { useRouter } from 'next/navigation';
 import Input from '@/components/Input';
 import { sinInValidate } from '@/Validation/AuthValidation';
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 import { useState } from 'react';
 
 const Page = () => {
@@ -12,6 +12,8 @@ const Page = () => {
         password: ""
     })
     const [err, seterr] = useState()
+    const { data: session, status } = useSession()
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
@@ -23,11 +25,11 @@ const Page = () => {
                 password: value.password,
             })
             if (data.error) {
-                console.log(data.error);
-                // alert(data.error)
+                console.log(data.error); 
             }
             else {
-                router.replace("/all-employees")
+                console.log("login sucessfull");
+                { session?.user.isFormCompleted ? router.replace(`/employee/${session.user.id}`) : router.replace(`/`) }
             }
         } catch (error) {
             const newError = {};

@@ -98,10 +98,19 @@ const employeeSchema = new mongoose.Schema({
     leaves: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Leave'
-    }]
+    }],
+    profile_photo:{
+        client_id: String,
+        cloud_url: String
+    }
 }, {
     timestamps: true
 });
+
+employeeSchema.pre(/^find/, function(next) {
+    this.populate('user_id');
+    next();
+  });
 
 const employeeModel = (mongoose.models.Emp) || mongoose.model("Emp", employeeSchema)
 export default employeeModel; 

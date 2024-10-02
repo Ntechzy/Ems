@@ -2,10 +2,10 @@ import dbconn from "@/lib/dbconn";
 import { AppError } from "@/lib/errors/AppError";
 import { AppResponse } from "@/lib/helper/responseJson";
 import {isUserAuthenticated, validateRole} from "@/lib/helper/ValidateUser"
-import { User } from "@/lib/repositories/User";
+import { Employee } from "@/lib/repositories";
 import { UserService } from "@/lib/services/user.service";
 
-const userService = new UserService(new User());
+const userService = new UserService(new Employee());
 let appResponse;
 
 export async function GET(req,res){
@@ -13,6 +13,7 @@ export async function GET(req,res){
         appResponse = new AppResponse();
         await dbconn();
         const params = res.params;
+        const searchParams = req.nextUrl.searchParams;
         const sessionUser = await isUserAuthenticated(req , res);
         if(sessionUser){
             const userIdArr = params.id;
@@ -22,7 +23,12 @@ export async function GET(req,res){
                 appResponse.data = user;
 
             }else if(validateRole(sessionUser,["super_admin","admin"])){
-                const all_users = await userService.GetAll();
+                const pageNo = parseInt(searchParams.get("page")) || 1;
+                const limit = parseInt(searchParams.get("limit")) || 10;
+                const offset = (pageNo - 1) * limit;
+
+                const all_users = await userService.GetAllWithPagination(offset , limit);
+
                 appResponse.data = all_users;
 
             }

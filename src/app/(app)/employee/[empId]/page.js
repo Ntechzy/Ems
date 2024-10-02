@@ -1,9 +1,10 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { MdEdit } from "react-icons/md";
 import { FaRegCalendarAlt, FaTicketAlt } from "react-icons/fa";
 import Input from '@/components/Input';
 import * as Yup from 'yup'
+import axiosRequest from '@/lib/axios';
 
 // leave form schema
 const leaveSchema = Yup.object().shape({
@@ -18,8 +19,8 @@ const leaveSchema = Yup.object().shape({
     reason: Yup.string().required('Please provide a reason for the leave')
 });
 
-const EmployeeProfile = () => {
-    const employee = {
+const EmployeeProfile = ({params}) => {
+    const sampleEmployeeDetails = {
         profilePicture: 'https://img.freepik.com/free-photo/beautiful-male-half-length-portrait-isolated-white-studio-background-young-emotional-hindu-man-blue-shirt-facial-expression-human-emotions-advertising-concept-standing-smiling_155003-25250.jpg?w=826&t=st=1727176643~exp=1727177243~hmac=d883f4c6ab692bb09bd6684c8e42efc270bca8adb3487e5b4b5a5eaaaf36fab3',
         name: 'Vikas Kumar',
         type: "user", // admin
@@ -53,12 +54,48 @@ const EmployeeProfile = () => {
             { name: "Version Control", version: "Github" },
         ]
     };
+    // const employee = {
+    //     profilePicture: 'https://img.freepik.com/free-photo/beautiful-male-half-length-portrait-isolated-white-studio-background-young-emotional-hindu-man-blue-shirt-facial-expression-human-emotions-advertising-concept-standing-smiling_155003-25250.jpg?w=826&t=st=1727176643~exp=1727177243~hmac=d883f4c6ab692bb09bd6684c8e42efc270bca8adb3487e5b4b5a5eaaaf36fab3',
+    //     name: 'Vikas Kumar',
+    //     type: "user", // admin
+    //     jobTitle: 'Tech Lead',
+    //     email: 'vikas@ntechzy.in',
+    //     location: 'Noida',
+    //     manager: 'Nikhil Sachan',
+    //     department: 'IT',
+    //     status: 'Active',
+    //     firstName: 'Vikas',
+    //     lastName: 'Kumar',
+    //     phone: '+9198756231',
+    //     address: '227, Behind TMKOC College, Kanpur, India - 400001',
+    //     employeeID: 'THMP2C0012',
+    //     employeeType: 'Permanent',
+    //     startDate: 'July 20, 2007',
+    //     salarySlot: '7',
+    //     dob: "Aug 1, 2002",
+    //     accountDetails: {
+    //         holderName: "Vikas Kumar",
+    //         bankName: "SBI",
+    //         ifscCode: "SBIUN21",
+    //         accountNumber: "88215437654"
+    //     },
+    //     hardware: [
+    //         { name: "Laptop", model: "Hp-Victus" },
+    //         { name: "MousePad", model: "Smuly" },
+    //     ],
+    //     software: [
+    //         { name: "IDE", version: "Visual Studio" },
+    //         { name: "Version Control", version: "Github" },
+    //     ]
+    // };
     const [leaveFormErrors, setLeaveFormErrors] = useState({});
     const [activeTab, setActiveTab] = useState('Employees');
     const [isLeaveModalOpen, setIsLeaveModalOpen] = useState(false);
     const [isTicketModalOpen, setIsTicketModalOpen] = useState(false);
     const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
     const [isAccountDetailsModalOpen, setIsAccountDetailsModalOpen] = useState(false);
+    const [employee , setEmployee] = useState(sampleEmployeeDetails);
+    const employeeId = params.empId;
     const [leaveDetails, setLeaveDetails] = useState({
         leaveType: '',
         startDate: '',
@@ -154,6 +191,80 @@ const EmployeeProfile = () => {
     const handleSaveDetails = (e) => {
         e.preventDefault();
     }
+
+    const fetchUserDetails = async (userId) => {
+        try {
+          const res = await axiosRequest.get(`/user/${userId}`);
+          const userDetails = res.data.data;
+      
+          const employee = {
+            profilePicture:
+              userDetails.profile_photo?.cloud_url ||
+              "https://img.freepik.com/free-photo/beautiful-male-half-length-portrait-isolated-white-studio-background-young-emotional-hindu-man-blue-shirt-facial-expression-human-emotions-advertising-concept-standing-smiling_155003-25250.jpg?w=826&t=st=1727176643~exp=1727177243~hmac=d883f4c6ab692bb09bd6684c8e42efc270bca8adb3487e5b4b5a5eaaaf36fab3",
+            name: userDetails?.user_id?.name,
+            type: userDetails?.user_id?.role, // Assuming roles like 'user', 'admin'
+            jobTitle: userDetails?.user_id?.designation,
+            email: userDetails?.user_id?.email,
+            location: userDetails.correspondence_address || "N/A",
+            manager: userDetails.manager || "N/A", // Assuming you have a manager field in employee details
+            department: userDetails?.user_id?.department,
+            status: userDetails.status ? "Active" : "Inactive",
+            firstName: userDetails?.user_id?.name.split(" ")[0],
+            lastName: userDetails?.user_id?.name.split(" ")[1] || "",
+            phone: userDetails?.user_id?.mobile_no,
+            address: userDetails.permanent_address || "N/A",
+            employeeID: userDetails?.user_id?.employee_id,
+            employeeType: "Permanent", // Assuming employee type; modify as needed
+            startDate: userDetails.date_of_joining
+              ? new Date(userDetails.date_of_joining).toLocaleDateString()
+              : "N/A",
+            salarySlot: userDetails.salary_slot || "N/A",
+            dob: userDetails.dob ? new Date(userDetails.dob).toLocaleDateString() : "N/A",
+            accountDetails: {
+              holderName: userDetails.accountDetails?.holderName || "N/A",
+              bankName: userDetails.accountDetails?.bankName || "N/A",
+              ifscCode: userDetails.accountDetails?.ifscCode || "N/A",
+              accountNumber: userDetails.accountDetails?.accountNumber || "N/A",
+            },
+            hardware: userDetails.alloted_hardwares?.map((hardware) => ({
+              name: hardware.name,
+              model: hardware.model || "N/A",
+            })) || [],
+            software: userDetails.alloted_softwares?.map((software) => ({
+              name: software.name,
+              version: software.version || "N/A",
+            })) || [],
+          };
+          setEmployee(employee);
+          setBasicDetails({
+            workEmail: employee.email,
+            firstName: employee.firstName,
+            lastName: employee.lastName,
+            countryCode: '+91',
+            phoneNumber: employee.phone,
+            secondaryEmail: '',
+            location: employee.location,
+            address: employee.address,
+            dob:employee.dob
+        });
+        setAccountDetails({
+            holderName: employee.accountDetails.holderName,
+            bankName: employee.accountDetails.bankName,
+            ifscCode: employee.accountDetails.ifscCode,
+            accountNumber: employee.accountDetails.accountNumber
+        })
+         
+          console.log(employee);
+          return employee;
+        } catch (err) {
+          console.error(err);
+        }
+      };
+      
+
+    useEffect(()=>{
+        fetchUserDetails(employeeId);
+    },[])
     return (
         <div className="bg-gray-100 min-h-screen p-6 ">
             {/* Profile Header */}

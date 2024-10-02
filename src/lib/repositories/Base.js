@@ -14,6 +14,11 @@ export class Base {
         return res;
     }
 
+    async GetWithPagination(filter , offset , limit){
+        const res = await this.#modelName.find(filter).skip(offset).limit(limit);
+        return res;
+    }
+
     async Get(filter){
         const res = await this.#modelName.findOne(filter);
         return res;

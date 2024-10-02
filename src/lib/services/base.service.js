@@ -19,6 +19,11 @@ export class BaseService {
 
     }
 
+    async GetAllWithPagination(offset , maxNoOfEntriesToShow){
+        const all_items = await this.#repository.GetWithPagination({},offset,maxNoOfEntriesToShow);
+        return all_items;
+    }
+
     async GetWithFields(fields){
         let all_items = await this.#repository.GetAll();
         const filterClass = new FilterData(all_items);

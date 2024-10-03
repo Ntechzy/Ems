@@ -32,8 +32,8 @@ function Navbar() {
 
                         <div className='flex justify-center items-center gap-6'>
                             <div className='flex flex-col justify-center items-center'>
-                                <IoLogOut onClick={() => signOut()} className="fas fa-cog text-gray-400 hover:text-white text-xl md:text-2xl" />
-                                Log Out
+                                <IoLogOut onClick={() => signOut()} className="fas fa-cog text-gray-200 hover:text-white text-xl md:text-4xl" />
+
                             </div>
                             <Link href={"/"} className="flex items-center space-x-4">
                                 <img src="https://img.freepik.com/free-photo/beautiful-male-half-length-portrait-isolated-white-studio-background-young-emotional-hindu-man-blue-shirt-facial-expression-human-emotions-advertising-concept-standing-smiling_155003-25250.jpg?w=826&t=st=1727176643~exp=1727177243~hmac=d883f4c6ab692bb09bd6684c8e42efc270bca8adb3487e5b4b5a5eaaaf36fab3" alt="Profile picture of a person" className="rounded-full w-10 h-10" />

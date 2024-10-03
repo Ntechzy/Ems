@@ -25,8 +25,6 @@ export async function POST(req) {
         const department_Ids = (typeof department === "string" ? new mongoose.Types.ObjectId(department) : department);
 
 
-
-
         const employee_id = name.slice(0, 4) + mobile_no.slice(5, 10) + email.slice(0, 4);
         const isUser = await userModel.findOne({ email, mobile_no });
 

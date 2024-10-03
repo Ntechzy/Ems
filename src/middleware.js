@@ -7,6 +7,10 @@ export async function middleware(request) {
     const url = request.nextUrl;
     const token = await getToken({ req: request, secret });
 
+    if (url.pathname.startsWith('/reset')) {
+        return NextResponse.next();
+    }
+
     if (!token && !url.pathname.startsWith('/login')) {
         return NextResponse.redirect(new URL('/login', request.url));
     }
@@ -16,6 +20,8 @@ export async function middleware(request) {
         if (url.pathname.startsWith('/login')) {
             return NextResponse.redirect(new URL('/', request.url));
         }
+
+        // User Routes
         if (role === 'user') {
             if (
                 url.pathname === '/' ||
@@ -36,6 +42,8 @@ export async function middleware(request) {
             return NextResponse.redirect(new URL('/', request.url));
         }
 
+
+        // Admin Routes
         if (role === 'admin') {
             if (!isFormCompleted) {
                 if (url.pathname !== '/') {

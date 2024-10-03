@@ -20,7 +20,7 @@ const leaveSchema = Yup.object().shape({
     reason: Yup.string().required('Please provide a reason for the leave')
 });
 
-const EmployeeProfile = ({params}) => {
+const EmployeeProfile = ({ params }) => {
     const sampleEmployeeDetails = {
         profilePicture: 'https://img.freepik.com/free-photo/beautiful-male-half-length-portrait-isolated-white-studio-background-young-emotional-hindu-man-blue-shirt-facial-expression-human-emotions-advertising-concept-standing-smiling_155003-25250.jpg?w=826&t=st=1727176643~exp=1727177243~hmac=d883f4c6ab692bb09bd6684c8e42efc270bca8adb3487e5b4b5a5eaaaf36fab3',
         name: 'Vikas Kumar',
@@ -95,7 +95,7 @@ const EmployeeProfile = ({params}) => {
     const [isTicketModalOpen, setIsTicketModalOpen] = useState(false);
     const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
     const [isAccountDetailsModalOpen, setIsAccountDetailsModalOpen] = useState(false);
-    const [employee , setEmployee] = useState(sampleEmployeeDetails);
+    const [employee, setEmployee] = useState(sampleEmployeeDetails);
     const userId = params.empId;
     const { data: session, status } = useSession()
     const [leaveDetails, setLeaveDetails] = useState({
@@ -121,7 +121,7 @@ const EmployeeProfile = ({params}) => {
         secondaryEmail: '',
         location: employee.location,
         address: employee.address,
-        dob:employee.dob
+        dob: employee.dob
     });
 
     const validateForm = async () => {
@@ -139,7 +139,7 @@ const EmployeeProfile = ({params}) => {
         }
     };
 
-  
+
 
     const handleInputChange = (e, detailsObj = leaveDetails, setFn = setLeaveDetails) => {
         const { name, value } = e.target;
@@ -151,31 +151,31 @@ const EmployeeProfile = ({params}) => {
     };
 
     const toggleLeaveModal = () => {
-        window.scrollTo({top:0 })
+        window.scrollTo({ top: 0 })
         !isLeaveModalOpen ? document.body.style.overflow = "hidden" : document.body.style.overflow = "auto";
 
         setIsLeaveModalOpen(!isLeaveModalOpen);
     };
 
     const toggleTicketModal = () => {
-        window.scrollTo({top:0 })
+        window.scrollTo({ top: 0 })
         !isTicketModalOpen ? document.body.style.overflow = "hidden" : document.body.style.overflow = "auto";
 
         setIsTicketModalOpen(!isTicketModalOpen);
     };
     const toggleDetailsModal = () => {
-        window.scrollTo({top:0 })
+        window.scrollTo({ top: 0 })
         !isDetailsModalOpen ? document.body.style.overflow = "hidden" : document.body.style.overflow = "auto";
 
         setIsDetailsModalOpen(!isDetailsModalOpen);
     };
     const toggleAccountModal = () => {
-        window.scrollTo({top:0})
+        window.scrollTo({ top: 0 })
         !isAccountDetailsModalOpen ? document.body.style.overflow = "hidden" : document.body.style.overflow = "auto";
         setIsAccountDetailsModalOpen(!isAccountDetailsModalOpen);
     };
 
-    const handleApplyLeave = async(e) => {
+    const handleApplyLeave = async (e) => {
         e.preventDefault();
 
         const isValid = await validateForm();
@@ -196,78 +196,78 @@ const EmployeeProfile = ({params}) => {
 
     const fetchUserDetails = async (userId) => {
         try {
-          const res = await axiosRequest.get(`/user/${userId}`);
-          const userDetails = res.data.data;
-      
-          const employee = {
-            profilePicture:
-              userDetails.profile_photo?.cloud_url ||
-              "https://img.freepik.com/free-photo/beautiful-male-half-length-portrait-isolated-white-studio-background-young-emotional-hindu-man-blue-shirt-facial-expression-human-emotions-advertising-concept-standing-smiling_155003-25250.jpg?w=826&t=st=1727176643~exp=1727177243~hmac=d883f4c6ab692bb09bd6684c8e42efc270bca8adb3487e5b4b5a5eaaaf36fab3",
-            user_id: userDetails?.user_id?._id,
-            name: userDetails?.user_id?.name,
-            type: userDetails?.user_id?.role, // Assuming roles like 'user', 'admin'
-            jobTitle: userDetails?.user_id?.designation,
-            email: userDetails?.user_id?.email,
-            location: userDetails.correspondence_address || "N/A",
-            manager: userDetails.manager || "N/A", // Assuming you have a manager field in employee details
-            department: userDetails?.user_id?.department,
-            status: userDetails.status ? "Active" : "Inactive",
-            firstName: userDetails?.user_id?.name.split(" ")[0],
-            lastName: userDetails?.user_id?.name.split(" ")[1] || "",
-            phone: userDetails?.user_id?.mobile_no,
-            address: userDetails.permanent_address || "N/A",
-            employeeID: userDetails?.user_id?.employee_id,
-            employeeType: "Permanent", // Assuming employee type; modify as needed
-            startDate: userDetails.date_of_joining
-              ? new Date(userDetails.date_of_joining).toLocaleDateString()
-              : "N/A",
-            salarySlot: userDetails.salary_slot || "N/A",
-            dob: userDetails.dob ? new Date(userDetails.dob).toLocaleDateString() : "N/A",
-            accountDetails: {
-              holderName: userDetails.accountDetails?.holderName || "N/A",
-              bankName: userDetails.accountDetails?.bankName || "N/A",
-              ifscCode: userDetails.accountDetails?.ifscCode || "N/A",
-              accountNumber: userDetails.accountDetails?.accountNumber || "N/A",
-            },
-            hardware: userDetails.alloted_hardwares?.map((hardware) => ({
-              name: hardware.name,
-              model: hardware.model || "N/A",
-            })) || [],
-            software: userDetails.alloted_softwares?.map((software) => ({
-              name: software.name,
-              version: software.version || "N/A",
-            })) || [],
-          };
-          setEmployee(employee);
-          setBasicDetails({
-            workEmail: employee.email,
-            firstName: employee.firstName,
-            lastName: employee.lastName,
-            countryCode: '+91',
-            phoneNumber: employee.phone,
-            secondaryEmail: '',
-            location: employee.location,
-            address: employee.address,
-            dob:employee.dob
-        });
-        setAccountDetails({
-            holderName: employee.accountDetails.holderName,
-            bankName: employee.accountDetails.bankName,
-            ifscCode: employee.accountDetails.ifscCode,
-            accountNumber: employee.accountDetails.accountNumber
-        })
-         
-          console.log(employee);
-          return employee;
-        } catch (err) {
-          console.error(err);
-        }
-      };
-      
+            const res = await axiosRequest.get(`/user/${userId}`);
+            const userDetails = res.data.data;
 
-    useEffect(()=>{
-        fetchUserDetails(userId );
-    },[])
+            const employee = {
+                profilePicture:
+                    userDetails.profile_photo?.cloud_url ||
+                    "https://img.freepik.com/free-photo/beautiful-male-half-length-portrait-isolated-white-studio-background-young-emotional-hindu-man-blue-shirt-facial-expression-human-emotions-advertising-concept-standing-smiling_155003-25250.jpg?w=826&t=st=1727176643~exp=1727177243~hmac=d883f4c6ab692bb09bd6684c8e42efc270bca8adb3487e5b4b5a5eaaaf36fab3",
+                user_id: userDetails?.user_id?._id,
+                name: userDetails?.user_id?.name,
+                type: userDetails?.user_id?.role, // Assuming roles like 'user', 'admin'
+                jobTitle: userDetails?.user_id?.designation,
+                email: userDetails?.user_id?.email,
+                location: userDetails.correspondence_address || "N/A",
+                manager: userDetails.manager || "N/A", // Assuming you have a manager field in employee details
+                department: userDetails?.user_id?.department,
+                status: userDetails.status ? "Active" : "Inactive",
+                firstName: userDetails?.user_id?.name.split(" ")[0],
+                lastName: userDetails?.user_id?.name.split(" ")[1] || "",
+                phone: userDetails?.user_id?.mobile_no,
+                address: userDetails.permanent_address || "N/A",
+                employeeID: userDetails?.user_id?.employee_id,
+                employeeType: "Permanent", // Assuming employee type; modify as needed
+                startDate: userDetails.date_of_joining
+                    ? new Date(userDetails.date_of_joining).toLocaleDateString()
+                    : "N/A",
+                salarySlot: userDetails.salary_slot || "N/A",
+                dob: userDetails.dob ? new Date(userDetails.dob).toLocaleDateString() : "N/A",
+                accountDetails: {
+                    holderName: userDetails.accountDetails?.holderName || "N/A",
+                    bankName: userDetails.accountDetails?.bankName || "N/A",
+                    ifscCode: userDetails.accountDetails?.ifscCode || "N/A",
+                    accountNumber: userDetails.accountDetails?.accountNumber || "N/A",
+                },
+                hardware: userDetails.alloted_hardwares?.map((hardware) => ({
+                    name: hardware.name,
+                    model: hardware.model || "N/A",
+                })) || [],
+                software: userDetails.alloted_softwares?.map((software) => ({
+                    name: software.name,
+                    version: software.version || "N/A",
+                })) || [],
+            };
+            setEmployee(employee);
+            setBasicDetails({
+                workEmail: employee.email,
+                firstName: employee.firstName,
+                lastName: employee.lastName,
+                countryCode: '+91',
+                phoneNumber: employee.phone,
+                secondaryEmail: '',
+                location: employee.location,
+                address: employee.address,
+                dob: employee.dob
+            });
+            setAccountDetails({
+                holderName: employee.accountDetails.holderName,
+                bankName: employee.accountDetails.bankName,
+                ifscCode: employee.accountDetails.ifscCode,
+                accountNumber: employee.accountDetails.accountNumber
+            })
+
+            console.log(employee);
+            return employee;
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+
+    useEffect(() => {
+        fetchUserDetails(userId);
+    }, [])
     return (
         <div className="bg-gray-100 min-h-screen p-6 ">
             {/* Profile Header */}
@@ -289,20 +289,20 @@ const EmployeeProfile = ({params}) => {
                     </div>
                     <div className="flex text-sm md:text-base gap-4">
                         {(session?.user?.role === "admin" && employee?.status == "Active") && <button className="bg-red-500 text-white py-1 md:py-2 px-3 md:px-4 rounded">Discontinue</button>}
-                        {console.log(session , userId , "jfklsjdklfj")}
+                        {console.log(session, userId, "jfklsjdklfj")}
                         {
-                            !(session?.user?.role == 'admin' && session?.user?.id != userId  ) ?
-                            <>
-                                <button onClick={toggleLeaveModal} className="bg-button_blue text-white py-1 md:py-2 px-3 md:px-4 rounded mr-4 flex gap-2 items-center">
-                                    <FaRegCalendarAlt />
-                                    Apply Leave
-                                </button>
-                                <button onClick={toggleTicketModal} className="bg-yellow-600 text-white py-1 md:py-2 px-3 md:px-4 rounded flex gap-2 items-center">
-                                    <FaTicketAlt />
-                                    Raise Ticket
-                                </button>
-                            
-                            </>:null
+                            !(session?.user?.role == 'admin' && session?.user?.id != userId) ?
+                                <>
+                                    <button onClick={toggleLeaveModal} className="bg-button_blue text-white py-1 md:py-2 px-3 md:px-4 rounded mr-4 flex gap-2 items-center">
+                                        <FaRegCalendarAlt />
+                                        Apply Leave
+                                    </button>
+                                    <button onClick={toggleTicketModal} className="bg-yellow-600 text-white py-1 md:py-2 px-3 md:px-4 rounded flex gap-2 items-center">
+                                        <FaTicketAlt />
+                                        Raise Ticket
+                                    </button>
+
+                                </> : null
                         }
                     </div>
                 </div>
@@ -349,10 +349,15 @@ const EmployeeProfile = ({params}) => {
                     <>
                         {/* Basic Details */}
                         <div>
+
                             <div className="flex justify-between items-center">
                                 <h3 className="text-xl font-semibold text-gray-800">Basic details</h3>
-                                <MdEdit className="text-blue-500 text-2xl cursor-pointer" onClick={toggleDetailsModal} />
+                                <div className='flex gap-5 justify-center items-center'>
+                                    <MdEdit className="text-blue-500 text-2xl cursor-pointer" onClick={toggleDetailsModal} />
+                                    <button className=' bg-blue-500 p-3 text-white rounded-lg'>Update Password</button>
+                                </div>
                             </div>
+
                             <div className="grid grid-cols-2 gap-6 mt-4">
                                 <div>
                                     <p className="text-gray-500">First name</p>
@@ -379,6 +384,7 @@ const EmployeeProfile = ({params}) => {
                                     <p>{employee.dob}</p>
                                 </div>
                             </div>
+
                         </div>
 
                         {/* Job Details */}
@@ -419,7 +425,7 @@ const EmployeeProfile = ({params}) => {
                         <div>
                             <div className="flex justify-between items-center">
                                 <h3 className="text-xl font-semibold text-gray-800">Account details</h3>
-                                <MdEdit className="text-blue-500 text-2xl cursor-pointer" onClick={toggleAccountModal}/>
+                                <MdEdit className="text-blue-500 text-2xl cursor-pointer" onClick={toggleAccountModal} />
                             </div>
                             <div className="grid grid-cols-2 gap-6 mt-4">
                                 <div>
@@ -472,94 +478,94 @@ const EmployeeProfile = ({params}) => {
 
             {/* Apply Leave Modal */}
             {isLeaveModalOpen && (
-                 <div
-                 className="absolute top-0 bottom-0 left-0 right-0 flex items-start justify-center z-50 bg-[#00000088] "
-                 onClick={toggleLeaveModal}
-             >
-                 <div
-                     className="bg-white p-6 rounded-lg shadow-md absolute top-[50vh] translate-y-[-50%] w-[90%] md:w-[40%]"
-                     onClick={(e) => e.stopPropagation()}
-                 >
-                     <h2 className="text-xl font-semibold mb-4">Apply Leave</h2>
-     
-                     {/* Leave Form */}
-                     <form className="space-y-4">
-                         {/* Leave Type */}
-                         <div>
-                             <label className="block text-gray-700">Leave Type</label>
-                             <select
-                                 name="leaveType"
-                                 value={leaveDetails.leaveType}
-                                 onChange={handleInputChange}
-                                 className="w-full mt-1 p-2 border rounded"
-                             >
-                                 <option value="" disabled>Select Leave Type</option>
-                                 <option value="sick">Sick Leave</option>
-                                 <option value="casual">Casual Leave</option>
-                             </select>
-                             {leaveFormErrors.leaveType && (
-                                 <div className="text-red-500 text-sm">{leaveFormErrors.leaveType}</div>
-                             )}
-                         </div>
-     
-                         {/* Start Date */}
-                         <div>
-                             <label className="block text-gray-700">Leave From</label>
-                             <input
-                                 type="date"
-                                 name="startDate"
-                                 value={leaveDetails.startDate}
-                                 onChange={handleInputChange}
-                                 className="w-full mt-1 p-2 border rounded"
-                             />
-                             {leaveFormErrors.startDate && (
-                                 <div className="text-red-500 text-sm">{leaveFormErrors.startDate}</div>
-                             )}
-                         </div>
-     
-                         {/* End Date */}
-                         <div>
-                             <label className="block text-gray-700">Leave To</label>
-                             <input
-                                 type="date"
-                                 name="endDate"
-                                 value={leaveDetails.endDate}
-                                 onChange={handleInputChange}
-                                 className="w-full mt-1 p-2 border rounded"
-                             />
-                             {leaveFormErrors.endDate && (
-                                 <div className="text-red-500 text-sm">{leaveFormErrors.endDate}</div>
-                             )}
-                         </div>
-     
-                         {/* Reason for Leave */}
-                         <div>
-                             <label className="block text-gray-700">Reason</label>
-                             <textarea
-                                 name="reason"
-                                 value={leaveDetails.reason}
-                                 onChange={handleInputChange}
-                                 className="w-full mt-1 p-2 border rounded"
-                                 rows="3"
-                                 placeholder="Enter reason for leave"
-                             ></textarea>
-                             {leaveFormErrors.reason && (
-                                 <div className="text-red-500 text-sm">{leaveFormErrors.reason}</div>
-                             )}
-                         </div>
-                     </form>
-     
-                     {/* Buttons */}
-                     <div className="mt-4 flex justify-end space-x-2">
-                         <button onClick={toggleLeaveModal} className="bg-gray-300 text-gray-700 py-2 px-4 rounded">
-                             Cancel
-                         </button>
-                         <button onClick={handleApplyLeave} className="bg-button_blue text-white py-2 px-4 rounded">
-                             Submit
-                         </button>
-                     </div>
-                 </div>
-             </div>
+                <div
+                    className="absolute top-0 bottom-0 left-0 right-0 flex items-start justify-center z-50 bg-[#00000088] "
+                    onClick={toggleLeaveModal}
+                >
+                    <div
+                        className="bg-white p-6 rounded-lg shadow-md absolute top-[50vh] translate-y-[-50%] w-[90%] md:w-[40%]"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <h2 className="text-xl font-semibold mb-4">Apply Leave</h2>
+
+                        {/* Leave Form */}
+                        <form className="space-y-4">
+                            {/* Leave Type */}
+                            <div>
+                                <label className="block text-gray-700">Leave Type</label>
+                                <select
+                                    name="leaveType"
+                                    value={leaveDetails.leaveType}
+                                    onChange={handleInputChange}
+                                    className="w-full mt-1 p-2 border rounded"
+                                >
+                                    <option value="" disabled>Select Leave Type</option>
+                                    <option value="sick">Sick Leave</option>
+                                    <option value="casual">Casual Leave</option>
+                                </select>
+                                {leaveFormErrors.leaveType && (
+                                    <div className="text-red-500 text-sm">{leaveFormErrors.leaveType}</div>
+                                )}
+                            </div>
+
+                            {/* Start Date */}
+                            <div>
+                                <label className="block text-gray-700">Leave From</label>
+                                <input
+                                    type="date"
+                                    name="startDate"
+                                    value={leaveDetails.startDate}
+                                    onChange={handleInputChange}
+                                    className="w-full mt-1 p-2 border rounded"
+                                />
+                                {leaveFormErrors.startDate && (
+                                    <div className="text-red-500 text-sm">{leaveFormErrors.startDate}</div>
+                                )}
+                            </div>
+
+                            {/* End Date */}
+                            <div>
+                                <label className="block text-gray-700">Leave To</label>
+                                <input
+                                    type="date"
+                                    name="endDate"
+                                    value={leaveDetails.endDate}
+                                    onChange={handleInputChange}
+                                    className="w-full mt-1 p-2 border rounded"
+                                />
+                                {leaveFormErrors.endDate && (
+                                    <div className="text-red-500 text-sm">{leaveFormErrors.endDate}</div>
+                                )}
+                            </div>
+
+                            {/* Reason for Leave */}
+                            <div>
+                                <label className="block text-gray-700">Reason</label>
+                                <textarea
+                                    name="reason"
+                                    value={leaveDetails.reason}
+                                    onChange={handleInputChange}
+                                    className="w-full mt-1 p-2 border rounded"
+                                    rows="3"
+                                    placeholder="Enter reason for leave"
+                                ></textarea>
+                                {leaveFormErrors.reason && (
+                                    <div className="text-red-500 text-sm">{leaveFormErrors.reason}</div>
+                                )}
+                            </div>
+                        </form>
+
+                        {/* Buttons */}
+                        <div className="mt-4 flex justify-end space-x-2">
+                            <button onClick={toggleLeaveModal} className="bg-gray-300 text-gray-700 py-2 px-4 rounded">
+                                Cancel
+                            </button>
+                            <button onClick={handleApplyLeave} className="bg-button_blue text-white py-2 px-4 rounded">
+                                Submit
+                            </button>
+                        </div>
+                    </div>
+                </div>
             )}
 
             {/* Raise Ticket Modal */}
@@ -706,16 +712,16 @@ const EmployeeProfile = ({params}) => {
                             />
 
                             <div className="flex space-x-2">
-                            <Input
-                                label="dob"
-                                name="Date of Birth"
-                                type="date"
-                                value={basicDetails.dob}
-                                handleChange={(e) => handleInputChange(e, basicDetails, setBasicDetails)}
-                                styles={{ border: "1px solid lightgray", color: "black" }}
-                                labelStyles={{ color: "gray" }}
-                                inputName={"dob"}
-                            />
+                                <Input
+                                    label="dob"
+                                    name="Date of Birth"
+                                    type="date"
+                                    value={basicDetails.dob}
+                                    handleChange={(e) => handleInputChange(e, basicDetails, setBasicDetails)}
+                                    styles={{ border: "1px solid lightgray", color: "black" }}
+                                    labelStyles={{ color: "gray" }}
+                                    inputName={"dob"}
+                                />
                             </div>
 
                             {/* Buttons */}
@@ -747,7 +753,7 @@ const EmployeeProfile = ({params}) => {
                         <h2 className="text-2xl font-semibold mb-3">Edit Account Details</h2>
                         <hr />
                         {/* Form for Account Details */}
-                        <form onSubmit={(e)=>handleInputChange(e,accountDetails,setAccountDetails)} className="mt-4">
+                        <form onSubmit={(e) => handleInputChange(e, accountDetails, setAccountDetails)} className="mt-4">
 
                             {/* Holder Name */}
                             <Input
@@ -755,7 +761,7 @@ const EmployeeProfile = ({params}) => {
                                 name="Holder Name"
                                 type="text"
                                 value={accountDetails.holderName}
-                                handleChange={(e)=>handleInputChange(e,accountDetails,setAccountDetails)}
+                                handleChange={(e) => handleInputChange(e, accountDetails, setAccountDetails)}
                                 styles={{ border: "1px solid lightgray", color: "black" }}
                                 labelStyles={{ color: "gray" }}
                                 inputName={"holderName"}
@@ -767,7 +773,7 @@ const EmployeeProfile = ({params}) => {
                                 name="Bank Name"
                                 type="text"
                                 value={accountDetails.bankName}
-                                handleChange={(e)=>handleInputChange(e,accountDetails,setAccountDetails)}
+                                handleChange={(e) => handleInputChange(e, accountDetails, setAccountDetails)}
                                 styles={{ border: "1px solid lightgray", color: "black" }}
                                 labelStyles={{ color: "gray" }}
                                 inputName={"bankName"}
@@ -781,7 +787,7 @@ const EmployeeProfile = ({params}) => {
                                         name="IFSC Code"
                                         type="text"
                                         value={accountDetails.ifscCode}
-                                        handleChange={(e)=>handleInputChange(e,accountDetails,setAccountDetails)}
+                                        handleChange={(e) => handleInputChange(e, accountDetails, setAccountDetails)}
                                         styles={{ border: "1px solid lightgray", color: "black" }}
                                         labelStyles={{ color: "gray" }}
                                         inputName={"ifscCode"}
@@ -795,7 +801,7 @@ const EmployeeProfile = ({params}) => {
                                         name="Account Number"
                                         type="text"
                                         value={accountDetails.accountNumber}
-                                        handleChange={(e)=>handleInputChange(e,accountDetails,setAccountDetails)}
+                                        handleChange={(e) => handleInputChange(e, accountDetails, setAccountDetails)}
                                         styles={{ border: "1px solid lightgray", color: "black" }}
                                         labelStyles={{ color: "gray" }}
                                         inputName={"accountNumber"}
@@ -820,10 +826,10 @@ const EmployeeProfile = ({params}) => {
                                 </button>
                             </div>
                         </form>
+
                     </div>
                 </div>
             )}
-
 
         </div>
     );

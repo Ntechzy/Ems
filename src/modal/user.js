@@ -50,6 +50,14 @@ const userSchema = new mongoose.Schema(
       ref: 'Department',
       required: [true, "department is required"]
     },
+    resetToken: {
+      type: String,
+      default: null,
+    },
+    resetTokenExpiration: {
+      type: Date,
+      detfault: null,
+    }
   },
   { timestamps: true }
 );

@@ -18,4 +18,9 @@ export class EmployeeService extends BaseService{
             return item;
         }
     }
+
+    async AddTicket(userId,ticket){
+        const res = await this.#repository.Update({user_id:userId} , {$push:{tickets:ticket}});
+        return res;
+    }
 }

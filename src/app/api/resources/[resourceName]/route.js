@@ -1,8 +1,8 @@
 import dbconn from "@/lib/dbconn";
 import { AppError } from "@/lib/errors/AppError";
 import { AppResponse } from "@/lib/helper/responseJson";
-import { Hardware, Software, Department, BirthDay, Ticket } from "@/lib/repositories";
-import { BirthDayService, DepartmentService, HardwareService, SoftwareService, TicketService } from "@/lib/services";
+import { Hardware, Software, Department, BirthDay, Ticket, Employee } from "@/lib/repositories";
+import { BirthDayService, DepartmentService, EmployeeService, HardwareService, SoftwareService, TicketService } from "@/lib/services";
 
 const hardwareRepo = new Hardware();
 const hardwareService = new HardwareService(hardwareRepo);
@@ -13,7 +13,8 @@ const departmentService = new DepartmentService(departmentRepo);
 const birthdayRepo = new BirthDay();
 const birthdayService = new BirthDayService(birthdayRepo);
 const ticketRepo = new Ticket();
-const ticketService = new TicketService(ticketRepo);
+const employeeService = new EmployeeService(new Employee());
+const ticketService = new TicketService(ticketRepo,employeeService);
 
 let appResponse;
 
@@ -111,56 +112,59 @@ export async function GET(req, { params }) {
 
 
 
-export async function POST(req, { params }) {
+export async function POST(req, res) {
     try {
         appResponse = new AppResponse();
-        const resourceName = params.resourceName;
+        const resourceName = res.params.resourceName;
         const reqBody = await req.json();
+       
 
-        if (!reqBody.name || !reqBody.value) {
-            appResponse.status = false;
-            appResponse.message = "Please provide all data";
+        if(resourceName.toLowerCase() == "hardware" || resourceName.toLowerCase() == "software"){
+            if (!reqBody.name || !reqBody.value) {
+                appResponse.status = false;
+                appResponse.message = "Please provide all data";
+    
+                return Response.json(appResponse.getResponse(), {
+                    status: 400
+                })
+            }
+    
+    
+            const data = {
+                name: reqBody.name,
+                logo: {
+                    url: "https://placeholder.co/100X100",
+                    client_id: "someid"
+                }
+            }
 
-            return Response.json(appResponse.getResponse(), {
-                status: 400
-            })
-        }
-
-
-        const data = {
-            name: reqBody.name,
-            logo: {
-                url: "https://placeholder.co/100X100",
-                client_id: "someid"
+            if (resourceName.toLowerCase() == "hardware") {
+    
+                data.value = reqBody.value;
+                const resData = await hardwareService.Create(data);
+                appResponse.status = true;
+                appResponse.message = "Successfully created Hardware";
+                appResponse.data = resData;
+    
+                return Response.json(appResponse.getResponse(), { status: 201 })
+            }
+    
+            else if (resourceName.toLowerCase() == "software") {
+                console.log("inside software..")
+                data.version = reqBody.value;
+                const resData = await softwareService.Create(data);
+    
+                appResponse.status = true;
+                appResponse.message = "Successfully created Software";
+                appResponse.data = resData;
+    
+                return Response.json(appResponse.getResponse(), { status: 201 })
             }
         }
 
-
-        if (resourceName.toLowerCase() == "hardware") {
-
-            data.value = reqBody.value;
-            const resData = await hardwareService.Create(data);
-            appResponse.status = true;
-            appResponse.message = "Successfully created Hardware";
-            appResponse.data = resData;
-
-            return Response.json(appResponse.getResponse(), { status: 201 })
-        }
-
-        else if (resourceName.toLowerCase() == "software") {
-            console.log("inside software..")
-            data.version = reqBody.value;
-            const resData = await softwareService.Create(data);
-
-            appResponse.status = true;
-            appResponse.message = "Successfully created Software";
-            appResponse.data = resData;
-
-            return Response.json(appResponse.getResponse(), { status: 201 })
-        }
         else if (resourceName.toLowerCase() == "ticket") {
             console.log("inside ticket..")
-            const resData = await ticketService.Create(reqBody);
+            const resData = await ticketService.Create(reqBody,req,res);
 
             appResponse.status = true;
             appResponse.message = "Successfully created Ticket";

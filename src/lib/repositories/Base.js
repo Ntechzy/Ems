@@ -24,6 +24,11 @@ export class Base {
         return res;
     }
 
+    async Update(filter , dataToUpdate){
+        const res = await this.#modelName.findOneAndUpdate(filter , dataToUpdate);
+        return res;
+    }
+
     async Delete(id){
         const res = await this.#modelName.findOneAndDelete({_id : id});
         return res;

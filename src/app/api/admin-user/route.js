@@ -5,7 +5,7 @@ import employeeModel from '@/modal/employee';
 
 
 export default async function handler(req) {
-    dbconn()
+  dbconn()
   const adminUser = employeeModel.find(user => user.role === 'admin');
   return Response.json({ id: adminUser.id, name: adminUser.name });
 }

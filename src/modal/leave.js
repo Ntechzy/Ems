@@ -1,25 +1,30 @@
 import mongoose from "mongoose";
 
 const leaveSchema = new mongoose.Schema({
-    leaveType:{
+    leaveType: {
         type: String,
-        enum: ['absent','casual']
+        enum: ['absent', 'casual']
     },
-    leaveFrom:{
+    leaveFrom: {
         type: Date,
-        required: [true , "Please provide from which date you want leave"]
+        required: [true, "Please provide from which date you want leave"]
     },
-    leaveFrom:{
+    leaveTo: {
         type: Date,
-        required: [true , "Please provide upto which date you want leave"]
+        required: [true, "Please provide upto which date you want leave"]
     },
-    reason:{
+    reason: {
         type: String,
-        required: [true , "Reason for leave is required"]
+        required: [true, "Reason for leave is required"]
+    },
+    whoApprovedLeave: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: [true, "Please provide who approved leave"]
     }
-    
+
 });
 
 
-const Leave = (mongoose.models.Leave) || mongoose.model("Leave",leaveSchema);
+const Leave = (mongoose.models.Leave) || mongoose.model("Leave", leaveSchema);
 export default Leave;

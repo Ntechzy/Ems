@@ -11,9 +11,11 @@ export async function middleware(request) {
         return NextResponse.redirect(new URL('/login', request.url));
     }
 
-    if (token) {
+    else if (token) {
         const { role, isFormCompleted } = token;
-
+        if (url.pathname.startsWith('/login')) {
+            return NextResponse.redirect(new URL('/', request.url));
+        }
         if (role === 'user') {
             if (
                 url.pathname === '/' ||

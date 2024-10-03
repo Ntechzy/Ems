@@ -61,6 +61,26 @@ export const first=[
       {
         "label": "salary_slot",
         "name": "Salary Slot",
+         "type": "date"
+      },
+      {
+        "label": "account_holder_name",
+        "name": "Account Holder Name",
+         "type": "text"
+      },
+      {
+        "label": "bank_name",
+        "name": "Bank Name",
+         "type": "text"
+      },
+      {
+        "label": "ifsc_code",
+        "name": "IFSC Code",
+         "type": "text"
+      },
+      {
+        "label": "account_number",
+        "name": "Account Number",
          "type": "text"
       },
     

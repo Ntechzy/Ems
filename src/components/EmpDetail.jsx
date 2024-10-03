@@ -2,12 +2,15 @@
 import Input from "@/components/Input";
 import { first, second } from "@/data/form_field";
 import { basicDetailsSchema, moreDetailsSchema } from "@/Validation/EmpValid";
+import axios from "axios";
 import { useState } from "react";
+import { toast } from "react-toastify"; 
+import "react-toastify/dist/ReactToastify.css"; 
 
 const EmpDetail = () => {
   const [data, setData] = useState({
     father_name: "",
-    DOB: "",
+  dob: "",
     permanent_address: "",
     correspondence_address: "",
     blood_group: "",
@@ -16,9 +19,13 @@ const EmpDetail = () => {
     aadhaar_no: "",
     pan_card_no: "",
     date_of_joining: "",
-    salary_slot:"",
+    salary_slot: "",
+    account_holder_name: "", 
+    bank_name: "",            
+    ifsc_code: "",            
+    account_number: "" 
   });
-
+  
   const [errors, setErrors] = useState({});
   const [step, setStep] = useState(0);
 
@@ -31,7 +38,7 @@ const EmpDetail = () => {
     try {
       if (step === 0) {
         await basicDetailsSchema.validate(data, { abortEarly: false });
-        return true;
+        // return true;
       } else if (step === 1) {
         await moreDetailsSchema.validate(data, { abortEarly: false });
         return true;
@@ -61,21 +68,42 @@ const EmpDetail = () => {
     e.preventDefault();
     const isValid = await validateStep();
     if (isValid) {
-      console.log("Form data submitted", data);
-      setData({
-        father_name: "",
-        DOB: "",
-        permanent_address: "",
-        correspondence_address: "",
-        blood_group: "",
-        marital_status: "",
-        highest_qualification: "",
-        aadhaar_no: "",
-        pan_card_no: "",
-        date_of_joining: "",
-        salary_slot: "",
-      });
-      alert("Form submitted successfully");
+      try {
+       
+        const response = await axios.put("/api/updatedetail", data); 
+        
+        if (response.status === 200) {
+          toast.success("Form submitted successfully");
+          // alert("Form submitted successfully");
+          setData({
+            father_name: "",
+             dob:"" ,
+            permanent_address: "",
+            correspondence_address: "",
+            blood_group: "",
+            marital_status: "",
+            highest_qualification: "",
+            aadhaar_no: "",
+            pan_card_no: "",
+            date_of_joining: "",
+            salary_slot: "",
+            account_holder_name: "",  
+            bank_name: "",
+            ifsc_code: "",
+            account_number: ""
+          });
+        } else {
+          toast.error("Failed to submit form");
+          console.log("failed");
+          
+          // alert("Failed to submit form");
+        }
+      } catch (error) {
+        toast.error("Error submitting form");
+         console.log("Error",error.message);
+        
+        // alert("Error submitting form");
+      }
     }
   };
 

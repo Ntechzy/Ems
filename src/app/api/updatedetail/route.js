@@ -4,6 +4,8 @@ import employeeModel from "@/modal/employee";
 import { getServerSession } from "next-auth";
 import { Option } from "../auth/[...nextauth]/option";
 import dobModel from "@/modal/birthday";
+import { encrypt } from "@/encrypt";
+import userModel from "@/modal/user";
 
 export async function PUT(req) {
   console.log("PUT request received");
@@ -26,8 +28,28 @@ export async function PUT(req) {
         blood_group = "",
         marital_status = "",
         highest_qualification = "",
+        account_holder_name = "", 
+        bank_name = "",       
+        ifsc_code = "",          
+        account_number = ""   
       } = await req.json();
 
+      const encryptedPanCardNo = encrypt(pan_card_no);
+      const encryptedAadhaarNo = encrypt(aadhaar_no);
+      const encryptedAccountHolderName = encrypt(account_holder_name);
+      const encryptedBankName = encrypt(bank_name);
+      const encryptedIfscCode = encrypt(ifsc_code);
+      const encryptedAccountNumber = encrypt(account_number);
+      console.log("Encrypted Request data:", {
+        permanent_address,
+        correspondence_address,
+        encryptedPanCardNo,
+        encryptedAadhaarNo,
+        encryptedAccountHolderName,
+        encryptedBankName,
+        encryptedIfscCode,
+        encryptedAccountNumber,
+      });
       console.log("Request data:", {
         permanent_address,
         correspondence_address,
@@ -39,6 +61,10 @@ export async function PUT(req) {
         blood_group,
         marital_status,
         highest_qualification,
+        account_holder_name , 
+        bank_name,           
+        ifsc_code ,           
+        account_number, 
       });
 
       // Convert date strings to Date objects
@@ -47,36 +73,48 @@ export async function PUT(req) {
       //   date_of_joining.split("/").join("-")
       // );
       console.log(session.user);
-
+    const dob_date = new Date (Date.now(dob))
       const dob_id = await dobModel.create({
         name: session.user.username,
-        date: dob,
+        date: dob_date,
       });
 
       const doj = new Date(Date.now(date_of_joining));
       console.log("doj", doj);
 
-      // Update the user record 
+    
       const  id =session.user.id 
       console.log(id);
       
       const updatedUser = await employeeModel.findOneAndUpdate(
-        {user_id:id},
+        { user_id: id },
         {
           permanent_address,
           correspondence_address,
-          pan_card_no,
-          aadhaar_no,
+          pan_card_no: encryptedPanCardNo,
+          aadhaar_no: encryptedAadhaarNo,
           father_name,
           dob: dob_id,
           date_of_joining: doj,
           blood_group,
           marital_status,
           highest_qualification,
+          account_holder_name: encryptedAccountHolderName,
+          bank_name: encryptedBankName,
+          ifsc_code: encryptedIfscCode,
+          account_number: encryptedAccountNumber,
         },
-        { new: true } // Return the updated document
+        { new: true }
       );
       console.log(updatedUser);
+      const updatedIt = await userModel.findByIdAndUpdate(
+        { _id: id }, 
+        {
+          isFormCompleted: true 
+        },
+        { new: true } 
+      );
+      console.log(updatedIt);
       
       if (!updatedUser) {
         return new Response(

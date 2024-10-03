@@ -1,58 +1,60 @@
 import mongoose, { Schema } from "mongoose";
+import { string } from "yup";
 
-const employeeSchema = new mongoose.Schema({
+const employeeSchema = new mongoose.Schema(
+  {
     user_id: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
     permanent_address: {
-        type: String,
-        // required: true
-        default: ""
+      type: String,
+      // required: true
+      default: "",
     },
     correspondence_address: {
-        type: String,
-        // required: true
-        default: ""
+      type: String,
+      // required: true
+      default: "",
     },
     pan_card_no: {
-        type: String,
-        // required: true
-        default: ""
+      type: String,
+      // required: true
+      default: "",
     },
     aadhaar_no: {
-        type: String,
-        // required: true
-        default: ""
+      type: String,
+      // required: true
+      default: "",
     },
     father_name: {
-        type: String,
-        // required: true
-        default: ""
+      type: String,
+      // required: true
+      default: "",
     },
     dob: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Birthday',
-        // required: true
-        default: null
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Birthday",
+      // required: true
+      default: null,
     },
     date_of_joining: {
-        type: Date,
+      type: Date,
     },
     salary: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
     },
     blood_group: {
-        type: String,
-        // required: true
-        default: ""
+      type: String,
+      // required: true
+      default: "",
     },
     marital_status: {
-        type: String,
-        // required: true
-        default: ""
+      type: String,
+      // required: true
+      default: "",
     },
     highest_qualification: {
         type: String,
@@ -80,24 +82,43 @@ const employeeSchema = new mongoose.Schema({
         required: [true, "Who finalized salary is required"]
     },
     salary_slot: {
-        type: Date,
-        // required: true
-        default: ""
+      type: Date,
+      // required: true
+      default: null,
+    },
+    account_holder_name: {
+      type: String,
+      required: true,
+    },
+    bank_name: {
+      type: String,
+      required: true,
+    },
+    ifsc_code: {
+      type: String,
+      required: true,
+    },
+    account_number: {
+      type: String,
+      required: true,
     },
     monthy_percentage: {
-        type: String,
-        // required: true
-        default: ""
+      type: String,
+      // required: true
+      default: "",
     },
     status: {
-        type: Boolean,
-        default: true
+      type: Boolean,
+      default: true,
     },
-    tickets: [{
+    tickets: [
+      {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Ticket'
-    }],
-    leaves: [{
+        ref: "Ticket",
+      },
+    ],
+    leaves: [
+      {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Leave'
     }],
@@ -122,5 +143,6 @@ employeeSchema.pre(/^find/, function (next) {
     next();
 });
 
-const employeeModel = (mongoose.models.Emp) || mongoose.model("Emp", employeeSchema)
-export default employeeModel; 
+const employeeModel =
+  mongoose.models.Emp || mongoose.model("Emp", employeeSchema);
+export default employeeModel;

@@ -16,8 +16,8 @@ export const isUserAuthenticated = async(req,res)=>{
 }
 
 export const validateRole = (sessionUser, allowedRolesArr)=>{
-    const session = sessionUser;
-    if(session && session.user && (allowedRolesArr.includes(session.user.role))){
+    console.log(sessionUser)
+    if(sessionUser && (allowedRolesArr.includes(sessionUser?.role))){
         return true;
     }else{
         throw new AppError("You are not allowed to access this resource" , 401);

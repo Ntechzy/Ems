@@ -3,9 +3,9 @@ import { AppError } from "@/lib/errors/AppError";
 import { AppResponse } from "@/lib/helper/responseJson";
 import {isUserAuthenticated, validateRole} from "@/lib/helper/ValidateUser"
 import { Employee } from "@/lib/repositories";
-import { UserService } from "@/lib/services/user.service";
+import { EmployeeService } from "@/lib/services";
 
-const userService = new UserService(new Employee());
+const employeeService = new EmployeeService(new Employee());
 let appResponse;
 
 export async function GET(req,res){
@@ -19,7 +19,10 @@ export async function GET(req,res){
             const userIdArr = params.id;
             if(userIdArr){
                 const userId = userIdArr[0];
-                const user = await userService.GetById(userId , req , res);
+                if(!userId){
+                    throw new AppError("Please provide correct data" , 400);
+                }
+                const user = await employeeService.GetById(userId , req , res);
                 appResponse.data = user;
 
             }else if(validateRole(sessionUser,["super_admin","admin"])){
@@ -27,7 +30,7 @@ export async function GET(req,res){
                 const limit = parseInt(searchParams.get("limit")) || 10;
                 const offset = (pageNo - 1) * limit;
 
-                const all_users = await userService.GetAllWithPagination(offset , limit);
+                const all_users = await employeeService.GetAllWithPagination(offset , limit);
 
                 appResponse.data = all_users;
 

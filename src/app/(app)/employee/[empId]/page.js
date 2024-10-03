@@ -5,6 +5,7 @@ import { FaRegCalendarAlt, FaTicketAlt } from "react-icons/fa";
 import Input from '@/components/Input';
 import * as Yup from 'yup'
 import axiosRequest from '@/lib/axios';
+import { useSession } from 'next-auth/react';
 
 // leave form schema
 const leaveSchema = Yup.object().shape({
@@ -65,7 +66,7 @@ const EmployeeProfile = ({params}) => {
     //     department: 'IT',
     //     status: 'Active',
     //     firstName: 'Vikas',
-    //     lastName: 'Kumar',
+    //     lastName: 'Kumar',userId
     //     phone: '+9198756231',
     //     address: '227, Behind TMKOC College, Kanpur, India - 400001',
     //     employeeID: 'THMP2C0012',
@@ -95,7 +96,8 @@ const EmployeeProfile = ({params}) => {
     const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
     const [isAccountDetailsModalOpen, setIsAccountDetailsModalOpen] = useState(false);
     const [employee , setEmployee] = useState(sampleEmployeeDetails);
-    const employeeId = params.empId;
+    const userId = params.empId;
+    const { data: session, status } = useSession()
     const [leaveDetails, setLeaveDetails] = useState({
         leaveType: '',
         startDate: '',
@@ -201,6 +203,7 @@ const EmployeeProfile = ({params}) => {
             profilePicture:
               userDetails.profile_photo?.cloud_url ||
               "https://img.freepik.com/free-photo/beautiful-male-half-length-portrait-isolated-white-studio-background-young-emotional-hindu-man-blue-shirt-facial-expression-human-emotions-advertising-concept-standing-smiling_155003-25250.jpg?w=826&t=st=1727176643~exp=1727177243~hmac=d883f4c6ab692bb09bd6684c8e42efc270bca8adb3487e5b4b5a5eaaaf36fab3",
+            user_id: userDetails?.user_id?._id,
             name: userDetails?.user_id?.name,
             type: userDetails?.user_id?.role, // Assuming roles like 'user', 'admin'
             jobTitle: userDetails?.user_id?.designation,
@@ -263,7 +266,7 @@ const EmployeeProfile = ({params}) => {
       
 
     useEffect(()=>{
-        fetchUserDetails(employeeId);
+        fetchUserDetails(userId );
     },[])
     return (
         <div className="bg-gray-100 min-h-screen p-6 ">
@@ -284,16 +287,23 @@ const EmployeeProfile = ({params}) => {
                             <p className="text-gray-500">Location: {employee.location}</p>
                         </div>
                     </div>
-                    {employee.type === "admin" && <button className="bg-red-500 text-white py-1 md:py-2 px-3 md:px-4 rounded">Discontinue</button>}
-                    <div className="flex text-sm md:text-base">
-                        <button onClick={toggleLeaveModal} className="bg-button_blue text-white py-1 md:py-2 px-3 md:px-4 rounded mr-4 flex gap-2 items-center">
-                            <FaRegCalendarAlt />
-                            Apply Leave
-                        </button>
-                        <button onClick={toggleTicketModal} className="bg-yellow-600 text-white py-1 md:py-2 px-3 md:px-4 rounded flex gap-2 items-center">
-                            <FaTicketAlt />
-                            Raise Ticket
-                        </button>
+                    <div className="flex text-sm md:text-base gap-4">
+                        {(session?.user?.role === "admin" && employee?.status == "Active") && <button className="bg-red-500 text-white py-1 md:py-2 px-3 md:px-4 rounded">Discontinue</button>}
+                        {console.log(session , userId , "jfklsjdklfj")}
+                        {
+                            !(session?.user?.role == 'admin' && session?.user?.id != userId  ) ?
+                            <>
+                                <button onClick={toggleLeaveModal} className="bg-button_blue text-white py-1 md:py-2 px-3 md:px-4 rounded mr-4 flex gap-2 items-center">
+                                    <FaRegCalendarAlt />
+                                    Apply Leave
+                                </button>
+                                <button onClick={toggleTicketModal} className="bg-yellow-600 text-white py-1 md:py-2 px-3 md:px-4 rounded flex gap-2 items-center">
+                                    <FaTicketAlt />
+                                    Raise Ticket
+                                </button>
+                            
+                            </>:null
+                        }
                     </div>
                 </div>
                 {/* Manager, Department, and Status */}

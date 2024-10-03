@@ -1,8 +1,9 @@
 'use client'
 import Registration from '@/components/EmplRegister/Registration';
 import Table from '@/components/Table';
-import { useSession } from 'next-auth/react';
-import React, { useState } from 'react'
+import axiosRequest from '@/lib/axios';
+import React, { useEffect, useState } from 'react'
+
 
 const page = () => {
     const employees = [
@@ -10,15 +11,48 @@ const page = () => {
         { id: 'A081C039', name: 'Pankaj Upadhyay', title: 'Software Engineer', location: 'Noida', department: 'IT', skills: ['Full stack', 'NodeJS', '3+'], status: 'Pending', joiningDate: "28-02-2024", link: "/employee/lfjsd" },
     ];
     const [tableData, setTableData] = useState(employees);
+    const [initialTableData , setInitialTableData] = useState(employees);
     const handleSearch = (searchVal) => {
         if (searchVal == "") {
-            setTableData(employees);
+            setTableData(initialTableData);
             return;
         }
         setTableData((prev) => prev.filter(obj => obj.id.toLowerCase().includes(searchVal.toLowerCase()) || obj.name.toLowerCase().includes(searchVal.toLowerCase())))
     }
 
-    const [isModal, setisModal] = useState(false)
+    const [isModal, setisModal] = useState(false);
+
+    const fetchEmployees = async()=>{
+        try {
+            const res = await axiosRequest.get(`/user`);
+            let employees = await res.data;
+            employees = employees.data;
+            console.log(employees);
+            const all_employees = employees?.map((obj)=>{
+                let dt = new Date(obj?.user_id?.createdAt);
+                let joiningDate = `${dt.getDate().toString().padStart(2,"0")}-${(dt.getMonth()+1).toString().padStart(2,"0")}-${dt.getFullYear()}`;
+                return {
+                id:obj?.user_id?.employee_id,
+                name: obj?.user_id?.name,
+                title: obj?.user_id?.designation,
+                location: obj?.user_id?.associated_with,
+                department: obj?.user_id?.department,
+                status: (obj?.status) ? "Active":"Inactive",
+                joiningDate : joiningDate,
+                link: `/employee/${obj?.user_id?._id}`
+                }
+            });
+            console.log(all_employees);
+            setInitialTableData(all_employees);
+            setTableData(all_employees);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    useEffect(()=>{
+        fetchEmployees();
+    },[])
     
 
     return (

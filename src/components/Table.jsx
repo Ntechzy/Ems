@@ -7,6 +7,7 @@ import Link from "next/link";
 const FilterComponent = ({ filters, handleFilterChange, handleClearFilters }) => {
     const [isLocationOpen, setLocationOpen] = useState(false);
     const [isDepartmentOpen, setDepartmentOpen] = useState(false);
+    const [isStatusOpen, setIsStatusOpen] = useState(false);
     const [isDateOfJoiningOpen, setDateOfJoiningOpen] = useState(false);
 
     return (
@@ -61,8 +62,30 @@ const FilterComponent = ({ filters, handleFilterChange, handleClearFilters }) =>
                 )}
             </div>
 
-            {/* Date of Joining Filter */}
+            {/* Status Filter */}
             <div className="mb-4">
+                <button className="w-full flex justify-between items-center py-2" onClick={() => setIsStatusOpen(!isStatusOpen)}>
+                    <span>Status</span>
+                    <IoIosArrowDown className={`transform ${isStatusOpen ? 'rotate-180' : ''}`} />
+                </button>
+                {isStatusOpen && (
+                    <div className="mt-2 ml-2">
+                        <select
+                            name="department"
+                            className="w-full p-2 border border-gray-300 rounded"
+                            value={filters.currentStatus}
+                            onChange={handleFilterChange}>
+                            <option value="">Select Status</option>
+                            {filters.status.map((val, i) => (
+                                <option key={i} value={val}>{val}</option>
+                            ))}
+                        </select>
+                    </div>
+                )}
+            </div>
+
+            {/* Date of Joining Filter */}
+            {/* <div className="mb-4">
                 <button className="w-full flex justify-between items-center py-2" onClick={() => setDateOfJoiningOpen(!isDateOfJoiningOpen)}>
                     <span>Date of Joining</span>
                     <IoIosArrowDown className={`transform ${isDateOfJoiningOpen ? 'rotate-180' : ''}`} />
@@ -78,7 +101,7 @@ const FilterComponent = ({ filters, handleFilterChange, handleClearFilters }) =>
                         />
                     </div>
                 )}
-            </div>
+            </div> */}
         </div>
     );
 };
@@ -87,12 +110,15 @@ const Table = ({ isModal, data, title = "Employees", subtitle = "Manage all your
     const [searchVal, setSeachVal] = useState('');
     const [showModal, setShowModal] = useState(false);
     const [filters, setFilters] = useState({
-        location: ["Kanpur", "Noida"], // List of selected locations
-        locations: ["Kanpur", "Noida", "Delhi", "Mumbai"], // Available locations
+        location: ["Kanpur", "Noida"], 
+        locations: ["Kanpur", "Noida"],
         department: '',
-        departments: ["IT", "HR", "Engineering", "Finance", "Marketing"], // Available departments
-        dateOfJoining: ''
+        departments: ["IT", "HR", "Engineering", "Finance", "Marketing"], 
+        dateOfJoining: '',
+        currentStatus:"",
+        status:["Active","Inactive"]
     });
+    const [filteredData , setFilteredData] = useState(data);
 
     const handleSearchSubmit = (e) => {
         setSeachVal(e.target.value);
@@ -122,22 +148,25 @@ const Table = ({ isModal, data, title = "Employees", subtitle = "Manage all your
         });
     };
 
-    const filteredData = data.filter((employee) => {
-        const isLocationMatch = filters.location.length === 0 || filters.location.includes(employee.location);
-        const isDepartmentMatch = filters.department === '' || employee.department === filters.department;
 
-        const [day, month, year] = employee.joiningDate.split('-');
-        const formattedEmployeeDate = `${year}-${month}-${day}`;
-        const employeeDate = new Date(formattedEmployeeDate);
-
-        const filterDate = new Date(filters.dateOfJoining);
-
-        const isDateMatch = filters.dateOfJoining === '' || employeeDate <= filterDate;
-
-        return isLocationMatch && isDepartmentMatch && isDateMatch;
-    });
-
-
+    useEffect(()=>{
+        let filterData = data.filter((employee) => {
+            const isLocationMatch = filters.location.length === 0 || filters.location.includes(employee?.location?.toLowerCase().replace(/\b\w/g, l => l.toUpperCase()));
+            const isDepartmentMatch = filters.department === '' || (employee.department.toUpperCase()) === filters.department;
+            const isStatusMatch = filters.currentStatus === '' || (employee.status.toUpperCase()) === filters.currentStatus;
+    
+            // const [day, month, year] = employee.joiningDate.split('-');
+            // const formattedEmployeeDate = `${year}-${month}-${day}`;
+            // const employeeDate = new Date(formattedEmployeeDate);
+    
+            // const filterDate = new Date(filters.dateOfJoining);
+    
+            // const isDateMatch = filters.dateOfJoining === '' || employeeDate <= filterDate;
+    
+            return isLocationMatch && isDepartmentMatch && isStatusMatch;
+        });
+        setFilteredData(filterData);
+    },[filters , data]);
 
 
     return (

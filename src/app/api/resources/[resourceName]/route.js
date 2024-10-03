@@ -158,6 +158,16 @@ export async function POST(req, { params }) {
 
             return Response.json(appResponse.getResponse(), { status: 201 })
         }
+        else if (resourceName.toLowerCase() == "ticket") {
+            console.log("inside ticket..")
+            const resData = await ticketService.Create(reqBody);
+
+            appResponse.status = true;
+            appResponse.message = "Successfully created Ticket";
+            appResponse.data = resData;
+
+            return Response.json(appResponse.getResponse(), { status: 201 })
+        }
 
         appResponse.status = false;
         appResponse.message = "Wrong Input";

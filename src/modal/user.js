@@ -46,8 +46,9 @@ const userSchema = new mongoose.Schema(
       default: false,
     },
     department: {
-      type: "string",
-      required: [true, "department is required"],
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Department',
+      required: [true, "department is required"]
     },
   },
   { timestamps: true }

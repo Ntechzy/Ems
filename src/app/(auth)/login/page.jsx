@@ -4,6 +4,7 @@ import Input from '@/components/Input';
 import { sinInValidate } from '@/Validation/AuthValidation';
 import { signIn, useSession } from 'next-auth/react';
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 
 const Page = () => {
     const router = useRouter()
@@ -25,10 +26,11 @@ const Page = () => {
                 password: value.password,
             })
             if (data.error) {
+                toast.error(data.error)
                 console.log(data.error);
             }
             else {
-                console.log("login sucessfull");
+                toast.success('Login successful')
                 router.push('/')
             }
         } catch (error) {

@@ -1,8 +1,5 @@
 import * as Yup from 'yup'
 export const RegistrationValidate = Yup.object({
-
-    employee_id: Yup.string().required("employee_id is required"),
-
     name: Yup.string().required("name is required"),
 
     salary: Yup.number().required("salary is required"),
@@ -17,7 +14,15 @@ export const RegistrationValidate = Yup.object({
 
     password: Yup.string().required('* Password is required'),
 
-    location: Yup.string().required("location address is required"),
+    alloted_hardwares: Yup.array()
+        .min(1, "At least one hardware must be allocated")
+        .of(Yup.string()),
+    alloted_softwares: Yup.array()
+        .min(1, "At least one software must be allocated")
+        .of(Yup.string()),
+
+    associated_with: Yup.string()
+        .required("Associated with is required"),
 
 });
 

@@ -1,5 +1,5 @@
 'use client'
-import { fields } from '../../data/RegistrationData'
+import { associated_with, fields, role } from '../../data/RegistrationData'
 import Input from '../Input'
 import { useEffect, useState } from 'react'
 import { genratePassword } from '@/lib/GenratePassword'
@@ -8,6 +8,7 @@ import { RegistrationValidate } from '@/Validation/AuthValidation'
 import CheckboxGroup from '../CheckboxGroup'
 import axios from 'axios'
 import toast from 'react-hot-toast'
+import { SelectField } from './SelectField'
 const Registration = ({ close }) => {
     const [data, setData] = useState(null)
     const [err, seterr] = useState()
@@ -32,8 +33,6 @@ const Registration = ({ close }) => {
             try {
                 const res = await axios.get('/api/registration-data')
                 setData(res.data.data)
-                console.log(res.data.data);
-
             } catch (error) {
                 toast.error(error.message)
             }
@@ -56,19 +55,47 @@ const Registration = ({ close }) => {
         }
     }
 
+    console.log(value);
+
     const handleSubmit = async (e) => {
-        e.preventDefault()
+        e.preventDefault();
+        console.log("Starting submission...");
+
         try {
-            await RegistrationValidate.validate(value, { abortEarly: false })
-            seterr(null)
+            await RegistrationValidate.validate(value, { abortEarly: false });
+
+            seterr(null);
+            const response = await axios.post('/api/sign-up', value);
+
+            console.log(response);
+
+
+            if (response.status === 200) {
+                toast.success(response.data.message);
+                if (response.data.emailRes) {
+                    toast.success(response.data.emailRes.message);
+                }
+            } else {
+                toast.error(response.data.message);
+                if (response.data.error) {
+                    toast.error(response.data.error);
+                }
+            }
         } catch (error) {
             const newError = {};
-            error.inner.forEach(elem => {
-                newError[elem.path] = elem.message
-            });
-            seterr(newError)
+            if (error.inner) {
+                error.inner.forEach(elem => {
+                    newError[elem.path] = elem.message;
+                });
+            } else {
+                toast.error("Unexpected error:");
+                toast.error(error.response.data.message);
+                { error.response.data.error && toast.error(error.response.data.error) }
+
+            }
+            seterr(newError);
         }
-    }
+    };
 
     const genrate = (e) => {
         e.preventDefault()
@@ -76,9 +103,6 @@ const Registration = ({ close }) => {
         const newPassword = genratePassword(16)
         setValue({ ...value, ["password"]: newPassword });
     };
-
-    console.log(value);
-
 
     return (
         <div className='my-2 flex flex-col sm:w-[80%] md:w-[50%] bg-white justify-center m-auto py-3 px-4 rounded-xl'>
@@ -127,77 +151,95 @@ const Registration = ({ close }) => {
                         {/* designation, department, associated with */}
                         <div className='flex gap-3 my-3'>
 
-                            <select name="associated_with" id="associated_with" className=" p-2 focus:border-blue-500 w-full placeholder-transparent rounded-md text-blue-900 border-2 outline-none peer border-gray-400" onChange={handleChange}>
+                            <div>
 
-                                <option value="option from db" >associated_with</option>
+                                <SelectField
+                                    label="Associated With"
+                                    id="associated_with"
+                                    options={associated_with.map(item => ({ value: item.name, label: item.name }))}
+                                    value={value.associated_with}
+                                    defaultOption="Select Associated With"
+                                    onChange={handleChange}
+                                />
+                                {err && <div className='text-red-700 text-center'> {err["associated_with"]}</div>}
+                            </div>
+                            <div>
 
-                            </select>
+                                <SelectField
+                                    label="Department"
+                                    id="department"
+                                    defaultOption="Select Department"
+                                    options={data.department.map(dep => ({ value: dep._id, label: dep.name }))}
+                                    value={value.department}
+                                    onChange={handleChange}
+                                />
+                            </div>
 
-                            {/* designation and department */}
-                            <select name="department" id="department" className=" p-2 focus:border-blue-500 w-full placeholder-transparent rounded-md text-blue-900 border-2 outline-none peer border-gray-400" onChange={handleChange}>
-                                <option selected disabled>Select department</option>
-                                {
-                                    data.department.map((obj, i) => (
-                                        <option key={i} id='department' value={obj.name}>{obj.name}</option>
-                                    ))
-                                }
-                            </select>
+                            <div>
 
-
-                            <select name="designation" id="designation" className=" p-2 focus:border-blue-500 w-full placeholder-transparent rounded-md text-blue-900 border-2 outline-none peer border-gray-400" onChange={handleChange}>
-
-                                <option selected disabled>Select department</option >
-                                {
-                                    data.department.map((obj) => (
-                                        obj.name == value.department &&
-
-                                        obj.designations.map((des, i) => (
-                                            <option key={i} value={des._id}> {des.name}</option>
-
-                                        ))
-                                    ))
-                                }
-
-                            </select>
+                                <SelectField
+                                    label="Designation"
+                                    id="designation"
+                                    defaultOption="Select Designation"
+                                    options={
+                                        data.department
+                                            .filter(dep => dep._id === value.department)[0]?.designations
+                                            .map(des => ({ value: des._id, label: des.name })) || []
+                                    }
+                                    value={value.designation}
+                                    onChange={handleChange}
+                                />
+                            </div>
                         </div>
 
                         {/* interview done by & who finalize salary */}
                         <div className='flex gap-3 my-3'>
 
-                            <select name="interview_done_by" id="interview_done_by" className=" p-2 focus:border-blue-500 w-full placeholder-transparent rounded-md text-blue-900 border-2 outline-none peer border-gray-400" onChange={handleChange}>
+                            <div>
 
+                                <SelectField
+                                    label="Interview Done By"
+                                    id="interview_done_by"
+                                    defaultOption="Interview Done by"
+                                    options={
+                                        data.department
+                                            .filter(dep => dep._id === value.department)[0]?.manager
+                                            .map(man => ({ value: man._id, label: man.name })) || []
+                                    }
+                                    value={value.interview_done_by}
+                                    onChange={handleChange}
+                                />
+                                {err && <div className='text-red-700 text-center'> {err["interview_done_by"]}</div>}
+                            </div>
 
+                            <div>
 
-                                <option selected disabled >Interview Done by</option>
+                                <SelectField
+                                    label="Who Finalizes Salary"
+                                    id="who_finalize_salary"
+                                    defaultOption="Who Finalizes Salary"
+                                    options={
+                                        data.department
+                                            .filter(dep => dep._id === value.department)[0]?.manager
+                                            .map(man => ({ value: man._id, label: man.name })) || []
+                                    }
+                                    value={value.who_finalize_salary}
+                                    onChange={handleChange}
+                                />
+                                {err && <div className='text-red-700 text-center'> {err["who_finalize_salary"]}</div>}
+                            </div>
 
-                                {
-                                    data.department.map((obj) => (
-                                        obj.name == value.department &&
+                            <div>
 
-                                        obj.manager.map((des, i) => (
-                                            <option key={i} value={des._id}> {des.name}</option>
-
-                                        ))
-                                    ))
-                                }
-
-                            </select>
-
-                            <select name="who_finalize_salary" id="who_finalize_salary" className=" p-2 focus:border-blue-500 w-full placeholder-transparent rounded-md text-blue-900 border-2 outline-none peer border-gray-400" onChange={handleChange}>
-                                <option selected disabled >Who finalize salary </option>
-
-                                {
-                                    data.department.map((obj) => (
-                                        obj.name == value.department &&
-
-                                        obj.manager.map((des, i) => (
-                                            <option key={i} value={des._id}> {des.name}</option>
-
-                                        ))
-                                    ))
-                                }
-                            </select>
-
+                                <SelectField
+                                    label="Role"
+                                    id="role"
+                                    defaultOption="Select Role"
+                                    options={role.map(r => ({ value: r.name, label: r.name }))}
+                                    value={value.role}
+                                    onChange={handleChange}
+                                />
+                            </div>
                         </div>
 
                         {/* allocated hardware & softwarre */}
@@ -211,6 +253,9 @@ const Registration = ({ close }) => {
                                     handleChange={handleCheckboxChange}
                                     name="alloted_hardwares"
                                 />
+
+                                {err && <div className='text-red-700 text-center'> {err["alloted_hardwares"]}</div>}
+
                             </div>
 
                             <div className='my-3'>
@@ -221,7 +266,9 @@ const Registration = ({ close }) => {
                                     handleChange={handleCheckboxChange}
                                     name="alloted_softwares"
                                 />
+                                {err && <div className='text-red-700 text-center'> {err["alloted_softwares"]}</div>}
                             </div>
+
                         </div>
 
                         <button type='submit' className='bg-button_blue p-2 md:w-[20%] flex justify-center items-center m-auto rounded-xl text-white text-lg'>Submit</button>

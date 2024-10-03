@@ -38,7 +38,7 @@ const employeeSchema = new mongoose.Schema({
         default: null
     },
     date_of_joining: {
-         type: Date, 
+        type: Date,
     },
     salary: {
         type: String,
@@ -58,24 +58,26 @@ const employeeSchema = new mongoose.Schema({
         type: String,
         // required: true
         default: ""
-    },  
+    },
     alloted_hardwares: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Hardware'
+        required: [true, "alloted_hardwares is required"],
+        ref: 'Hardware',
     }],
     alloted_softwares: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Software'
+        ref: 'Software',
+        required: [true, "alloted_softwares is required"],
     }],
     interview_done_by: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: true
+        required: [true, "Interview Done By is required "]
     },
     who_finalized_salary: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: true
+        required: [true, "Who finalized salary is required"]
     },
     salary_slot: {
         type: Date,
@@ -99,7 +101,7 @@ const employeeSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Leave'
     }],
-    profile_photo:{
+    profile_photo: {
         client_id: String,
         cloud_url: String
     }
@@ -107,10 +109,18 @@ const employeeSchema = new mongoose.Schema({
     timestamps: true
 });
 
-employeeSchema.pre(/^find/, function(next) {
+employeeSchema.path('alloted_hardwares').validate(function (value) {
+    return value.length > 0;
+}, 'At least one hardware must be allocated.');
+
+employeeSchema.path('alloted_softwares').validate(function (value) {
+    return value.length > 0;
+}, 'At least one software must be allocated.');
+
+employeeSchema.pre(/^find/, function (next) {
     this.populate('user_id');
     next();
-  });
+});
 
 const employeeModel = (mongoose.models.Emp) || mongoose.model("Emp", employeeSchema)
 export default employeeModel; 

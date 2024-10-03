@@ -41,7 +41,7 @@ export const Option = {
                 token.id = user._id?.toString()
                 token.role = user.role
                 token.username = user.name
-                token.isFormCompleted = true
+                token.isFormCompleted = user.isFormCompleted
             }
             return token
         },

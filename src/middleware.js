@@ -37,10 +37,14 @@ export async function middleware(request) {
         }
 
         if (role === 'admin') {
-            if (!isFormCompleted && url.pathname.startsWith('/employee/')) {
-                return NextResponse.redirect(new URL('/', request.url));
+            if (!isFormCompleted) {
+                if (url.pathname !== '/') {
+                    return NextResponse.redirect(new URL('/', request.url));
+                }
+                return NextResponse.next();
             }
             if (isFormCompleted && url.pathname === '/') {
+                console.log("inside2");
                 return NextResponse.redirect(new URL(`/employee/${token.id}`, request.url));
             }
 

@@ -3,6 +3,9 @@ import { AppError } from "@/lib/errors/AppError";
 import { AppResponse } from "@/lib/helper/responseJson";
 import { Hardware, Software, Department, BirthDay, Ticket, Employee } from "@/lib/repositories";
 import { BirthDayService, DepartmentService, EmployeeService, HardwareService, SoftwareService, TicketService } from "@/lib/services";
+import { getServerSession } from "next-auth";
+import { Option } from "../../auth/[...nextauth]/option";
+import userModel from "@/modal/user";
 
 const hardwareRepo = new Hardware();
 const hardwareService = new HardwareService(hardwareRepo);
@@ -114,9 +117,11 @@ export async function GET(req, { params }) {
 
 export async function POST(req, res) {
     try {
+        const session = await getServerSession(Option);
+        await dbconn();
         appResponse = new AppResponse();
         const resourceName = res.params.resourceName;
-        const reqBody = await req.json();
+        const reqBody = await req.json(); 
        
 
         if(resourceName.toLowerCase() == "hardware" || resourceName.toLowerCase() == "software"){
@@ -163,22 +168,29 @@ export async function POST(req, res) {
         }
 
         else if (resourceName.toLowerCase() == "ticket") {
-            console.log("inside ticket..")
-            const resData = await ticketService.Create(reqBody,req,res);
-
+            const userId = session?.user?.id;
+            console.log("Fetching username for user with ObjectId:", userId);
+        
+            const userfind = await userModel.findById(userId); 
+        
+            if (!userfind) {
+                appResponse.status = false;
+                appResponse.message = "User not found";
+                return Response.json(appResponse.getResponse(), { status: 404 });
+            }
+        
+            const username = userfind.name;
+            console.log("Fetched username:", username);
+        
+            const resData = await ticketService.Create(reqBody, req, res);
+        
             appResponse.status = true;
             appResponse.message = "Successfully created Ticket";
             appResponse.data = resData;
-
-            return Response.json(appResponse.getResponse(), { status: 201 })
+        
+            return Response.json(appResponse.getResponse(), { status: 201 });
         }
-
-        appResponse.status = false;
-        appResponse.message = "Wrong Input";
-
-        return Response.json(appResponse.getResponse(), { status: 400 })
-
-
+        
     } catch (err) {
         appResponse = new AppResponse();
         appResponse.status = false;

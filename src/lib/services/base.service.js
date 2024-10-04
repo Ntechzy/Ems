@@ -45,4 +45,9 @@ export class BaseService {
         const deleted_item = await this.#repository.Delete(id);
         return deleted_item;
     }
+
+    async Update(filter , dataToUpdate){
+        const updated_item = await this.#repository.Update(filter , dataToUpdate);
+        return updated_item;
+    }
 }

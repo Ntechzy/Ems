@@ -8,6 +8,8 @@ import axiosRequest from '@/lib/axios';
 import { useSession } from 'next-auth/react';
 import Loader from '@/components/Loader';
 import axios from 'axios';
+import UpdatePassword from '@/components/UpdatePassword';
+import { associated_with } from '@/data/RegistrationData';
 
 // leave form schema
 const leaveSchema = Yup.object().shape({
@@ -29,7 +31,7 @@ const EmployeeProfile = ({ params }) => {
     const [isTicketModalOpen, setIsTicketModalOpen] = useState(false);
     const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
     const [isAccountDetailsModalOpen, setIsAccountDetailsModalOpen] = useState(false);
-    const [employee, setEmployee] = useState(sampleEmployeeDetails);
+    const [employee, setEmployee] = useState();
     const [isUpdatePass, setisUpdatePass] = useState(true)
     const userId = params.empId;
     const { data: session, status } = useSession()
@@ -40,17 +42,17 @@ const EmployeeProfile = ({ params }) => {
         reason: '',
     });
     const [accountDetails, setAccountDetails] = useState({
-        holderName: employee.accountDetails.holderName,
-        bankName: employee.accountDetails.bankName,
-        ifscCode: employee.accountDetails.ifscCode,
-        accountNumber: employee.accountDetails.accountNumber
+        account_holder_name: employee?.accountDetails.holderName,
+        bank_name: employee?.accountDetails.bankName,
+        ifsc_code: employee?.accountDetails.ifscCode,
+        account_number: employee?.accountDetails.accountNumber
     });
 
     const handleSaveAccountDetails = async (e) => {
       e.preventDefault();
     
       try {
-        const response = await axios.post('/api/update-account-details', accountDetails);
+        const response = await axios.put('/employee/66fbd35f9c6a406dc87d11fa', accountDetails);
     
         if (response.status === 200) {
           // Handle successful update, maybe close the modal or show a success message
@@ -72,11 +74,17 @@ const EmployeeProfile = ({ params }) => {
       e.preventDefault();
     
       try {
-        const response = await axios.post('/api/update-basic-details', basicDetails, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+        const response = await axios.put('/api/user', {userId,...{
+          name: basicDetails?.firstName + " " + basicDetails?.lastName,
+            email: basicDetails?.email,
+            countryCode: '+91',
+            mobile_no: basicDetails?.phone,
+            secondaryEmail: '',
+            correspondence_address: basicDetails?.address,
+            associated_with: basicDetails?.location,
+            dob: basicDetails?.dob
+        }})
+    
     
         if (response.status === 200) {
           // Handle successful update, maybe close the modal or show a success message
@@ -91,19 +99,18 @@ const EmployeeProfile = ({ params }) => {
       }
     };
     
-    
-    
+
 
     const [basicDetails, setBasicDetails] = useState({
-        workEmail: employee.email,
-        firstName: employee.firstName,
-        lastName: employee.lastName,
+      firstName: employee?.firstName,
+        workEmail: employee?.email,
+        lastName: employee?.lastName,
         countryCode: '+91',
-        phoneNumber: employee.phone,
+        phoneNumber: employee?.phone,
         secondaryEmail: '',
-        location: employee.location,
-        address: employee.address,
-        dob: employee.dob
+        address: employee?.address,
+        location: employee?.location,
+        dob: employee?.dob
     });
 
     const validateForm = async () => {
@@ -217,21 +224,21 @@ const EmployeeProfile = ({ params }) => {
             };
             setEmployee(employee);
             setBasicDetails({
-                workEmail: employee.email,
-                firstName: employee.firstName,
-                lastName: employee.lastName,
+                email: employee?.email,
+                name: employee?.firstName,
+                // name: employee?.lastName,
                 countryCode: '+91',
-                phoneNumber: employee.phone,
+                mobile_no: employee?.phone,
                 secondaryEmail: '',
-                location: employee.location,
-                address: employee.address,
-                dob: employee.dob
+                associated_with: employee?.location,
+                correspondence_address: employee?.address,
+                dob: employee?.dob
             });
             setAccountDetails({
-                holderName: employee.accountDetails.holderName,
-                bankName: employee.accountDetails.bankName,
-                ifscCode: employee.accountDetails.ifscCode,
-                accountNumber: employee.accountDetails.accountNumber
+                holderName: employee?.accountDetails.holderName,
+                bankName: employee?.accountDetails.bankName,
+                ifscCode: employee?.accountDetails.ifscCode,
+                accountNumber: employee?.accountDetails.accountNumber
             })
 
             return employee;
@@ -252,15 +259,15 @@ const EmployeeProfile = ({ params }) => {
                     {/* Profile Info */}
                     <div className="flex items-center">
                         <img
-                            src={employee.profilePicture}
+                            src={employee?.profilePicture}
                             alt="Profile"
                             className="rounded-full w-20 h-20 mr-4 object-cover"
                         />
                         <div>
-                            <h2 className="text-2xl font-semibold">{employee.name}</h2>
-                            <p className="text-gray-500">{employee.jobTitle}</p>
-                            <p className="text-sm text-gray-400">{employee.email}</p>
-                            <p className="text-gray-500">Location: {employee.location}</p>
+                            <h2 className="text-2xl font-semibold">{employee?.name}</h2>
+                            <p className="text-gray-500">{employee?.jobTitle}</p>
+                            <p className="text-sm text-gray-400">{employee?.email}</p>
+                            <p className="text-gray-500">Location: {employee?.location}</p>
                         </div>
                     </div>
                     <div className="flex text-sm md:text-base gap-4">
@@ -286,16 +293,16 @@ const EmployeeProfile = ({ params }) => {
                 <div className="mt-4 flex space-x-4 text-sm md:text-base">
                     <div>
                         <span className="text-gray-600">Manager: </span>
-                        <span className="font-semibold">{employee.manager}</span>
+                        <span className="font-semibold">{employee?.manager}</span>
                     </div>
                     <div>
                         <span className="text-gray-600">Department: </span>
-                        <span className="font-semibold">{employee.department}</span>
+                        <span className="font-semibold">{employee?.department}</span>
                     </div>
                     <div>
                         <span className="text-gray-600">Status: </span>
-                        <span className={`text-white font-semibold p-1  md:mt-0 md:p-2 rounded ${employee.status === 'Active' ? 'bg-green-500' : 'bg-red-500'}`}>
-                            {employee.status}
+                        <span className={`text-white font-semibold p-1  md:mt-0 md:p-2 rounded ${employee?.status === 'Active' ? 'bg-green-500' : 'bg-red-500'}`}>
+                            {employee?.status}
                         </span>
                     </div>
                 </div>
@@ -343,27 +350,27 @@ const EmployeeProfile = ({ params }) => {
                             <div className="grid grid-cols-2 gap-6 mt-4">
                                 <div>
                                     <p className="text-gray-500">First name</p>
-                                    <p>{employee.firstName}</p>
+                                    <p>{employee?.firstName}</p>
                                 </div>
                                 <div>
                                     <p className="text-gray-500">Last name</p>
-                                    <p>{employee.lastName}</p>
+                                    <p>{employee?.lastName}</p>
                                 </div>
                                 <div>
                                     <p className="text-gray-500">Phone</p>
-                                    <p>{employee.phone}</p>
+                                    <p>{employee?.phone}</p>
                                 </div>
                                 <div>
                                     <p className="text-gray-500">Location</p>
-                                    <p>{employee.location}</p>
+                                    <p>{employee?.location}</p>
                                 </div>
                                 <div>
                                     <p className="text-gray-500">Address</p>
-                                    <p>{employee.address}</p>
+                                    <p>{employee?.address}</p>
                                 </div>
                                 <div>
                                     <p className="text-gray-500">Date of Birth</p>
-                                    <p>{employee.dob}</p>
+                                    <p>{employee?.dob}</p>
                                 </div>
                             </div>
 
@@ -378,27 +385,27 @@ const EmployeeProfile = ({ params }) => {
                             <div className="grid grid-cols-2 gap-6 mt-4">
                                 <div>
                                     <p className="text-gray-500">ID</p>
-                                    <p>{employee.employeeID}</p>
+                                    <p>{employee?.employeeID}</p>
                                 </div>
                                 <div>
                                     <p className="text-gray-500">Job Title</p>
-                                    <p>{employee.jobTitle}</p>
+                                    <p>{employee?.jobTitle}</p>
                                 </div>
                                 <div>
                                     <p className="text-gray-500">Employee Type</p>
-                                    <p>{employee.employeeType}</p>
+                                    <p>{employee?.employeeType}</p>
                                 </div>
                                 <div>
                                     <p className="text-gray-500">Start Date</p>
-                                    <p>{employee.startDate}</p>
+                                    <p>{employee?.startDate}</p>
                                 </div>
                                 <div>
                                     <p className="text-gray-500">Department</p>
-                                    <p>{employee.department}</p>
+                                    <p>{employee?.department}</p>
                                 </div>
                                 <div>
                                     <p className="text-gray-500">Salary Slot</p>
-                                    <p>{employee.salarySlot}</p>
+                                    <p>{employee?.salarySlot}</p>
                                 </div>
                             </div>
                         </div>
@@ -412,19 +419,19 @@ const EmployeeProfile = ({ params }) => {
                             <div className="grid grid-cols-2 gap-6 mt-4">
                                 <div>
                                     <p className="text-gray-500">Holder Name</p>
-                                    <p>{employee.accountDetails.holderName}</p>
+                                    <p>{employee?.accountDetails.holderName}</p>
                                 </div>
                                 <div>
                                     <p className="text-gray-500">Bank Name</p>
-                                    <p>{employee.accountDetails.bankName}</p>
+                                    <p>{employee?.accountDetails.bankName}</p>
                                 </div>
                                 <div>
                                     <p className="text-gray-500">IFSC Code</p>
-                                    <p>{employee.accountDetails.ifscCode}</p>
+                                    <p>{employee?.accountDetails.ifscCode}</p>
                                 </div>
                                 <div>
                                     <p className="text-gray-500">Account Number</p>
-                                    <p>{employee.accountDetails.accountNumber}</p>
+                                    <p>{employee?.accountDetails.accountNumber}</p>
                                 </div>
                             </div>
                         </div>
@@ -434,7 +441,7 @@ const EmployeeProfile = ({ params }) => {
                     <div className="bg-white p-6">
                         <h3 className="text-xl font-semibold text-gray-800 mb-4 border-b pb-2 border-gray-200">Hardware Assigned</h3>
                         <ul className="mt-4 space-y-4 text-base">
-                            {employee.hardware.map((item, index) => (
+                            {employee?.hardware.map((item, index) => (
                                 <li key={index} className="flex items-center gap-4 p-4 rounded-lg border bg-gray-50 hover:bg-white transition-all duration-200 ease-in-out shadow-sm hover:shadow-md">
                                     <span className="font-bold text-indigo-600">{item.name}:</span>
                                     <span className="text-gray-700">{item.model}</span>
@@ -447,7 +454,7 @@ const EmployeeProfile = ({ params }) => {
                     <div className="bg-white p-6">
                         <h3 className="text-xl font-semibold text-gray-800 mb-4 border-b pb-2 border-gray-200">Software Licenses</h3>
                         <ul className="mt-4 space-y-4 text-base">
-                            {employee.software.map((item, index) => (
+                            {employee?.software.map((item, index) => (
                                 <li key={index} className="flex gap-4 p-4 rounded-lg border bg-gray-50 hover:shadow-md transition-shadow">
                                     <span className="font-bold text-button_blue">{item.name}:</span>
                                     <span className="text-gray-700">{item.version}</span>
@@ -735,7 +742,7 @@ const EmployeeProfile = ({ params }) => {
                         <h2 className="text-2xl font-semibold mb-3">Edit Account Details</h2>
                         <hr />
                         {/* Form for Account Details */}
-                        <form onSubmit={(e) => handleInputChange(e, accountDetails, setAccountDetails)} className="mt-4">
+                        <form onSubmit={handleSaveAccountDetails} className="mt-4">
 
                             {/* Holder Name */}
                             <Input

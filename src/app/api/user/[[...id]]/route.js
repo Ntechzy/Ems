@@ -2,10 +2,11 @@ import dbconn from "@/lib/dbconn";
 import { AppError } from "@/lib/errors/AppError";
 import { AppResponse } from "@/lib/helper/responseJson";
 import {isUserAuthenticated, validateRole} from "@/lib/helper/ValidateUser"
-import { Employee } from "@/lib/repositories";
-import { EmployeeService } from "@/lib/services";
+import { Employee, User } from "@/lib/repositories";
+import { EmployeeService, UserService } from "@/lib/services";
 
 const employeeService = new EmployeeService(new Employee());
+const userService = new UserService(new User());
 let appResponse;
 
 export async function GET(req,res){
@@ -48,5 +49,36 @@ export async function GET(req,res){
             return Response.json(appResponse.getResponse(),{status:err.statusCode});
         }
         return Response.json(appResponse.getResponse(),{status:500});
+    }
+}
+
+export async function PATCH(req , res){
+    try {
+        await dbconn();
+        appResponse = new AppResponse();
+        const resource = res.params.id;
+        const reqBody = await req.json();
+        if(resource == "updateRole" ){
+            if(!reqBody.userId && !reqBody.role){
+                throw new AppError("Please Provide Complete Data" , 400);
+            }
+
+            await userService.ChangeUserRole(reqBody.userId , reqBody.role , req , res);
+            appResponse.status = true;
+            appResponse.message = "Role Updated Successfully";
+            return Response.json(appResponse.getResponse());            
+        }
+
+    } catch (err) {
+        appResponse = new AppResponse();
+        appResponse.status = false;
+        appResponse.message = "Error While Updating Items";
+        appResponse.error = err.message;
+
+        return Response.json(appResponse.getResponse(),
+            {
+                status: 500,
+            }
+        )
     }
 }

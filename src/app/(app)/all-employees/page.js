@@ -34,6 +34,7 @@ const page = () => {
                 let dt = new Date(obj?.user_id?.createdAt);
                 let joiningDate = `${dt.getDate().toString().padStart(2,"0")}-${(dt.getMonth()+1).toString().padStart(2,"0")}-${dt.getFullYear()}`;
                 return {
+                user_id:obj?.user_id?._id,
                 id:obj?.user_id?.employee_id,
                 name: obj?.user_id?.name,
                 title: obj?.user_id?.designation,
@@ -41,7 +42,8 @@ const page = () => {
                 department: obj?.user_id?.department,
                 status: (obj?.status) ? "Active":"Inactive",
                 joiningDate : joiningDate,
-                link: `/employee/${obj?.user_id?._id}`
+                link: `/employee/${obj?.user_id?._id}`,
+                role: obj?.user_id?.role
                 }
             });
             console.log(all_employees);

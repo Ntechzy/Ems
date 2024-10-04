@@ -3,9 +3,7 @@ import { AppError } from "@/lib/errors/AppError";
 import { AppResponse } from "@/lib/helper/responseJson";
 import { Hardware, Software, Department, BirthDay, Ticket, Employee } from "@/lib/repositories";
 import { BirthDayService, DepartmentService, EmployeeService, HardwareService, SoftwareService, TicketService } from "@/lib/services";
-import { getServerSession } from "next-auth";
-import { Option } from "../../auth/[...nextauth]/option";
-import userModel from "@/modal/user";
+
 
 const hardwareRepo = new Hardware();
 const hardwareService = new HardwareService(hardwareRepo);
@@ -117,7 +115,6 @@ export async function GET(req, { params }) {
 
 export async function POST(req, res) {
     try {
-        const session = await getServerSession(Option);
         await dbconn();
         appResponse = new AppResponse();
         const resourceName = res.params.resourceName;
@@ -182,6 +179,29 @@ export async function POST(req, res) {
         appResponse = new AppResponse();
         appResponse.status = false;
         appResponse.message = "Error While Creating Items";
+        appResponse.error = err.message;
+
+        return Response.json(appResponse.getResponse(),
+            {
+                status: 500,
+            }
+        )
+    }
+}
+
+export async function PATCH(req , res){
+    try {
+        await dbconn();
+        appResponse = new AppResponse();
+        const resourceName = res.params.resourceName;
+        if(resourceName == "user"){
+            
+        }
+
+    } catch (err) {
+        appResponse = new AppResponse();
+        appResponse.status = false;
+        appResponse.message = "Error While Updating Items";
         appResponse.error = err.message;
 
         return Response.json(appResponse.getResponse(),

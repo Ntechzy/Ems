@@ -4,6 +4,11 @@ import { FaFilter } from "react-icons/fa";
 import { IoIosArrowDown } from "react-icons/io";
 import Link from "next/link";
 import Loader from "./Loader";
+import { SelectField } from "./EmplRegister/SelectField";
+import Select from "./Select";
+import axiosRequest from "@/lib/axios";
+import toast from "react-hot-toast";
+import { useSession } from "next-auth/react";
 
 const FilterComponent = ({ filters, handleFilterChange, handleClearFilters }) => {
     const [isLocationOpen, setLocationOpen] = useState(false);
@@ -101,7 +106,9 @@ const Table = ({ isModal, data, title = "Employees", subtitle = "Manage all your
         status:["Active","Inactive"]
     });
     const [filteredData , setFilteredData] = useState(data);
-
+    const tableHeaders = ["ID","Name","Location","Department","Date of Joining","Status"]
+    const availableRole = [{label:"Employee",value:"user"},{label:"Hr",value:"admin"}];
+    const {data:session} = useSession();
     const handleSearchSubmit = (e) => {
         setSeachVal(e.target.value);
         handleSearchChange(e.target.value);
@@ -141,9 +148,36 @@ const Table = ({ isModal, data, title = "Employees", subtitle = "Manage all your
             })
         }
     }
+    const handleRoleChangeDropdown = async(userId , role)=>{
+        try {
+            const res = await toast.promise(
+                axiosRequest.patch("/user/updateRole" , {
+                    userId,
+                    role
+                }),
+                {
+                    loading:"Updating User Role.." ,
+                    success:"User Role Updated Successfully" , 
+                    error:"Error While Updating User Role"
+                },
+                {
+                    position:"top-center"
+                }
+                // return res;
+            )
+    
+        } catch (err) {
+            toast.error("Some Error Occured While Updating User Role");
+            console.log(err);
+        }
+    }
 
     useEffect(()=>{
         handlePrepareFilterOptions();
+        // remove Role from tableHeaders ( To be added)
+        // if(!(session?.user.role == "super_admin")){
+        //     tableHeaders[tableHeaders.at]
+        // } ;
     },[data])
 
     useEffect(()=>{
@@ -183,12 +217,11 @@ const Table = ({ isModal, data, title = "Employees", subtitle = "Manage all your
                 <table className="min-w-full bg-white border rounded">
                     <thead>
                         <tr className="bg-gray-100">
-                            <th className="py-2 px-4 border">ID</th>
-                            <th className="py-2 px-4 border">Name</th>
-                            <th className="py-2 px-4 border">Location</th>
-                            <th className="py-2 px-4 border">Department</th>
-                            <th className="py-2 px-4 border">Date of Joining</th>
-                            <th className="py-2 px-4 border">Status</th>
+                            {
+                                tableHeaders.map((val,i)=>(
+                                    <th className="py-2 px-4 border" key={i}>{val}</th>
+                                ))
+                            }
                         </tr>
                     </thead>
                     <tbody>
@@ -209,6 +242,9 @@ const Table = ({ isModal, data, title = "Employees", subtitle = "Manage all your
                                 <td className="py-2 px-4 border text-center">
                                     <span className="inline-block bg-gray-200 text-gray-700 text-xs px-2 py-1 rounded">{employee.joiningDate}</span>
                                 </td>
+                               {session?.user.role == "super_admin" && <td className="py-2 px-4 border text-center">
+                                    <Select options={availableRole} selectedOptionValue={employee.role} onChange={handleRoleChangeDropdown} userId={employee.user_id} key={index}/>
+                                </td>}
                                 <td className="py-2 px-4 border">
                                     <div className={`inline-block px-2 py-1 text-xs rounded-full text-white ${employee.status === "Active" ? "bg-green-500" : employee.status === "Pending" ? "bg-blue-500" : "bg-red-500"}`}>
                                         {employee.status}
@@ -218,10 +254,10 @@ const Table = ({ isModal, data, title = "Employees", subtitle = "Manage all your
                         )) :
                             !loading ?
                             <tr className="text-center" >
-                                <td colSpan={6} className="p-4 text-gray-500  ">No Data</td>
+                                <td colSpan={tableHeaders.length} className="p-4 text-gray-500  ">No Data</td>
                             </tr>:
                             <tr className="text-center">
-                                 <td colSpan={6} className="p-4 text-gray-500  ">
+                                 <td colSpan={tableHeaders.length} className="p-4 text-gray-500  ">
                                     <Loader/>
                                  </td>
                             </tr>

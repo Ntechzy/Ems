@@ -1,6 +1,9 @@
 'use client';
+import Loader from '@/components/Loader';
 import axios from 'axios';
+import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
+import { FaUser } from 'react-icons/fa';
 
 const Tickets = () => {
   const [tickets, setTickets] = useState([]);
@@ -30,12 +33,14 @@ const Tickets = () => {
 
   // Loading state
   if (loading) {
-    return <div className="text-center">Loading...</div>;
+    return <div className="min-h-screen w-full flex justify-center items-center">
+      <Loader/>
+    </div>;
   }
 
   // Error state
   if (error) {
-    return <div className="text-red-500 text-center">Error: {error}</div>;
+    return <div className="text-red-500 min-h-screen w-full flex justify-center items-center">Error: {error}</div>;
   }
 
   // Render tickets
@@ -43,15 +48,25 @@ const Tickets = () => {
     <div className="container mx-auto p-6">
       <h1 className="text-3xl font-bold text-center mb-6">Ticket Dashboard</h1>
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {tickets.map(ticket => (
-          <div key={ticket._id} className="bg-white shadow-lg rounded-lg p-4">
-          <h1 className="text-xl font-bold">{ticket.name}</h1>
-            <h2 className="text-xl font-semibold">{ticket.message}</h2>
-            <p className="text-gray-600">
+        {tickets?.length ? tickets.map(ticket => (
+          <div key={ticket._id} className="bg-orange-100 shadow-lg rounded-lg p-4 md:p-6 lg:p-8 cursor-pointer hover:shadow-2xl">
+            <p className="text-2xl font-semibold flex items-center mb-4 gap-2">
+              <FaUser   className="mr-2 text-orange-400" /> 
+              <Link href={ticket.user ? `/employee/${ticket.user._id}` : "#"}>
+                {ticket?.user?.name}
+              </Link>
+              <span className='text-base p-1 bg-orange-400'>{ticket?.user?.employee_id}</span>
+            </p>
+            <h2 className="text-xl font-medium mb-2 text-blue-600">{ticket.message}</h2>
+            <p className="text-gray-100 text-sm bg-gray-400 p-2 rounded-lg">
               <strong>Created At:</strong> {new Date(ticket.createdAt).toLocaleString()}
             </p>
-          </div>
-        ))}
+        </div>
+        )): 
+        <div className='text-center text-xl'>
+          No Ticket
+        </div>
+        }
       </div>
     </div>
   );

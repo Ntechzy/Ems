@@ -168,20 +168,7 @@ export async function POST(req, res) {
         }
 
         else if (resourceName.toLowerCase() == "ticket") {
-            const userId = session?.user?.id;
-            console.log("Fetching username for user with ObjectId:", userId);
-        
-            const userfind = await userModel.findById(userId); 
-        
-            if (!userfind) {
-                appResponse.status = false;
-                appResponse.message = "User not found";
-                return Response.json(appResponse.getResponse(), { status: 404 });
-            }
-        
-            const username = userfind.name;
-            console.log("Fetched username:", username);
-        
+                  
             const resData = await ticketService.Create(reqBody, req, res);
         
             appResponse.status = true;

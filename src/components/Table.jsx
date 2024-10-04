@@ -3,6 +3,7 @@ import Input from "./Input";
 import { FaFilter } from "react-icons/fa";
 import { IoIosArrowDown } from "react-icons/io";
 import Link from "next/link";
+import Loader from "./Loader";
 
 const FilterComponent = ({ filters, handleFilterChange, handleClearFilters }) => {
     const [isLocationOpen, setLocationOpen] = useState(false);
@@ -11,7 +12,7 @@ const FilterComponent = ({ filters, handleFilterChange, handleClearFilters }) =>
     const [isDateOfJoiningOpen, setDateOfJoiningOpen] = useState(false);
 
     return (
-        <div className="absolute top-14 p-4 w-[350px] bg-gray-100 shadow-2xl rounded-lg border-2">
+        <div className="absolute top-14 p-4 w-[350px] bg-gray-100 shadow-2xl rounded-lg border-2" >
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-lg font-semibold">Filter</h2>
                 <button className="text-red-500 font-semibold" onClick={handleClearFilters}>CLEAR</button>
@@ -71,7 +72,7 @@ const FilterComponent = ({ filters, handleFilterChange, handleClearFilters }) =>
                 {isStatusOpen && (
                     <div className="mt-2 ml-2">
                         <select
-                            name="department"
+                            name="currentStatus"
                             className="w-full p-2 border border-gray-300 rounded"
                             value={filters.currentStatus}
                             onChange={handleFilterChange}>
@@ -83,30 +84,11 @@ const FilterComponent = ({ filters, handleFilterChange, handleClearFilters }) =>
                     </div>
                 )}
             </div>
-
-            {/* Date of Joining Filter */}
-            {/* <div className="mb-4">
-                <button className="w-full flex justify-between items-center py-2" onClick={() => setDateOfJoiningOpen(!isDateOfJoiningOpen)}>
-                    <span>Date of Joining</span>
-                    <IoIosArrowDown className={`transform ${isDateOfJoiningOpen ? 'rotate-180' : ''}`} />
-                </button>
-                {isDateOfJoiningOpen && (
-                    <div className="mt-2 ml-2">
-                        <input
-                            type="date"
-                            name="dateOfJoining"
-                            value={filters.dateOfJoining}
-                            onChange={handleFilterChange}
-                            className="w-full p-2 border border-gray-300 rounded"
-                        />
-                    </div>
-                )}
-            </div> */}
         </div>
     );
 };
 
-const Table = ({ isModal, data, title = "Employees", subtitle = "Manage all your full-time, part-time & contractor employees.", addBtnTitle = "EMPLOYEE", handleSearchChange = () => { } }) => {
+const Table = ({ isModal, data, title = "Employees", subtitle = "Manage all your full-time, part-time & contractor employees.", addBtnTitle = "EMPLOYEE", handleSearchChange = () => { } ,loading}) => {
     const [searchVal, setSeachVal] = useState('');
     const [showModal, setShowModal] = useState(false);
     const [filters, setFilters] = useState({
@@ -139,29 +121,37 @@ const Table = ({ isModal, data, title = "Employees", subtitle = "Manage all your
     };
 
     const handleClearFilters = () => {
-        setFilters({
-            location: [],
-            locations: ["Kanpur", "Noida", "Delhi", "Mumbai"],
-            department: '',
-            departments: ["IT", "HR", "Engineering", "Finance", "Marketing"],
-            dateOfJoining: ''
-        });
+        handlePrepareFilterOptions()
     };
 
+    const handlePrepareFilterOptions = ()=>{
+        const locations = [] , departments=[];
+        if(data.length){
+            data.map(employee=>{
+                !(locations.find(str=>str == employee?.location)) && employee.location && locations.push(employee?.location);
+                !(departments.find(department=>department == employee?.department?.name)) && employee.department && departments.push(employee?.department?.name);
+            })
+            setFilters({
+                location:[],
+                locations: locations,
+                department:'',
+                departments:departments,
+                currentStatus:"",
+                status:["Active","Inactive"]
+            })
+        }
+    }
+
+    useEffect(()=>{
+        handlePrepareFilterOptions();
+    },[data])
 
     useEffect(()=>{
         let filterData = data.filter((employee) => {
-            const isLocationMatch = filters.location.length === 0 || filters.location.includes(employee?.location?.toLowerCase().replace(/\b\w/g, l => l.toUpperCase()));
-            const isDepartmentMatch = filters.department === '' || (employee.department.toUpperCase()) === filters.department;
-            const isStatusMatch = filters.currentStatus === '' || (employee.status.toUpperCase()) === filters.currentStatus;
-    
-            // const [day, month, year] = employee.joiningDate.split('-');
-            // const formattedEmployeeDate = `${year}-${month}-${day}`;
-            // const employeeDate = new Date(formattedEmployeeDate);
-    
-            // const filterDate = new Date(filters.dateOfJoining);
-    
-            // const isDateMatch = filters.dateOfJoining === '' || employeeDate <= filterDate;
+            console.log(employee , 'employee',filters.currentStatus)
+            const isLocationMatch = filters.location.length === 0 || filters.locations.includes(employee?.location);
+            const isDepartmentMatch = filters.department === '' || (employee.department?.name.toUpperCase()) === filters.department;
+            const isStatusMatch = filters.currentStatus === '' || (employee.status.toUpperCase()) === filters.currentStatus.toUpperCase();
     
             return isLocationMatch && isDepartmentMatch && isStatusMatch;
         });
@@ -183,7 +173,7 @@ const Table = ({ isModal, data, title = "Employees", subtitle = "Manage all your
                     <Input label={"Search ID, Name & Title"} name={"Search"} value={searchVal} handleChange={handleSearchSubmit} />
                 </div>
                 <div className="flex items-center justify-end relative">
-                    <button className="bg-gray-200 text-gray-600 px-4  rounded flex items-center p-2 hover:bg-gray-300" onClick={() => setShowModal(!showModal)}>
+                    <button className="bg-gray-200 text-gray-600 px-4  rounded flex items-center p-2 hover:bg-gray-300 cursor-pointer" onClick={() => setShowModal(!showModal)} disabled={loading}>
                         <FaFilter className="mr-2" /> FILTER
                     </button>
                     {showModal && <FilterComponent filters={filters} handleFilterChange={handleFilterChange} handleClearFilters={handleClearFilters} />}
@@ -215,7 +205,7 @@ const Table = ({ isModal, data, title = "Employees", subtitle = "Manage all your
                                     </Link>
                                 </td>
                                 <td className="py-2 px-4 border">{employee.location}</td>
-                                <td className="py-2 px-4 border font-bold text-center">{employee.department}</td>
+                                <td className="py-2 px-4 border font-bold text-center">{employee.department?.name}</td>
                                 <td className="py-2 px-4 border text-center">
                                     <span className="inline-block bg-gray-200 text-gray-700 text-xs px-2 py-1 rounded">{employee.joiningDate}</span>
                                 </td>
@@ -226,8 +216,14 @@ const Table = ({ isModal, data, title = "Employees", subtitle = "Manage all your
                                 </td>
                             </tr>
                         )) :
+                            !loading ?
                             <tr className="text-center" >
                                 <td colSpan={6} className="p-4 text-gray-500  ">No Data</td>
+                            </tr>:
+                            <tr className="text-center">
+                                 <td colSpan={6} className="p-4 text-gray-500  ">
+                                    <Loader/>
+                                 </td>
                             </tr>
                         }
                     </tbody>

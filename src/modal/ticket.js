@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const ticketSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Users",
+        ref: "User",
         required: true,
     },
     message: {
@@ -13,6 +13,12 @@ const ticketSchema = new mongoose.Schema({
     }
 
 }, { timestamps: true });
+
+
+ticketSchema.pre(/^find/, function (next) {
+    this.populate('user');
+    next();
+});
 
 const TicketModel = (mongoose.models.Ticket) || mongoose.model("Ticket", ticketSchema);
 

@@ -33,4 +33,14 @@ export const sinInValidate = Yup.object({
 
     password: Yup.string().required("* Enter Your password"),
 
-}) 
+})
+
+export const password = Yup.object({
+
+    newPass: Yup.string().required("* Enter Your password").matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/, "* password should be of minimum 8 characters, at least 1 uppercase letter, 1 lowercase letter, 1 number and 1 special character"),
+
+    confirmPass: Yup.string()
+        .required("* Enter Confirm Password")
+        .oneOf([Yup.ref('newPass'), null], "* New Password and Confirm Passwaord Should be Same")
+
+})

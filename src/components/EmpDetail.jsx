@@ -4,13 +4,13 @@ import { first, second } from "@/data/form_field";
 import { basicDetailsSchema, moreDetailsSchema } from "@/Validation/EmpValid";
 import axios from "axios";
 import { useState } from "react";
-import { toast } from "react-toastify"; 
-import "react-toastify/dist/ReactToastify.css"; 
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const EmpDetail = () => {
   const [data, setData] = useState({
     father_name: "",
-  dob: "",
+    dob: "",
     permanent_address: "",
     correspondence_address: "",
     blood_group: "",
@@ -20,12 +20,12 @@ const EmpDetail = () => {
     pan_card_no: "",
     date_of_joining: "",
     salary_slot: "",
-    account_holder_name: "", 
-    bank_name: "",            
-    ifsc_code: "",            
-    account_number: "" 
+    account_holder_name: "",
+    bank_name: "",
+    ifsc_code: "",
+    account_number: ""
   });
-  
+
   const [errors, setErrors] = useState({});
   const [step, setStep] = useState(0);
 
@@ -69,15 +69,14 @@ const EmpDetail = () => {
     const isValid = await validateStep();
     if (isValid) {
       try {
-       
-        const response = await axios.put("/api/updatedetail", data); 
-        
+
+        const response = await axios.put("/api/updatedetail", data);
+
         if (response.status === 200) {
-          toast.success("Form submitted successfully");
-          // alert("Form submitted successfully");
+          toast.success("Form submitted successfully"); 
           setData({
             father_name: "",
-             dob:"" ,
+            dob: "",
             permanent_address: "",
             correspondence_address: "",
             blood_group: "",
@@ -87,7 +86,7 @@ const EmpDetail = () => {
             pan_card_no: "",
             date_of_joining: "",
             salary_slot: "",
-            account_holder_name: "",  
+            account_holder_name: "",
             bank_name: "",
             ifsc_code: "",
             account_number: ""
@@ -95,14 +94,12 @@ const EmpDetail = () => {
         } else {
           toast.error("Failed to submit form");
           console.log("failed");
-          
-          // alert("Failed to submit form");
+ 
         }
       } catch (error) {
         toast.error("Error submitting form");
-         console.log("Error",error.message);
-        
-        // alert("Error submitting form");
+        console.log("Error", error.message);
+ 
       }
     }
   };
@@ -135,21 +132,19 @@ const EmpDetail = () => {
         {/* Progress Indicator */}
         <div className="flex justify-between items-center mb-6">
           <div
-            className={`${
-              step === 0
+            className={`${step === 0
                 ? "bg-blue-600 text-white"
                 : "bg-gray-200 text-gray-600"
-            } rounded-full p-4 w-12 h-12 flex items-center justify-center font-bold`}
+              } rounded-full p-4 w-12 h-12 flex items-center justify-center font-bold`}
           >
             1
           </div>
           <div className="flex-grow h-1 bg-gray-300 mx-4"></div>
-          <div 
-            className={`${
-              step === 1
+          <div
+            className={`${step === 1
                 ? "bg-blue-600 text-white"
                 : "bg-gray-200 text-gray-600"
-            } rounded-full p-4 w-12 h-12 flex items-center justify-center font-bold`}
+              } rounded-full p-4 w-12 h-12 flex items-center justify-center font-bold`}
           >
             2
           </div>

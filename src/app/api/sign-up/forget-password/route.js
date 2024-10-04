@@ -1,21 +1,21 @@
-import dbconn from "@/lib/dbconn";
-import { getServerSession } from "next-auth";
-import { Option } from "../../auth/[...nextauth]/option";
+import dbconn from "@/lib/dbconn"; 
 import userModel from "@/modal/user";
 import crypto from 'crypto';
-import { resetMail } from "@/lib/resend";
-export async function GET(req) {
+import { resetMail } from "@/lib/resend"; 
+export async function POST(req) {
     await dbconn()
-    const session = await getServerSession(Option)
-
     try {
-        if (!session) {
+        const { empId } = await req.json()
+
+        if (!empId) {
             return Response.json({
                 sucess: false,
-                message: "Please Login First"
-            }, { status: 401 })
+                message: "Employee ID is required"
+            }, { status: 400 })
         }
-        const user = await userModel.findById(session.user.id)
+
+        const user = await userModel.findOne({ employee_id: empId })
+        
         if (!user) {
             return Response.json({
                 sucess: false,
@@ -31,7 +31,10 @@ export async function GET(req) {
 
         const expiration = new Date(Date.now() + 10 * 60 * 1000);
 
-
+        user.resetToken = token
+        user.resetTokenExpiration = expiration
+        await user.save()
+        
         const emailRes = await resetMail(user.name, user.email, link);
 
         if (!emailRes.sucess) {
@@ -49,7 +52,7 @@ export async function GET(req) {
         return Response.json({
             sucess: true,
             message: "Reset Mail Sent Sucessfully"
-        })
+        }, { status: 200 })
     } catch (error) {
         return Response.json({
             sucess: false,
@@ -57,5 +60,4 @@ export async function GET(req) {
             error: error.message
         }, { status: 500 })
     }
-    return Response.json({ message: 'GET request received', session });
 }

@@ -1,3 +1,4 @@
+import * as Yup from 'yup';
 import { object, string, number, date } from "yup";
 
 export const basicDetailsSchema = object({
@@ -11,13 +12,11 @@ export const basicDetailsSchema = object({
   father_name: string().required("Father's name is required"),
   DOB: date()
     .test("DOB", "Date of birth is required", (value) => {
-        return value !== "";
+      return value !== "";
     })
-  
+
 });
 
-// Schema validation for more details (you can extend this)
-import * as Yup from 'yup'; // Import Yup if not already imported
 
 export const moreDetailsSchema = Yup.object({
   pan_card_no: Yup.string().required("PAN Card number is required"),
@@ -28,7 +27,7 @@ export const moreDetailsSchema = Yup.object({
     .test("date_of_joining", "Date of joining is required", (value) => {
       return value !== "";
     }),
-  
+
   // Add validation for new fields
   account_holder_name: Yup.string().required("Account holder name is required"),
   bank_name: Yup.string().required("Bank name is required"),

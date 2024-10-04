@@ -7,6 +7,7 @@ import * as Yup from 'yup'
 import axiosRequest from '@/lib/axios';
 import { useSession } from 'next-auth/react';
 import Loader from '@/components/Loader';
+import axios from 'axios';
 
 // leave form schema
 const leaveSchema = Yup.object().shape({
@@ -45,6 +46,53 @@ const EmployeeProfile = ({ params }) => {
         accountNumber: employee?.accountDetails?.accountNumber
     });
 
+    const handleSaveAccountDetails = async (e) => {
+      e.preventDefault();
+    
+      try {
+        const response = await axios.post('/api/update-account-details', accountDetails);
+    
+        if (response.status === 200) {
+          // Handle successful update, maybe close the modal or show a success message
+          console.log('Account details updated successfully');
+          toggleAccountModal(); // Close modal after successful save
+        } else {
+          // Handle failure
+          console.error('Failed to update account details');
+        }
+      } catch (error) {
+        console.error('Error updating account details:', error);
+      }
+    };
+    
+
+
+
+    const handleSaveDetails = async (e) => {
+      e.preventDefault();
+    
+      try {
+        const response = await axios.post('/api/update-basic-details', basicDetails, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+    
+        if (response.status === 200) {
+          // Handle successful update, maybe close the modal or show a success message
+          console.log('Basic details updated successfully');
+          toggleDetailsModal(); // Close modal after successful save
+        } else {
+          // Handle failure
+          console.error('Failed to update basic details');
+        }
+      } catch (error) {
+        console.error('Error updating basic details:', error);
+      }
+    };
+    
+    
+    
 
     const [basicDetails, setBasicDetails] = useState({
         workEmail: employee?.email,
@@ -123,9 +171,6 @@ const EmployeeProfile = ({ params }) => {
     const handleRaiseTicket = () => {
         toggleTicketModal();
     };
-    const handleSaveDetails = (e) => {
-        e.preventDefault();
-    }
 
     const fetchUserDetails = async (userId) => {
         try {

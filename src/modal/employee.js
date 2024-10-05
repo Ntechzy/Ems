@@ -105,12 +105,12 @@ const employeeSchema = new mongoose.Schema(
         ref: "Ticket",
       },
     ],
-    leaves: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Leave'
-      }
-    ],
+    // leaves: [
+    //   {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'Leave'
+    //   }
+    // ],
     profile_photo: {
       client_id: String,
       cloud_url: String

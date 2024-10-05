@@ -28,6 +28,7 @@ const EmployeeProfile = ({ params }) => {
     const { data: session, status } = useSession()
     const [leaveDetails, setLeaveDetails] = useState({
         leaveType: '',
+        managerToAsk: '',
         startDate: '',
         endDate: '',
         reason: '',
@@ -44,17 +45,19 @@ const EmployeeProfile = ({ params }) => {
         e.preventDefault();
 
         try {
-            const response = await axios.put('/api/user', {userId,...{
-                name: basicDetails?.firstName + " " + basicDetails?.lastName,
-                  email: basicDetails?.email,
-                //   countryCode: '+91',
-                  mobile_no: basicDetails?.phone,
-                //   secondaryEmail: '',
-                  correspondence_address: basicDetails?.address,
-                  associated_with: basicDetails?.location,
-                  dob: basicDetails?.dob
-              }})
-      
+            const response = await axios.put('/api/user', {
+                userId, ...{
+                    name: basicDetails?.firstName + " " + basicDetails?.lastName,
+                    email: basicDetails?.email,
+                    //   countryCode: '+91',
+                    mobile_no: basicDetails?.phone,
+                    //   secondaryEmail: '',
+                    correspondence_address: basicDetails?.address,
+                    associated_with: basicDetails?.location,
+                    dob: basicDetails?.dob
+                }
+            })
+
             setIsDetailsModalOpen(!isDetailsModalOpen);
             if (response.status === 200) {
                 alert('Details updated successfully');
@@ -90,7 +93,7 @@ const EmployeeProfile = ({ params }) => {
 
     const [basicDetails, setBasicDetails] = useState({
         firstName: employee?.firstName,
-        lastName: employee?.lastName ,
+        lastName: employee?.lastName,
         workEmail: employee?.email,
 
         countryCode: '+91',
@@ -143,7 +146,7 @@ const EmployeeProfile = ({ params }) => {
             const res = await axiosRequest.get(`/user/${userId}`);
             const userDetails = res.data.data;
             console.log(userDetails);
-            
+
             const employee = {
                 profilePicture:
                     userDetails.profile_photo?.cloud_url ||
@@ -186,14 +189,14 @@ const EmployeeProfile = ({ params }) => {
             setEmployee(employee);
             setBasicDetails({
                 firstName: employee?.firstName,
-        lastName: employee?.lastName ,
-        workEmail: employee?.email,
-        countryCode: '+91',
-        phoneNumber: employee?.phone,
-        secondaryEmail: '',
-        address: employee?.address,
-        location: employee?.location,
-        dob: employee?.dob
+                lastName: employee?.lastName,
+                workEmail: employee?.email,
+                countryCode: '+91',
+                phoneNumber: employee?.phone,
+                secondaryEmail: '',
+                address: employee?.address,
+                location: employee?.location,
+                dob: employee?.dob
             });
             setAccountDetails({
                 holderName: employee?.accountDetails.holderName,
@@ -430,7 +433,7 @@ const EmployeeProfile = ({ params }) => {
                     handleInputChange={handleInputChange}
                     setLeaveFormErrors={setLeaveFormErrors}
                     leaveDetails={leaveDetails}
-                    leaveFormErrors={leaveFormErrors}  />
+                    leaveFormErrors={leaveFormErrors} />
             )}
 
             {/* Raise Ticket Modal */}

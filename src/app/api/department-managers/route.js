@@ -21,7 +21,7 @@ export async function GET(req) {
         if (!session && !id) {
             return Response.json({
                 success: false,
-                msg: 'Please Login'
+                message: 'Please Login'
             }, { status: 401 });
         }
 
@@ -32,7 +32,7 @@ export async function GET(req) {
             if (!user || !user.department) {
                 return Response.json({
                     success: false,
-                    msg: 'user or department not found'
+                    message: 'user or department not found'
                 }, { status: 404 });
             }
 
@@ -43,19 +43,21 @@ export async function GET(req) {
         }
 
         if (!department) {
-            return Response.json({ success: false, msg: 'department not found' }, { status: 404 });
+            return Response.json({
+                success: false,
+                message: 'department not found'
+            }, { status: 404 });
         }
 
         return Response.json({
             success: true,
-            message:"",
             department,
         }, { status: 200 });
 
     } catch (error) {
         return Response.json({
             success: false,
-            msg: `Error: ${error.message}`,
+            message: `Error: ${error.message}`,
         }, { status: 500 });
     }
 }

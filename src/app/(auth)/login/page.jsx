@@ -2,7 +2,7 @@
 import { useRouter } from 'next/navigation';
 import Input from '@/components/Input';
 import { sinInValidate } from '@/Validation/AuthValidation';
-import { signIn, useSession } from 'next-auth/react';
+import { signIn } from 'next-auth/react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { handleError } from '@/lib/helper/YupResponseHandler';

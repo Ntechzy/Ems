@@ -1,6 +1,7 @@
 import { Resend } from 'resend';
 import { OnBoarding } from '../../email/Onboarding';
 import { Updatepassword } from '../../email/Updatepassword';
+import { LeaveRequestEmail } from '../../email/Leave';
 
 
 const resend = new Resend(process.env.API_KEY);
@@ -46,6 +47,30 @@ export const resetMail = async (name, email, link) => {
         return {
             sucess: false,
             message: "Unable to send password change mail ! try again later "
+        }
+    }
+}
+
+
+export const leaveMail = async (name, email, leaveType, leaveFrom, leaveTo, reason) => {
+    try {
+        await resend.emails.send({
+            from: 'onboarding@resend.dev',
+            to: email,
+            subject: `${name} :- Asking For ${leaveType} Leave `,
+            react: LeaveRequestEmail({ name, leaveType, leaveFrom, leaveTo, reason })
+        });
+        return {
+            sucess: true,
+            message: "Email for password change sent sucessfully ! "
+        }
+    } catch (error) {
+        console.log("error", error);
+
+        return {
+            sucess: false,
+            message: "Unable to send leave Request for now ! try again later ",
+            error
         }
     }
 } 

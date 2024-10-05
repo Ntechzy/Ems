@@ -7,6 +7,5 @@ import { TicketService } from "./ticket.service"
 import { BirthDayService } from "./birthday.service"
 import {UserService} from './user.service'
 import {EmployeeService} from './employee.service'
-import {UserService} from './user.service'
 
 export {HardwareService , SoftwareService , DepartmentService , BankDetailsService , LeaveService , TicketService , BirthDayService , EmployeeService,UserService}

@@ -4,8 +4,6 @@ import { AppResponse } from "@/lib/helper/responseJson";
 import {isUserAuthenticated, validateRole} from "@/lib/helper/ValidateUser"
 import { Employee, User } from "@/lib/repositories";
 import { EmployeeService, UserService } from "@/lib/services";
-import { Employee, User } from "@/lib/repositories";
-import { EmployeeService, UserService } from "@/lib/services";
 
 const employeeService = new EmployeeService(new Employee());
 const userService = new UserService(new User());

@@ -72,7 +72,7 @@ const employeeSchema = new mongoose.Schema(
       required: [true, "Who finalized salary is required"]
     },
     salary_slot: {
-      type: Date,
+      type: String,
       default: null,
     },
     account_holder_name: {

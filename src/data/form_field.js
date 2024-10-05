@@ -61,7 +61,7 @@ export const first=[
       {
         "label": "salary_slot",
         "name": "Salary Slot",
-         "type": "date"
+         "type": "text"
       },
       {
         "label": "account_holder_name",

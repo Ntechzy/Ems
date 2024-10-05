@@ -48,9 +48,9 @@ const EmployeeProfile = ({ params }) => {
             const response = await axios.put('/api/user', {userId,...{
                 name: basicDetails?.firstName + " " + basicDetails?.lastName,
                   email: basicDetails?.email,
-                  countryCode: '+91',
+                //   countryCode: '+91',
                   mobile_no: basicDetails?.phone,
-                  secondaryEmail: '',
+                //   secondaryEmail: '',
                   correspondence_address: basicDetails?.address,
                   associated_with: basicDetails?.location,
                   dob: basicDetails?.dob
@@ -92,8 +92,9 @@ const EmployeeProfile = ({ params }) => {
 
     const [basicDetails, setBasicDetails] = useState({
         firstName: employee?.firstName,
+        lastName: employee?.lastName ,
         workEmail: employee?.email,
-        lastName: employee?.lastName,
+
         countryCode: '+91',
         phoneNumber: employee?.phone,
         secondaryEmail: '',
@@ -142,6 +143,8 @@ const EmployeeProfile = ({ params }) => {
         try {
             const res = await axiosRequest.get(`/user/${userId}`);
             const userDetails = res.data.data;
+            console.log(userDetails);
+            
             const employee = {
                 profilePicture:
                     userDetails.profile_photo?.cloud_url ||
@@ -183,15 +186,15 @@ const EmployeeProfile = ({ params }) => {
             };
             setEmployee(employee);
             setBasicDetails({
-                email: employee?.email,
-                name: employee?.firstName,
-                // name: employee?.lastName,
-                countryCode: '+91',
-                mobile_no: employee?.phone,
-                secondaryEmail: '',
-                associated_with: employee?.location,
-                correspondence_address: employee?.address,
-                dob: employee?.dob
+                firstName: employee?.firstName,
+        lastName: employee?.lastName ,
+        workEmail: employee?.email,
+        countryCode: '+91',
+        phoneNumber: employee?.phone,
+        secondaryEmail: '',
+        address: employee?.address,
+        location: employee?.location,
+        dob: employee?.dob
             });
             setAccountDetails({
                 holderName: employee?.accountDetails.holderName,

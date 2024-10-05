@@ -87,7 +87,7 @@ export async function PUT(req, res) {
     try {   
         appResponse = new AppResponse();
         await dbconn();
-      const {userId, name, email, associated_with, account_holder_name, bank_name, ifsc_code, account_number, mobile_no } = await req.json();
+      const {userId, name, email, mobile_no, correspondence_address,associated_with, account_holder_name, bank_name, ifsc_code, account_number } = await req.json();
   
       // Update the User model fields
       await userService.Update(
@@ -97,7 +97,9 @@ export async function PUT(req, res) {
             name: name, 
             email: email, 
             mobile_no: mobile_no,
-            associated_with: associated_with
+            associated_with: associated_with,
+            
+            
           }
         }
       );
@@ -111,6 +113,7 @@ export async function PUT(req, res) {
             bank_name:bank_name,
             ifsc_code:ifsc_code,  
             account_number:account_number,
+            correspondence_address:correspondence_address
           }
         }
       );

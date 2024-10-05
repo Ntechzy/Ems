@@ -1,48 +1,59 @@
-import dbconn from "@/lib/dbconn"
-import { getServerSession } from "next-auth"
-import { Option } from "../auth/[...nextauth]/option"
-import userModel from "@/modal/user"
-import Department from "@/modal/department"
+import dbconn from "@/lib/dbconn";
+import { getServerSession } from "next-auth";
+import { Option } from "../auth/[...nextauth]/option";
+import userModel from "@/modal/user";
+import Department from "@/modal/department";
+
+const fetchDepartment = async (id) => {
+    return Department.findById(id)
+        .populate('manager', 'name email')
+        .select('manager');
+};
 
 export async function GET(req) {
-    await dbconn()
+    await dbconn();
+
     try {
-        const value = req.nextUrl.searchParams
-        var department;
-        const id = value.get('id')
-        if (id) {
-            department = await Department.findById(id)
-            if (!department) {
-                return Response.json(
-                    {
-                        sucess: false,
-                        message: 'Department not found'
-                    }, { status: 404 }
-                )
-            }
+        const session = await getServerSession(Option);
 
-            const session = await getServerSession(Option)
+        const id = req.nextUrl.searchParams.get('id');
 
-            if (!session) {
-                return Response.json(
-                    {
-                        sucess: false,
-                        message: 'Please login First'
-                    }, { status: 404 }
-                )
-            }
-
-            const user = await userModel.findById(session.user.id)
-            // department = 
+        if (!session && !id) {
+            return Response.json({
+                success: false,
+                msg: 'Please Login'
+            }, { status: 401 });
         }
-        return Response.json({ sucess: true, data: id })
 
-        // const user = await userModel.findById(session.user.id)
+        let department;
+
+        if (!id) {
+            const user = await userModel.findById(session.user.id);
+            if (!user || !user.department) {
+                return Response.json({
+                    success: false,
+                    msg: 'user or department not found'
+                }, { status: 404 });
+            }
+
+            department = await fetchDepartment(user.department);
+        } else {
+            department = await fetchDepartment(id);
+        }
+
+        if (!department) {
+            return Response.json({ success: false, msg: 'department not found' }, { status: 404 });
+        }
+
+        return Response.json({
+            success: true,
+            department,
+        }, { status: 200 });
 
     } catch (error) {
         return Response.json({
-            sucess: false,
-            msg: error.message
-        }, { status: 500 })
+            success: false,
+            msg: `Error: ${error.message}`,
+        }, { status: 500 });
     }
 }

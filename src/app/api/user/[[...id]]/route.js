@@ -9,7 +9,6 @@ import { EmployeeService, UserService } from "@/lib/services";
 
 const employeeService = new EmployeeService(new Employee());
 const userService = new UserService(new User());
-const userService = new UserService(new User());
 let appResponse;
 
 export async function GET(req,res){

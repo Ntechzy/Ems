@@ -99,7 +99,6 @@ const EmpDetail = () => {
       } catch (error) {
         toast.error("Error submitting form");
         console.log("Error", error.message);
- 
       }
     }
   };

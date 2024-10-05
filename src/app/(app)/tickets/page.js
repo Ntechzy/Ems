@@ -16,8 +16,7 @@ const Tickets = () => {
       try {
         const response = await axios.get('/api/resources/ticket');
         if (response.data.status) {
-          setTickets(response.data.data); 
-          console.log(response.data.data);
+          setTickets(response.data.data);  
         } else {
           setError('Failed to fetch tickets');
         }

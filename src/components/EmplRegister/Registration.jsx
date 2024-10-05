@@ -8,7 +8,8 @@ import { RegistrationValidate } from '@/Validation/AuthValidation'
 import CheckboxGroup from '../CheckboxGroup'
 import axios from 'axios'
 import toast from 'react-hot-toast'
-import { SelectField } from './SelectField'
+import { SelectField } from './SelectField' 
+import { handleError, handleResponse } from '@/lib/helper/YupResponseHandler'
 const Registration = ({ close }) => {
     const [data, setData] = useState(null)
     const [err, seterr] = useState()
@@ -66,33 +67,9 @@ const Registration = ({ close }) => {
 
             seterr(null);
             const response = await axios.post('/api/sign-up', value);
-
-            console.log(response);
-
-
-            if (response.status === 200) {
-                toast.success(response.data.message);
-                if (response.data.emailRes) {
-                    toast.success(response.data.emailRes.message);
-                }
-            } else {
-                toast.error(response.data.message);
-                if (response.data.error) {
-                    toast.error(response.data.error);
-                }
-            }
+            handleResponse(response)
         } catch (error) {
-            const newError = {};
-            if (error.inner) {
-                error.inner.forEach(elem => {
-                    newError[elem.path] = elem.message;
-                });
-            } else {
-                toast.error("Unexpected error:");
-                toast.error(error.response.data.message);
-                { error.response.data.error && toast.error(error.response.data.error) }
-
-            }
+            const newError = handleError(error)
             seterr(newError);
         }
     };

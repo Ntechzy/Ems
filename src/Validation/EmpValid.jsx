@@ -28,7 +28,6 @@ export const moreDetailsSchema = Yup.object({
       return value !== "";
     }),
 
-  // Add validation for new fields
   account_holder_name: Yup.string().required("Account holder name is required"),
   bank_name: Yup.string().required("Bank name is required"),
   ifsc_code: Yup.string()

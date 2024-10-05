@@ -6,6 +6,7 @@ import { IoCloseCircle } from "react-icons/io5"
 import Input from "./Input"
 import axios from "axios"
 import toast from "react-hot-toast"
+import { handleError, handleResponse } from "@/lib/helper/YupResponseHandler"
 
 
 const UpdatePassword = ({ setisOpen }) => {
@@ -13,7 +14,6 @@ const UpdatePassword = ({ setisOpen }) => {
         oldPass: "",
         newPass: ""
     })
-    console.log(value.length);
 
     const [confirmPass, setConfirmPass] = useState("");
 
@@ -25,28 +25,9 @@ const UpdatePassword = ({ setisOpen }) => {
             await password.validate({ ...value, confirmPass }, { abortEarly: false })
             seterr(null)
             const response = await axios.put('/api/reset-pass/update', value)
-
-            if (response.status === 200) {
-                toast.success(response.data.message);
-                setisOpen(false)
-            } else {
-                toast.error(response.data.message);
-                if (response.data.error) {
-                    toast.error(response.data.error);
-                }
-            }
+            handleResponse(response)
         } catch (error) {
-            const newError = {};
-            if (error.inner) {
-                error.inner.forEach(elem => {
-                    newError[elem.path] = elem.message;
-                });
-            } else {
-
-                { error.response.data.message ? toast.error(error.response.data.message) : toast.error("Unexpected error:"); }
-                { error.response.data.error && toast.error(error.response.data.error) }
-
-            }
+            const newError = handleError(error)
             seterr(newError);
         }
     };

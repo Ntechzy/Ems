@@ -10,6 +10,7 @@ import Loader from '@/components/Loader';
 import axios from 'axios';
 import UpdatePassword from '@/components/UpdatePassword';
 import { associated_with } from '@/data/RegistrationData';
+import toast from 'react-hot-toast';
 
 // leave form schema
 const leaveSchema = Yup.object().shape({
@@ -32,7 +33,7 @@ const EmployeeProfile = ({ params }) => {
     const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
     const [isAccountDetailsModalOpen, setIsAccountDetailsModalOpen] = useState(false);
     const [employee, setEmployee] = useState();
-    const [isUpdatePass, setisUpdatePass] = useState(true)
+    const [isUpdatePass, setisUpdatePass] = useState(false)
     const userId = params.empId;
     const { data: session, status } = useSession()
     const [leaveDetails, setLeaveDetails] = useState({
@@ -49,60 +50,53 @@ const EmployeeProfile = ({ params }) => {
     });
 
     const handleSaveAccountDetails = async (e) => {
-      e.preventDefault();
-    
-      try {
-        const response = await axios.put('/employee/66fbd35f9c6a406dc87d11fa', accountDetails);
-    
-        if (response.status === 200) {
-          // Handle successful update, maybe close the modal or show a success message
-          console.log('Account details updated successfully');
-          toggleAccountModal(); // Close modal after successful save
-        } else {
-          // Handle failure
-          console.error('Failed to update account details');
-        }
-      } catch (error) {
-        console.error('Error updating account details:', error);
-      }
-    };
-    
+        e.preventDefault();
 
+        try {
+            const response = await axios.post('/api/update-account-details', accountDetails);
+
+            if (response.status === 200) {
+                // Handle successful update, maybe close the modal or show a success message
+                console.log('Account details updated successfully');
+                toggleAccountModal(); // Close modal after successful save
+            } else {
+                // Handle failure
+                console.error('Failed to update account details');
+            }
+        } catch (error) {
+            console.error('Error updating account details:', error);
+        }
+    };
 
 
     const handleSaveDetails = async (e) => {
-      e.preventDefault();
-    
-      try {
-        const response = await axios.put('/api/user', {userId,...{
-          name: basicDetails?.firstName + " " + basicDetails?.lastName,
-            email: basicDetails?.email,
-            countryCode: '+91',
-            mobile_no: basicDetails?.phone,
-            secondaryEmail: '',
-            correspondence_address: basicDetails?.address,
-            associated_with: basicDetails?.location,
-            dob: basicDetails?.dob
-        }})
-    
-    
-        if (response.status === 200) {
-          // Handle successful update, maybe close the modal or show a success message
-          console.log('Basic details updated successfully');
-          toggleDetailsModal(); // Close modal after successful save
-        } else {
-          // Handle failure
-          console.error('Failed to update basic details');
+        e.preventDefault();
+
+        try {
+            const response = await axios.post('/api/update-basic-details', basicDetails, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (response.status === 200) {
+                toast.success('Basic details updated successfully')
+
+                toggleDetailsModal();
+            } else {
+
+                toast.error('Failed to update basic details');
+            }
+        } catch (error) {
+            console.error('Error updating basic details:', error);
         }
-      } catch (error) {
-        console.error('Error updating basic details:', error);
-      }
     };
-    
+
+
 
 
     const [basicDetails, setBasicDetails] = useState({
-      firstName: employee?.firstName,
+        firstName: employee?.firstName,
         workEmail: employee?.email,
         lastName: employee?.lastName,
         countryCode: '+91',
@@ -127,7 +121,6 @@ const EmployeeProfile = ({ params }) => {
             return false;
         }
     };
-
 
 
     const handleInputChange = (e, detailsObj = leaveDetails, setFn = setLeaveDetails) => {

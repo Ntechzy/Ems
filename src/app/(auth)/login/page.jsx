@@ -5,6 +5,7 @@ import { sinInValidate } from '@/Validation/AuthValidation';
 import { signIn, useSession } from 'next-auth/react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
+import { handleError } from '@/lib/helper/YupResponseHandler';
 
 const Page = () => {
     const router = useRouter()
@@ -34,12 +35,7 @@ const Page = () => {
                 router.push('/')
             }
         } catch (error) {
-            const newError = {};
-            error.inner.forEach(elem => {
-                newError[elem.path] = elem.message
-
-            });
-            console.log(newError);
+            const newError = handleError(error);
             seterr(newError)
         }
     };

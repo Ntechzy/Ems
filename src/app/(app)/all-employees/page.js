@@ -5,11 +5,7 @@ import axiosRequest from '@/lib/axios';
 import React, { useEffect, useState } from 'react'
 
 
-const Page = () => {
-    const employees = [
-        { id: 'A081C058', name: 'Vikas Kumar', title: 'Tech Lead', location: 'Kanpur', department: 'IT', skills: ['Dev Ops', 'Server', 'backend', '2+'], status: 'Active', joiningDate: "28-01-2023", link: "/employee/lfjsd" },
-        { id: 'A081C039', name: 'Pankaj Upadhyay', title: 'Software Engineer', location: 'Noida', department: 'IT', skills: ['Full stack', 'NodeJS', '3+'], status: 'Pending', joiningDate: "28-02-2024", link: "/employee/lfjsd" },
-    ];
+const Page = () => { 
     const [tableData, setTableData] = useState([]);
     const [initialTableData , setInitialTableData] = useState([]);
     const [loading , setLoading] = useState(true);
@@ -45,8 +41,7 @@ const Page = () => {
                 link: `/employee/${obj?.user_id?._id}`,
                 role: obj?.user_id?.role
                 }
-            });
-            console.log(all_employees);
+            }); 
             setInitialTableData(all_employees);
             setTableData(all_employees);
         } catch (err) {

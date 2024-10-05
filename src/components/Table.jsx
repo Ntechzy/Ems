@@ -93,22 +93,22 @@ const FilterComponent = ({ filters, handleFilterChange, handleClearFilters }) =>
     );
 };
 
-const Table = ({ isModal, data, title = "Employees", subtitle = "Manage all your full-time, part-time & contractor employees.", addBtnTitle = "EMPLOYEE", handleSearchChange = () => { } ,loading}) => {
+const Table = ({ isModal, data, title = "Employees", subtitle = "Manage all your full-time, part-time & contractor employees.", addBtnTitle = "EMPLOYEE", handleSearchChange = () => { }, loading }) => {
     const [searchVal, setSeachVal] = useState('');
     const [showModal, setShowModal] = useState(false);
     const [filters, setFilters] = useState({
-        location: ["Kanpur", "Noida"], 
+        location: ["Kanpur", "Noida"],
         locations: ["Kanpur", "Noida"],
         department: '',
-        departments: ["IT", "HR", "Engineering", "Finance", "Marketing"], 
+        departments: ["IT", "HR", "Engineering", "Finance", "Marketing"],
         dateOfJoining: '',
-        currentStatus:"",
-        status:["Active","Inactive"]
+        currentStatus: "",
+        status: ["Active", "Inactive"]
     });
-    const [filteredData , setFilteredData] = useState(data);
-    const tableHeaders = ["ID","Name","Location","Department","Date of Joining","Status"]
-    const availableRole = [{label:"Employee",value:"user"},{label:"Hr",value:"admin"}];
-    const {data:session} = useSession();
+    const [filteredData, setFilteredData] = useState(data);
+    const tableHeaders = ["ID", "Name", "Location", "Department", "Date of Joining", "Status"]
+    const availableRole = [{ label: "Employee", value: "user" }, { label: "Hr", value: "admin" }];
+    const { data: session } = useSession();
     const handleSearchSubmit = (e) => {
         setSeachVal(e.target.value);
         handleSearchChange(e.target.value);
@@ -131,66 +131,65 @@ const Table = ({ isModal, data, title = "Employees", subtitle = "Manage all your
         handlePrepareFilterOptions()
     };
 
-    const handlePrepareFilterOptions = ()=>{
-        const locations = [] , departments=[];
-        if(data.length){
-            data.map(employee=>{
-                !(locations.find(str=>str == employee?.location)) && employee.location && locations.push(employee?.location);
-                !(departments.find(department=>department == employee?.department?.name)) && employee.department && departments.push(employee?.department?.name);
+    const handlePrepareFilterOptions = () => {
+        const locations = [], departments = [];
+        if (data.length) {
+            data.map(employee => {
+                !(locations.find(str => str == employee?.location)) && employee.location && locations.push(employee?.location);
+                !(departments.find(department => department == employee?.department?.name)) && employee.department && departments.push(employee?.department?.name);
             })
             setFilters({
-                location:[],
+                location: [],
                 locations: locations,
-                department:'',
-                departments:departments,
-                currentStatus:"",
-                status:["Active","Inactive"]
+                department: '',
+                departments: departments,
+                currentStatus: "",
+                status: ["Active", "Inactive"]
             })
         }
     }
-    const handleRoleChangeDropdown = async(userId , role)=>{
+    const handleRoleChangeDropdown = async (userId, role) => {
         try {
             const res = await toast.promise(
-                axiosRequest.patch("/user/updateRole" , {
+                axiosRequest.patch("/user/updateRole", {
                     userId,
                     role
                 }),
                 {
-                    loading:"Updating User Role.." ,
-                    success:"User Role Updated Successfully" , 
-                    error:"Error While Updating User Role"
+                    loading: "Updating User Role..",
+                    success: "User Role Updated Successfully",
+                    error: "Error While Updating User Role"
                 },
                 {
-                    position:"top-center"
+                    position: "top-center"
                 }
                 // return res;
             )
-    
+
         } catch (err) {
             toast.error("Some Error Occured While Updating User Role");
             console.log(err);
         }
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         handlePrepareFilterOptions();
         // remove Role from tableHeaders ( To be added)
         // if(!(session?.user.role == "super_admin")){
         //     tableHeaders[tableHeaders.at]
         // } ;
-    },[data])
+    }, [data])
 
-    useEffect(()=>{
+    useEffect(() => {
         let filterData = data.filter((employee) => {
-            console.log(employee , 'employee',filters.currentStatus)
             const isLocationMatch = filters.location.length === 0 || filters.locations.includes(employee?.location);
             const isDepartmentMatch = filters.department === '' || (employee.department?.name.toUpperCase()) === filters.department;
             const isStatusMatch = filters.currentStatus === '' || (employee.status.toUpperCase()) === filters.currentStatus.toUpperCase();
-    
+
             return isLocationMatch && isDepartmentMatch && isStatusMatch;
         });
         setFilteredData(filterData);
-    },[filters , data]);
+    }, [filters, data]);
 
 
     return (
@@ -218,7 +217,7 @@ const Table = ({ isModal, data, title = "Employees", subtitle = "Manage all your
                     <thead>
                         <tr className="bg-gray-100">
                             {
-                                tableHeaders.map((val,i)=>(
+                                tableHeaders.map((val, i) => (
                                     <th className="py-2 px-4 border" key={i}>{val}</th>
                                 ))
                             }
@@ -242,8 +241,8 @@ const Table = ({ isModal, data, title = "Employees", subtitle = "Manage all your
                                 <td className="py-2 px-4 border text-center">
                                     <span className="inline-block bg-gray-200 text-gray-700 text-xs px-2 py-1 rounded">{employee.joiningDate}</span>
                                 </td>
-                               {session?.user.role == "super_admin" && <td className="py-2 px-4 border text-center">
-                                    <Select options={availableRole} selectedOptionValue={employee.role} onChange={handleRoleChangeDropdown} userId={employee.user_id} key={index}/>
+                                {session?.user.role == "super_admin" && <td className="py-2 px-4 border text-center">
+                                    <Select options={availableRole} selectedOptionValue={employee.role} onChange={handleRoleChangeDropdown} userId={employee.user_id} key={index} />
                                 </td>}
                                 <td className="py-2 px-4 border">
                                     <div className={`inline-block px-2 py-1 text-xs rounded-full text-white ${employee.status === "Active" ? "bg-green-500" : employee.status === "Pending" ? "bg-blue-500" : "bg-red-500"}`}>
@@ -253,14 +252,14 @@ const Table = ({ isModal, data, title = "Employees", subtitle = "Manage all your
                             </tr>
                         )) :
                             !loading ?
-                            <tr className="text-center" >
-                                <td colSpan={tableHeaders.length} className="p-4 text-gray-500  ">No Data</td>
-                            </tr>:
-                            <tr className="text-center">
-                                 <td colSpan={tableHeaders.length} className="p-4 text-gray-500  ">
-                                    <Loader/>
-                                 </td>
-                            </tr>
+                                <tr className="text-center" >
+                                    <td colSpan={tableHeaders.length} className="p-4 text-gray-500  ">No Data</td>
+                                </tr> :
+                                <tr className="text-center">
+                                    <td colSpan={tableHeaders.length} className="p-4 text-gray-500  ">
+                                        <Loader />
+                                    </td>
+                                </tr>
                         }
                     </tbody>
                 </table>

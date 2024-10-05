@@ -49,46 +49,49 @@ const EmployeeProfile = ({ params }) => {
         account_number: employee?.accountDetails.accountNumber
     });
 
-    const handleSaveAccountDetails = async (e) => {
+    const handleSaveDetails = async (e) => {
         e.preventDefault();
 
         try {
-            const response = await axios.post('/api/update-account-details', accountDetails);
-
+            const response = await axios.put('/api/user', {userId,...{
+                name: basicDetails?.firstName + " " + basicDetails?.lastName,
+                  email: basicDetails?.email,
+                  countryCode: '+91',
+                  mobile_no: basicDetails?.phone,
+                  secondaryEmail: '',
+                  correspondence_address: basicDetails?.address,
+                  associated_with: basicDetails?.location,
+                  dob: basicDetails?.dob
+              }})
+      
+            setIsDetailsModalOpen(!isDetailsModalOpen);
             if (response.status === 200) {
-                // Handle successful update, maybe close the modal or show a success message
-                console.log('Account details updated successfully');
-                toggleAccountModal(); // Close modal after successful save
-            } else {
-                // Handle failure
-                console.error('Failed to update account details');
+                alert('Details updated successfully');
+                
             }
+              
         } catch (error) {
             console.error('Error updating account details:', error);
         }
     };
 
 
-    const handleSaveDetails = async (e) => {
+    const handleSaveAccountDetails = async (e) => {
         e.preventDefault();
 
         try {
-            const response = await axios.post('/api/update-basic-details', basicDetails, {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            if (response.status === 200) {
-                toast.success('Basic details updated successfully')
-
-                toggleDetailsModal();
-            } else {
-
-                toast.error('Failed to update basic details');
-            }
+            const response = await axios.put('/api/user', {userId,...{
+                account_holder_name: accountDetails?.account_holder_name,
+                  bank_name: accountDetails?.bankName,
+                  ifsc_code: accountDetails?.ifscCode,
+                  account_number: accountDetails?.accountNumber,
+              }})
+              if(response.status === 200) {
+                alert('Account Details updated successfully');
+              }
+              setIsAccountDetailsModalOpen(!isAccountDetailsModalOpen);
         } catch (error) {
-            console.error('Error updating basic details:', error);
+            console.error('Error updating account details:', error);
         }
     };
 

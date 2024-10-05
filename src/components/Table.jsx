@@ -106,7 +106,7 @@ const Table = ({ isModal, data, title = "Employees", subtitle = "Manage all your
         status: ["Active", "Inactive"]
     });
     const [filteredData, setFilteredData] = useState(data);
-    const tableHeaders = ["ID", "Name", "Location", "Department", "Date of Joining", "Status"]
+    const [tableHeaders , setTableHeaders] = useState(["ID", "Name", "Location", "Department", "Date of Joining", "Status"])
     const availableRole = [{ label: "Employee", value: "user" }, { label: "Hr", value: "admin" }];
     const { data: session } = useSession();
     const handleSearchSubmit = (e) => {
@@ -136,10 +136,10 @@ const Table = ({ isModal, data, title = "Employees", subtitle = "Manage all your
         if (data.length) {
             data.map(employee => {
                 !(locations.find(str => str == employee?.location)) && employee.location && locations.push(employee?.location);
-                !(departments.find(department => department == employee?.department?.name)) && employee.department && departments.push(employee?.department?.name);
+                !(departments.find(department => department == employee?.department)) && employee.department && departments.push(employee?.department);
             })
             setFilters({
-                location: [],
+                location: locations,
                 locations: locations,
                 department: '',
                 departments: departments,
@@ -175,16 +175,18 @@ const Table = ({ isModal, data, title = "Employees", subtitle = "Manage all your
     useEffect(() => {
         handlePrepareFilterOptions();
         // remove Role from tableHeaders ( To be added)
-        // if(!(session?.user.role == "super_admin")){
-        //     tableHeaders[tableHeaders.at]
+        // if((session?.user.role == "super_admin") ){
+        //     console.log("Executed..." , tableHeaders)
+        //     setTableHeaders((prev)=>prev.splice(prev.length - 1, 0, "Role"))
+        //     console.log("after..." , tableHeaders)
         // } ;
-    }, [data])
+    }, [data , tableHeaders])
 
     useEffect(() => {
         let filterData = data.filter((employee) => {
-            const isLocationMatch = filters.location.length === 0 || filters.locations.includes(employee?.location);
-            const isDepartmentMatch = filters.department === '' || (employee.department?.name.toUpperCase()) === filters.department;
-            const isStatusMatch = filters.currentStatus === '' || (employee.status.toUpperCase()) === filters.currentStatus.toUpperCase();
+            const isLocationMatch = filters.location.length === 0 || filters.location.includes(employee?.location);
+            const isDepartmentMatch = filters.department === '' || (employee?.department?.toUpperCase()) === filters.department;
+            const isStatusMatch = filters.currentStatus === '' || (employee?.status?.toUpperCase()) === filters.currentStatus.toUpperCase();
 
             return isLocationMatch && isDepartmentMatch && isStatusMatch;
         });
@@ -237,7 +239,7 @@ const Table = ({ isModal, data, title = "Employees", subtitle = "Manage all your
                                     </Link>
                                 </td>
                                 <td className="py-2 px-4 border">{employee.location}</td>
-                                <td className="py-2 px-4 border font-bold text-center">{employee.department?.name}</td>
+                                <td className="py-2 px-4 border font-bold text-center">{employee.department}</td>
                                 <td className="py-2 px-4 border text-center">
                                     <span className="inline-block bg-gray-200 text-gray-700 text-xs px-2 py-1 rounded">{employee.joiningDate}</span>
                                 </td>

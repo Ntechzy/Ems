@@ -4,7 +4,7 @@ import employeeModel from "@/modal/employee";
 import { getServerSession } from "next-auth";
 import { Option } from "../auth/[...nextauth]/option";
 import dobModel from "@/modal/birthday";
-import { encrypt } from "@/encrypt";
+import { encrypt } from "@/lib/encrypt";
 import userModel from "@/modal/user";
 
 export async function PUT(req) {

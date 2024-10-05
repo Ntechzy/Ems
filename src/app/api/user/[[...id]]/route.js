@@ -1,12 +1,15 @@
 import dbconn from "@/lib/dbconn";
+import { encrypt } from "@/lib/encrypt";
 import { AppError } from "@/lib/errors/AppError";
+import { isValidDate } from "@/lib/helper/isValidDate";
 import { AppResponse } from "@/lib/helper/responseJson";
 import {isUserAuthenticated, validateRole} from "@/lib/helper/ValidateUser"
-import { Employee, User } from "@/lib/repositories";
-import { EmployeeService, UserService } from "@/lib/services";
+import { BirthDay, Employee, User } from "@/lib/repositories";
+import { BirthDayService, EmployeeService, UserService } from "@/lib/services";
 
 const employeeService = new EmployeeService(new Employee());
 const userService = new UserService(new User());
+const birthDayService = new BirthDayService(new BirthDay() , employeeService);
 let appResponse;
 
 export async function GET(req,res){
@@ -84,54 +87,59 @@ export async function PATCH(req , res){
 }
 
 export async function PUT(req, res) {
-    try {   
-        appResponse = new AppResponse();
-        await dbconn();
-      const {userId, name, email, mobile_no, correspondence_address,associated_with, account_holder_name, bank_name, ifsc_code, account_number } = await req.json();
-  
-      // Update the User model fields
-      await userService.Update(
-        { _id: userId }, 
-        { 
-          $set: {
-            name: name, 
-            email: email, 
-            mobile_no: mobile_no,
-            associated_with: associated_with,
-            
-            
-          }
-        }
-      );
-  
-      // Update the Employee model fields
-      await employeeService.Update(
-        { user_id: userId }, 
-        { 
-          $set: {
-            account_holder_name:account_holder_name,
-            bank_name:bank_name,
-            ifsc_code:ifsc_code,  
-            account_number:account_number,
-            correspondence_address:correspondence_address
-          }
-        }
-      );
+  try {
+      const appResponse = new AppResponse();
+      await dbconn();
 
-      appResponse.status = true;    
+      const { userId, name, email, mobile_no, correspondence_address, associated_with, account_holder_name, bank_name, ifsc_code, account_number,dob } = await req.json();
+      const dataToUpdate = {};
+
+      
+      if (name) dataToUpdate.name = name;
+      if (email) dataToUpdate.email = email;
+      if (mobile_no) dataToUpdate.mobile_no = mobile_no;
+      if (correspondence_address) dataToUpdate.correspondence_address = correspondence_address;
+      if (associated_with) dataToUpdate.associated_with = associated_with;
+
+      if (Object.keys(dataToUpdate).length > 0) {
+          await userService.Update(
+              { _id: userId },
+              { $set: dataToUpdate }
+          );
+      }
+
+      const employeeUpdateData = {};
+      if (account_holder_name) employeeUpdateData.account_holder_name = encrypt(account_holder_name);
+      if (bank_name) employeeUpdateData.bank_name = encrypt(bank_name);
+      if (ifsc_code) employeeUpdateData.ifsc_code = encrypt(ifsc_code);
+      if (account_number) employeeUpdateData.account_number = encrypt(account_number);
+      if (correspondence_address) employeeUpdateData.correspondence_address = correspondence_address;
+
+      if (Object.keys(employeeUpdateData).length > 0) {
+          await employeeService.Update(
+              { user_id: userId },
+              { $set: employeeUpdateData }
+          );
+      }
+
+      if(name && userId && dob && isValidDate(dob)){
+        await birthDayService.AddAndUpdateDOB({name , date:dob , userId});
+      }
+
+      appResponse.status = true;
       appResponse.message = "User and employee details updated successfully";
 
-      return Response.json(appResponse.getResponse(),{status:200});
-  
-    } catch (error) {
-      appResponse = new AppResponse();
+      return Response.json(appResponse.getResponse(), { status: 200 });
+
+  } catch (error) {
+      const appResponse = new AppResponse();
       appResponse.status = false;
       appResponse.message = error.message;
-      appResponse.error = {message:"Error while updating user"};
-      if(error instanceof AppError){
-        return Response.json(appResponse.getResponse(),{status:error.statusCode});
+      appResponse.error = { message: "Error while updating user" };
+
+      if (error instanceof AppError) {
+          return Response.json(appResponse.getResponse(), { status: error.statusCode });
       }
-      return Response.json(appResponse.getResponse(),{status:500});
-    }
+      return Response.json(appResponse.getResponse(), { status: 500 });
   }
-  
+}

@@ -29,7 +29,7 @@ const employeeSchema = new mongoose.Schema(
     },
     dob: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Birthday",
+      ref: "DOB",
       default: null,
     },
     date_of_joining: {
@@ -58,7 +58,7 @@ const employeeSchema = new mongoose.Schema(
     }],
     alloted_softwares: [{
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Software',
+      ref: 'Softwares',
       required: [true, "alloted_softwares is required"],
     }],
     interview_done_by: {
@@ -127,10 +127,10 @@ employeeSchema.path('alloted_softwares').validate(function (value) {
   return value.length > 0;
 }, 'At least one software must be allocated.');
 
-employeeSchema.pre(/^find/, function (next) {
-  this.populate('user_id');
-  next();
-});
+// employeeSchema.pre(/^find/, function (next) {
+//   this.populate('user_id');
+//   next();
+// });
 
 const employeeModel =
   mongoose.models.Emp || mongoose.model("Emp", employeeSchema);

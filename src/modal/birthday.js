@@ -6,10 +6,15 @@ const dobSchema = new mongoose.Schema({
         required: true, 
     },
     date: {
-        type: String,
+        type: Date,
         required: true,
         trim: true
     },
+    userId : {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        default: null,
+    }
 
 });
 

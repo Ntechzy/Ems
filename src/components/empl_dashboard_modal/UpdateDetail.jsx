@@ -3,8 +3,11 @@ import axios from "axios";
 import Input from "../Input";
 import toast from "react-hot-toast";
 const UpdateDetail = ({ toggleDetailsModal, setBasicDetails, basicDetails,
-    handleInputChange, userId, setIsDetailsModalOpen, isDetailsModalOpen
+    handleInputChange, userId, setIsDetailsModalOpen, isDetailsModalOpen,fetchUserDetailsFn
 }) => {
+    console.log("basicDetails dob: " , basicDetails.dob)
+    const formatDateString = (new Date(basicDetails.dob)).toISOString().split('T')[0];
+    console.log("formatted date is: " , formatDateString)
 
     const handleSaveDetails = async (e) => {
         e.preventDefault();
@@ -23,13 +26,16 @@ const UpdateDetail = ({ toggleDetailsModal, setBasicDetails, basicDetails,
                 }
             })
 
-            setIsDetailsModalOpen(!isDetailsModalOpen);
             if (response.status === 200) {
                 toast.success('Details updated successfully');
+                await fetchUserDetailsFn();
             }
 
         } catch (error) {
             toast.error('Error updating account details:', error);
+        }finally{
+            document.body.style.overflow ="auto"; 
+            setIsDetailsModalOpen(false);
         }
     };
 
@@ -142,7 +148,7 @@ const UpdateDetail = ({ toggleDetailsModal, setBasicDetails, basicDetails,
                             label="dob"
                             name="Date of Birth"
                             type="date"
-                            value={basicDetails.dob}
+                            value={new Date(basicDetails.dob).toISOString().split('T')[0]}
                             handleChange={(e) => handleInputChange(e, basicDetails, setBasicDetails)}
                             styles={{ border: "1px solid lightgray", color: "black" }}
                             labelStyles={{ color: "gray" }}

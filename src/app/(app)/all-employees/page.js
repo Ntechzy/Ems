@@ -25,22 +25,21 @@ const Page = () => {
             const res = await axiosRequest.get(`/user`);
             let employees = await res.data;
             employees = employees.data;
-            console.log(employees);
             const all_employees = employees?.map((obj)=>{
                 let dt = new Date(obj?.user_id?.createdAt);
                 let joiningDate = `${dt.getDate().toString().padStart(2,"0")}-${(dt.getMonth()+1).toString().padStart(2,"0")}-${dt.getFullYear()}`;
                 return {
-                user_id:obj?.user_id?._id,
+                user_id:obj?.user_id?._id,  
                 id:obj?.user_id?.employee_id,
                 name: obj?.user_id?.name,
                 title: obj?.user_id?.designation,
                 location: obj?.user_id?.associated_with,
-                department: obj?.user_id?.department,
+                department: obj?.user_id?.department?.name,
                 status: (obj?.status) ? "Active":"Inactive",
                 joiningDate : joiningDate,
                 link: `/employee/${obj?.user_id?._id}`,
                 role: obj?.user_id?.role
-                }
+                }   
             }); 
             setInitialTableData(all_employees);
             setTableData(all_employees);

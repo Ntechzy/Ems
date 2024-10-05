@@ -78,7 +78,7 @@ export async function GET(req, res) {
     } catch (error) {
         return Response.json(
             {
-                sucess: "false",
+                sucess: false,
                 message: "Something went Wrong",
                 error: error.message
             },

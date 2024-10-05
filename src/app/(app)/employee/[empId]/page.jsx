@@ -13,8 +13,6 @@ import toast from 'react-hot-toast';
 import LeaveModal from '@/components/empl_dashboard_modal/LeaveModal';
 import RaiseTicket from '@/components/empl_dashboard_modal/RaiseTicket';
 import UpdateDetail from '@/components/empl_dashboard_modal/UpdateDetail';
-
-
 // pankaj removed leave form schema 
 
 const EmployeeProfile = ({ params }) => {
@@ -34,6 +32,7 @@ const EmployeeProfile = ({ params }) => {
         endDate: '',
         reason: '',
     });
+
     const [accountDetails, setAccountDetails] = useState({
         account_holder_name: employee?.accountDetails.holderName,
         bank_name: employee?.accountDetails.bankName,
@@ -59,9 +58,9 @@ const EmployeeProfile = ({ params }) => {
             setIsDetailsModalOpen(!isDetailsModalOpen);
             if (response.status === 200) {
                 alert('Details updated successfully');
-                
+
             }
-              
+
         } catch (error) {
             console.error('Error updating account details:', error);
         }
@@ -72,23 +71,22 @@ const EmployeeProfile = ({ params }) => {
         e.preventDefault();
 
         try {
-            const response = await axios.put('/api/user', {userId,...{
-                account_holder_name: accountDetails?.account_holder_name,
-                  bank_name: accountDetails?.bankName,
-                  ifsc_code: accountDetails?.ifscCode,
-                  account_number: accountDetails?.accountNumber,
-              }})
-              if(response.status === 200) {
+            const response = await axios.put('/api/user', {
+                userId, ...{
+                    account_holder_name: accountDetails?.account_holder_name,
+                    bank_name: accountDetails?.bankName,
+                    ifsc_code: accountDetails?.ifscCode,
+                    account_number: accountDetails?.accountNumber,
+                }
+            })
+            if (response.status === 200) {
                 alert('Account Details updated successfully');
-              }
-              setIsAccountDetailsModalOpen(!isAccountDetailsModalOpen);
+            }
+            setIsAccountDetailsModalOpen(!isAccountDetailsModalOpen);
         } catch (error) {
             console.error('Error updating account details:', error);
         }
     };
-
-
-
 
     const [basicDetails, setBasicDetails] = useState({
         firstName: employee?.firstName,
@@ -133,6 +131,7 @@ const EmployeeProfile = ({ params }) => {
 
         setIsDetailsModalOpen(!isDetailsModalOpen);
     };
+
     const toggleAccountModal = () => {
         window.scrollTo({ top: 0 })
         !isAccountDetailsModalOpen ? document.body.style.overflow = "hidden" : document.body.style.overflow = "auto";
@@ -163,7 +162,7 @@ const EmployeeProfile = ({ params }) => {
                 phone: userDetails?.user_id?.mobile_no,
                 address: userDetails.correspondence_address || "N/A",
                 employeeID: userDetails?.user_id?.employee_id,
-                employeeType: "Permanent",  
+                employeeType: "Permanent",
                 startDate: userDetails.date_of_joining
                     ? new Date(userDetails.date_of_joining).toLocaleDateString()
                     : "N/A",
@@ -269,8 +268,6 @@ const EmployeeProfile = ({ params }) => {
                     </div>
                 </div>
             </div>
-
-
 
             {/* Tabs */}
             <div className="bg-white rounded-lg shadow-md mb-6 p-4">
@@ -433,14 +430,12 @@ const EmployeeProfile = ({ params }) => {
                     handleInputChange={handleInputChange}
                     setLeaveFormErrors={setLeaveFormErrors}
                     leaveDetails={leaveDetails}
-                    leaveFormErrors={leaveFormErrors}
-                    handleApplyLeave={handleApplyLeave} />
+                    leaveFormErrors={leaveFormErrors}  />
             )}
 
             {/* Raise Ticket Modal */}
             {isTicketModalOpen && (
                 <RaiseTicket toggleTicketModal={toggleTicketModal} />
-
             )}
 
             {/* Edit Details Modal */}

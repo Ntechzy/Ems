@@ -12,7 +12,7 @@ export const handleResponse = (response) => {
 };
 
 export const handleError = (error) => {
-    const newError = {};
+    const newError = [];
     if (error.inner) {
         error.inner.forEach(elem => {
             newError[elem.path] = elem.message;

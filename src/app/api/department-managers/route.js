@@ -37,6 +37,7 @@ export async function GET(req) {
             }
 
             department = await fetchDepartment(user.department);
+
         } else {
             department = await fetchDepartment(id);
         }
@@ -47,6 +48,7 @@ export async function GET(req) {
 
         return Response.json({
             success: true,
+            message:"",
             department,
         }, { status: 200 });
 

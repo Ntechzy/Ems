@@ -1,23 +1,36 @@
-"use client"
+"use client";
 
 import { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useSession } from "next-auth/react";
+import { use } from "bcrypt/promises";
 
 const RaiseTicket = ({ toggleTicketModal }) => {
-  const [description, setDescription] = useState("");
-  const handleRaiseTicket = async() => {
+  const [message, setMessage] = useState("");
+  const { data: session } = useSession();
+  const userId=session?.user?.id;
+  const handleRaiseTicket = async (e) => {
+    e.preventDefault();
     toggleTicketModal();
-  try {
-    const response = await axios.post("/api/resources/ticket", {
-        description,
+    try {
+      if (!userId) {
+        throw new Error("User not authenticated");
+      }
+      console.log(message);
+
+      const response = await axios.post("/api/resources/ticket", {
+        user: userId,
+        message: message.trim(),
       });
-      if(response.status === 200) {
+      if (response.status === true) {
         toast.success("Ticket raised successfully");
       }
-  } catch (error) {
-    toast.error("Failed to raise ticket");
-  }
+    } catch (error) {
+      console.log(error.message);
+
+      toast.error("Failed to raise ticket");
+    }
   };
 
   return (
@@ -46,7 +59,7 @@ const RaiseTicket = ({ toggleTicketModal }) => {
               className="w-full p-3 border rounded-lg focus:outline-none focus:border-blue-500"
               placeholder="Describe the issue..."
               required
-              onchange={(e) => setDescription(e.target.value)}
+              onChange={(e) => setMessage(e.target.value)}
             ></textarea>
           </div>
           <div className="flex justify-end gap-4">

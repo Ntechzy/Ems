@@ -48,7 +48,6 @@ const Page = () => {
         setValue({ ...value, [e.target.id]: e.target.value })
     };
 
-
     return (
         <div className="flex min-h-screen">
 

@@ -4,8 +4,11 @@ import { AppResponse } from "@/lib/helper/responseJson";
 import {isUserAuthenticated, validateRole} from "@/lib/helper/ValidateUser"
 import { Employee, User } from "@/lib/repositories";
 import { EmployeeService, UserService } from "@/lib/services";
+import { Employee, User } from "@/lib/repositories";
+import { EmployeeService, UserService } from "@/lib/services";
 
 const employeeService = new EmployeeService(new Employee());
+const userService = new UserService(new User());
 const userService = new UserService(new User());
 let appResponse;
 
@@ -82,3 +85,50 @@ export async function PATCH(req , res){
         )
     }
 }
+
+export async function PUT(req, res) {
+    try {   
+        appResponse = new AppResponse();
+        await dbconn();
+      const {userId, name, email, associated_with, correspondence_address, mobile_no } = await req.json();
+  
+      // Update the User model fields
+      await userService.Update(
+        { _id: userId }, 
+        { 
+          $set: {
+            name: name, 
+            email: email, 
+            mobile_no: mobile_no,
+            associated_with: associated_with
+          }
+        }
+      );
+  
+      // Update the Employee model fields
+      await employeeService.Update(
+        { user_id: userId }, 
+        { 
+          $set: {
+            correspondence_address: correspondence_address
+          }
+        }
+      );
+
+      appResponse.status = true;    
+      appResponse.message = "User and employee details updated successfully";
+
+      return Response.json(appResponse.getResponse(),{status:200});
+  
+    } catch (error) {
+      appResponse = new AppResponse();
+      appResponse.status = false;
+      appResponse.message = error.message;
+      appResponse.error = {message:"Error while updating user"};
+      if(error instanceof AppError){
+        return Response.json(appResponse.getResponse(),{status:error.statusCode});
+      }
+      return Response.json(appResponse.getResponse(),{status:500});
+    }
+  }
+  

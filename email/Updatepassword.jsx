@@ -19,16 +19,16 @@ export const Updatepassword = ({ name, link }) => (
             </a>
 
             <br />
-        </div> 
+        </div>
 
         <p>If you didn't request a password reset, please ignore this email. Your password will remain unchanged.</p>
 
         <p style={{ fontSize: '12px', color: '#888' }}>
-            <b>Note:</b> This reset link is valid for a limited time only for security reasons.
+            <b>Note:</b> This reset link is valid for a 10 min only for security reasons.
         </p>
 
         <p style={{ textAlign: 'center', marginTop: '30px', color: '#555' }}>
-            Thank you for using NTech Zy! We're here to assist you if you have any questions.
+            Thank you for being a part of NTechZy! We're here to assist you if you have any questions.
         </p>
 
         <hr style={{ margin: '30px 0', borderColor: '#ddd' }} />

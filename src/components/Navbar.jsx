@@ -23,9 +23,9 @@ function Navbar() {
                             <div className="hidden md:flex items-center space-x-8">
                                 <Link href="/all-employees" className="text-gray-200 hover:text-white">EMPLOYEES</Link>
                                 <Link href="/tickets" className="text-gray-200 hover:text-white uppercase">Raised Ticket</Link>
-                                <a href="#" className="text-gray-200 hover:text-white">HARDWARE</a>
-                                <a href="#" className="text-gray-200 hover:text-white">SOFTWARE</a>
-                                <a href="#" className="text-gray-200 hover:text-white">PROJECTS</a>
+                                <Link href="/" className="text-gray-200 hover:text-white uppercase">Offer Letter</Link>
+                                <Link href="/" className="text-gray-200 hover:text-white uppercase">Birth Date</Link>
+                                <Link href="/leave" className="text-gray-200 hover:text-white uppercase">Leave</Link>
                             </div>
                         }
 
@@ -43,12 +43,13 @@ function Navbar() {
                             <GiHamburgerMenu onClick={() => setIsOpen(!isOpen)} className="text-gray-400 hover:text-white focus:outline-none" />
                         </div>
                     </div>
-                    {isOpen && (
+                    {session && (session?.user.role === "admin" || session?.user.role === "super_admin") && isOpen && (
                         <div className="md:hidden mt-4 space-y-2">
-                            <a href="#" className="block text-gray-400 hover:text-white">EMPLOYEES</a>
-                            <a href="#" className="block text-gray-400 hover:text-white">HARDWARE</a>
-                            <a href="#" className="block text-gray-400 hover:text-white">SOFTWARE</a>
-                            <a href="#" className="block text-gray-400 hover:text-white">PROJECTS</a>
+                          <Link href="/all-employees" className="text-gray-200 hover:text-white">EMPLOYEES</Link>
+                                <Link href="/tickets" className="text-gray-200 hover:text-white uppercase">Raised Ticket</Link>
+                                <Link href="/" className="text-gray-200 hover:text-white uppercase">Offer Letter</Link>
+                                <Link href="/" className="text-gray-200 hover:text-white uppercase">Birth Date</Link>
+                                <Link href="/leave" className="text-gray-200 hover:text-white uppercase">Leave</Link>
                         </div>
                     )}
                 </div>}

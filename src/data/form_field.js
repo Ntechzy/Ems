@@ -10,7 +10,7 @@ export const first=[
         
       },
     {
-        "label": "DOB",
+        "label": "dob",
         "name": "Data of Birth",
         "type":"date"
       },
@@ -61,7 +61,7 @@ export const first=[
       {
         "label": "salary_slot",
         "name": "Salary Slot",
-         "type": "text"
+         "type": "date"
       },
       {
         "label": "account_holder_name",

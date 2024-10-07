@@ -13,9 +13,10 @@ const birthDayService = new BirthDayService(new BirthDay(), employeeService);
 let appResponse;
 
 export async function GET(req, res) {
+  await dbconn();
+
     try {
         appResponse = new AppResponse();
-        await dbconn();
         const params = res.params;
         const searchParams = req.nextUrl.searchParams;
         const sessionUser = await isUserAuthenticated(req, res);

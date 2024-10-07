@@ -72,8 +72,9 @@ const employeeSchema = new mongoose.Schema(
       required: [true, "Who finalized salary is required"]
     },
     salary_slot: {
-      type: String,
-      default: null,
+      type: Number,
+      // default: null,
+
     },
     account_holder_name: {
       type: String,
@@ -99,12 +100,7 @@ const employeeSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
-    tickets: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Ticket",
-      },
-    ],
+   
     // leaves: [
     //   {
     //     type: mongoose.Schema.Types.ObjectId,

@@ -38,7 +38,7 @@ const EmpDetail = () => {
     try {
       if (step === 0) {
         await basicDetailsSchema.validate(data, { abortEarly: false });
-        // return true;
+        return true;
       } else if (step === 1) {
         await moreDetailsSchema.validate(data, { abortEarly: false });
         return true;

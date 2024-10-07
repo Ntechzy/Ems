@@ -49,11 +49,11 @@ const Page = () => {
     return (
         <div className="flex min-h-screen">
 
-            <div className="flex flex-col items-center justify-center w-1/2 bg-gradient-to-b  from-[#93fdc1c2] to-[#dfbd73] ">
-                <h1 className="text-4xl font-bold text-black mb-4">
-                    Welcome Aboard
+            <div className="flex flex-col items-center justify-center w-1/2 bg-gradient-to-r  from-[rgba(2,7,23,0.76)] to-[#114061] ">
+                <h1 className="text-4xl font-bold  mb-4 text-white">
+                    Welcome to Ntechzy pvt. ltd.
                 </h1>
-                <h2>
+                <h2 className='text-white'>
                     Together, We Create the Solutions of Tomorrow.
                 </h2>
             </div>
@@ -77,7 +77,7 @@ const Page = () => {
 
                     <button
                         type="submit"
-                        className="bg-gradient-to-r from-[#93fdc1c2] to-[#dfbd73] w-full text-blue-950 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        className=" bg-gradient-to-br  from-[rgba(149,167,223,0.76)] to-[#326ba9] w-full text-white hover:text-blue-950 hover:bg-blue-950 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     >
                         Sign In
                     </button>

@@ -44,7 +44,7 @@ export async function middleware(request) {
 
 
         // Admin Routes
-        if (role === 'admin') {
+        if (role === 'admin' || role ==='super_admin') {
             if (!isFormCompleted) {
                 if (url.pathname !== '/') {
                     return NextResponse.redirect(new URL('/', request.url));

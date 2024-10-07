@@ -54,9 +54,7 @@ const Registration = ({ close }) => {
         } else {
             setValue({ ...value, [fieldName]: selected.filter(item => item !== e.target.value) });
         }
-    }
-
-    console.log(value);
+    } 
 
     const handleSubmit = async (e) => {
         e.preventDefault();

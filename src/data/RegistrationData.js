@@ -12,13 +12,7 @@ export const fields = [
         "placeholder": "Enter Name",
 
     },
-    {
-        "name": "Salary",
-        "label": "salary",
-        "type": "number",
-        "placeholder": "Enter Name",
 
-    },
     {
         "name": "Email",
         "label": "email",
@@ -31,6 +25,14 @@ export const fields = [
         "label": "mobile_no",
         "type": "text",
         "placeholder": "Enter Mobile Number",
+    },
+
+    {
+        "name": "Salary",
+        "label": "salary",
+        "type": "number",
+        "placeholder": "Enter Name",
+
     },
 ]
 

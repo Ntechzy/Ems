@@ -146,7 +146,6 @@ const EmployeeProfile = ({ params }) => {
             setLoading(true);
             const res = await axiosRequest.get(`/user/${userId}`);
             const userDetails = res.data.data;
-            console.log(userDetails);
 
             const employee = {
                 profilePicture:

@@ -10,7 +10,7 @@ import { handleError, handleResponse } from "@/lib/helper/YupResponseHandler";
 const LeaveModal = ({ toggleLeaveModal, setLeaveFormErrors, handleInputChange, leaveDetails, leaveFormErrors }) => {
 
     const [manager, setManager] = useState()
-
+    const [isSubmiting, setisSubmiting] = useState(false)
     const getManagerName = async () => {
         try {
             const data = await axios.get('/api/department-managers')
@@ -31,9 +31,13 @@ const LeaveModal = ({ toggleLeaveModal, setLeaveFormErrors, handleInputChange, l
         try {
             await leaveValidation.validate(leaveDetails, { abortEarly: false });
 
+            setisSubmiting(true)
             const response = await axios.post('/api/apply-leave', leaveDetails)
+
             handleResponse(response)
+            setisSubmiting(false)
             toggleLeaveModal();
+
             return true;
         } catch (error) {
             const formErrors = handleError(error)
@@ -72,6 +76,7 @@ const LeaveModal = ({ toggleLeaveModal, setLeaveFormErrors, handleInputChange, l
                     </div>
 
                     <div>
+                        <label className="block text-gray-700">Select You Manager </label>
                         <select
                             name="managerToAsk"
                             value={leaveDetails.managerToAsk}
@@ -146,7 +151,7 @@ const LeaveModal = ({ toggleLeaveModal, setLeaveFormErrors, handleInputChange, l
                     <button onClick={toggleLeaveModal} className="bg-gray-300 text-gray-700 py-2 px-4 rounded">
                         Cancel
                     </button>
-                    <button onClick={handleApplyLeave} className="bg-button_blue text-white py-2 px-4 rounded">
+                    <button disabled={isSubmiting} onClick={handleApplyLeave} className="bg-button_blue text-white py-2 px-4 rounded">
                         Submit
                     </button>
                 </div>

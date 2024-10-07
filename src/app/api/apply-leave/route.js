@@ -8,8 +8,7 @@ import { leaveMail } from "@/lib/resend";
 export async function POST(req, res) {
     await dbconn()
     try {
-        const user = await isUserAuthenticated(req, res)
-        console.log(user);
+        const user = await isUserAuthenticated(req, res) 
 
         const { leaveType, managerToAsk,
             startDate, endDate, reason } = await req.json()

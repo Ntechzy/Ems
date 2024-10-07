@@ -66,7 +66,15 @@ export async function GET(req, { params }) {
 
 
         else if (resourceName.toLowerCase() == "birthday") {
-
+            let date = searchParams.get("date");
+            if((new Date(date)) != "Invalid Date"){
+                date = new Date(date);
+                let month = date.getMonth();
+                let day = date.getDate();
+                const dates_birthday = await birthdayService.GetAllTodayBirthdays(month , day);
+                appResponse.data = dates_birthday;
+                return Response.json(appResponse.getResponse(),{status:200});
+            }
             const all_birthdays = await birthdayService.GetAll();
             appResponse.data = all_birthdays;
 

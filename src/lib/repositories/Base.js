@@ -33,4 +33,9 @@ export class Base {
         const res = await this.#modelName.findOneAndDelete({_id : id});
         return res;
     }
+
+    async GetByFilters(filters){
+        const res = await this.#modelName.find(filters).exec();
+        return res;
+    }
 }

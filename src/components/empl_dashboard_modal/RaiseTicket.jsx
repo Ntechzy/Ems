@@ -23,9 +23,6 @@ const RaiseTicket = ({ toggleTicketModal }) => {
             console.log(typeof response.data.status);
 
             if (response.data.status == true) {
-
-                console.log("ok ok ok ");
-
                 toast.success("Ticket raised successfully")
             }
             toggleTicketModal();

@@ -6,7 +6,6 @@ import { signIn } from 'next-auth/react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { handleError } from '@/lib/helper/YupResponseHandler';
-import UpdatePassword from '@/components/UpdatePassword';
 import ResetPassword from '@/components/ResetPassword';
 import Loader from '@/components/Loader';
 
@@ -22,7 +21,6 @@ const Page = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-
             setisLoading(true)
             await sinInValidate.validate(value, { abortEarly: false })
             seterr(null)
@@ -86,7 +84,7 @@ const Page = () => {
                         type="submit"
                         className="bg-gradient-to-br from-[rgba(149,167,223,0.76)] to-[#326ba9] w-full text-white hover:text-blue-950 hover:bg-blue-950 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     >
-                        {isLoading ? <div className='white'><Loader /></div> :
+                        {isLoading ? <Loader /> :
                             "Sign In"
                         }
                     </button>

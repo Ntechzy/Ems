@@ -1,11 +1,12 @@
-import dbconn from "@/lib/dbconn"; 
+import dbconn from "@/lib/dbconn";
 import userModel from "@/modal/user";
 import crypto from 'crypto';
-import { resetMail } from "@/lib/resend"; 
+import { resetMail } from "@/lib/resend";
 export async function POST(req) {
     await dbconn()
     try {
         const { empId } = await req.json()
+        console.log(empId);
 
         if (!empId) {
             return Response.json({
@@ -15,11 +16,11 @@ export async function POST(req) {
         }
 
         const user = await userModel.findOne({ employee_id: empId })
-        
+
         if (!user) {
             return Response.json({
                 sucess: false,
-                message: "User not found"
+                message: "Ooops... You Miss Something! Try Again"
             }, { status: 404 })
         }
 
@@ -34,7 +35,7 @@ export async function POST(req) {
         user.resetToken = token
         user.resetTokenExpiration = expiration
         await user.save()
-        
+
         const emailRes = await resetMail(user.name, user.email, link);
 
         if (!emailRes.sucess) {

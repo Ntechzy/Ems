@@ -175,12 +175,12 @@ const Table = ({ isModal, data, title = "Employees", subtitle = "Manage all your
     useEffect(() => {
         handlePrepareFilterOptions();
         // remove Role from tableHeaders ( To be added)
-        // if((session?.user.role == "super_admin") ){
-        //     console.log("Executed..." , tableHeaders)
-        //     setTableHeaders((prev)=>prev.splice(prev.length - 1, 0, "Role"))
-        //     console.log("after..." , tableHeaders)
-        // } ;
-    }, [data , tableHeaders])
+        if((session?.user.role == "super_admin") && data && data.length){
+            let arr = tableHeaders;
+            arr.splice(arr.length - 1, 0, "Role")
+            arr.find(elem=>elem == "Role") && setTableHeaders(arr)
+        } ;
+    }, [data])
 
     useEffect(() => {
         let filterData = data.filter((employee) => {

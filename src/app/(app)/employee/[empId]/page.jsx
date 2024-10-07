@@ -13,8 +13,6 @@ import toast from 'react-hot-toast';
 import LeaveModal from '@/components/empl_dashboard_modal/LeaveModal';
 import RaiseTicket from '@/components/empl_dashboard_modal/RaiseTicket';
 import UpdateDetail from '@/components/empl_dashboard_modal/UpdateDetail';
-
-
 // pankaj removed leave form schema 
 
 const EmployeeProfile = ({ params }) => {
@@ -31,10 +29,12 @@ const EmployeeProfile = ({ params }) => {
     const { data: session, status } = useSession()
     const [leaveDetails, setLeaveDetails] = useState({
         leaveType: '',
+        managerToAsk: '',
         startDate: '',
         endDate: '',
         reason: '',
     });
+
     const [accountDetails, setAccountDetails] = useState({
         holderName: employee?.accountDetails.holderName,
         bank_name: employee?.accountDetails.bankName,
@@ -61,7 +61,7 @@ const EmployeeProfile = ({ params }) => {
                 toast.success('Details updated successfully' , {position:"top-center"});
                 await fetchUserDetails(userId);
             }
-              
+
         } catch (error) {
             console.error('Error updating account details:', error);
         }finally{
@@ -92,12 +92,9 @@ const EmployeeProfile = ({ params }) => {
         }
     };
 
-
-
-
     const [basicDetails, setBasicDetails] = useState({
         firstName: employee?.firstName,
-        lastName: employee?.lastName ,
+        lastName: employee?.lastName,
         workEmail: employee?.email,
 
         countryCode: '+91',
@@ -150,7 +147,7 @@ const EmployeeProfile = ({ params }) => {
             const res = await axiosRequest.get(`/user/${userId}`);
             const userDetails = res.data.data;
             console.log(userDetails);
-            
+
             const employee = {
                 profilePicture:
                     userDetails.profile_photo?.cloud_url ||
@@ -169,7 +166,7 @@ const EmployeeProfile = ({ params }) => {
                 phone: userDetails?.user_id?.mobile_no,
                 address: userDetails.correspondence_address || "N/A",
                 employeeID: userDetails?.user_id?.employee_id,
-                employeeType: "Permanent",  
+                employeeType: "Permanent",
                 startDate: userDetails.date_of_joining
                     ? new Date(userDetails.date_of_joining).toLocaleDateString()
                     : "N/A",

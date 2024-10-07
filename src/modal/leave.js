@@ -1,9 +1,14 @@
 import mongoose from "mongoose";
 
 const leaveSchema = new mongoose.Schema({
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: [true, "User is required"]
+    },
     leaveType: {
         type: String,
-        enum: ['absent', 'casual']
+        enum: ['absent', 'casual', 'sick']
     },
     leaveFrom: {
         type: Date,
@@ -22,7 +27,6 @@ const leaveSchema = new mongoose.Schema({
         ref: "User",
         required: [true, "Please provide who approved leave"]
     }
-
 });
 
 

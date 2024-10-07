@@ -18,11 +18,12 @@ export async function POST(req) {
 
         // Convert strings to ObjectId 
 
-        const hardwareObjectIds = alloted_hardwares.map(id => (typeof id === 'string' ? new mongoose.Types.ObjectId(id) : id));
-        const softwareObjectIds = alloted_softwares.map(id => (typeof id === 'string' ? new mongoose.Types.ObjectId(id) : id));
-        const interview_done_by_Ids = (typeof interview_done_by === "string" ? new mongoose.Types.ObjectId(interview_done_by) : interview_done_by);
-        const who_finalize_salary_Ids = (typeof who_finalize_salary === "string" ? new mongoose.Types.ObjectId(who_finalize_salary) : who_finalize_salary);
-        const department_Ids = (typeof department === "string" ? new mongoose.Types.ObjectId(department) : department);
+        // const hardwareObjectIds = alloted_hardwares.map(id => (typeof id === 'string' ? new mongoose.Types.ObjectId(id) : id));
+        // const softwareObjectIds = alloted_softwares.map(id => (typeof id === 'string' ? new mongoose.Types.ObjectId(id) : id));
+
+        // const interview_done_by_Ids = (typeof interview_done_by === "string" ? new mongoose.Types.ObjectId(interview_done_by) : interview_done_by);
+        // const who_finalize_salary_Ids = (typeof who_finalize_salary === "string" ? new mongoose.Types.ObjectId(who_finalize_salary) : who_finalize_salary);
+        // const department_Ids = (typeof department === "string" ? new mongoose.Types.ObjectId(department) : department);
 
 
         const employee_id = name.slice(0, 4) + mobile_no.slice(5, 10) + email.slice(0, 4);
@@ -47,11 +48,11 @@ export async function POST(req) {
 
             employee = await employeeModel.create({
                 user_id: isUser._id,
-                alloted_hardwares: hardwareObjectIds,
-                alloted_softwares: softwareObjectIds,
+                alloted_hardwares,
+                alloted_softwares,
                 salary,
-                interview_done_by: interview_done_by_Ids,
-                who_finalized_salary: who_finalize_salary_Ids
+                interview_done_by,
+                who_finalize_salary
             });
         } else {
             user = await userModel.create({
@@ -63,16 +64,16 @@ export async function POST(req) {
                 associated_with,
                 role,
                 designation,
-                department: department_Ids
+                department
             });
 
             employee = await employeeModel.create({
                 user_id: user._id,
-                alloted_hardwares: hardwareObjectIds,
-                alloted_softwares: softwareObjectIds,
+                alloted_hardwares,
+                alloted_softwares,
                 salary,
-                interview_done_by: interview_done_by_Ids,
-                who_finalized_salary: who_finalize_salary_Ids
+                interview_done_by,
+                who_finalized_salary
             });
         }
         if (role === 'admin') {

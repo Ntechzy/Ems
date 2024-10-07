@@ -180,7 +180,8 @@ export async function POST(req, res) {
         appResponse.status = false;
         appResponse.message = "Error While Creating Items";
         appResponse.error = err.message;
-
+        console.log(err);
+        
         return Response.json(appResponse.getResponse(),
             {
                 status: 500,

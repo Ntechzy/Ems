@@ -2,10 +2,12 @@
 import { useRouter } from 'next/navigation';
 import Input from '@/components/Input';
 import { sinInValidate } from '@/Validation/AuthValidation';
-import { signIn, useSession } from 'next-auth/react';
+import { signIn } from 'next-auth/react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { handleError } from '@/lib/helper/YupResponseHandler';
+import UpdatePassword from '@/components/UpdatePassword';
+import ResetPassword from '@/components/ResetPassword';
 
 const Page = () => {
     const router = useRouter()
@@ -14,8 +16,7 @@ const Page = () => {
         password: ""
     })
     const [err, seterr] = useState()
-    const { data: session, status } = useSession()
-
+    const [openModal, setOpenModal] = useState(false)
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
@@ -39,6 +40,7 @@ const Page = () => {
             seterr(newError)
         }
     };
+
     const handleChange = (e) => {
         e.preventDefault();
         setValue({ ...value, [e.target.id]: e.target.value })
@@ -54,7 +56,6 @@ const Page = () => {
                 <h2>
                     Together, We Create the Solutions of Tomorrow.
                 </h2>
-                {/*  from-pink-500 to-red-500 */}
             </div>
 
             <div className="flex flex-col items-center justify-center w-1/2 bg-white px-10 py-20">
@@ -80,7 +81,17 @@ const Page = () => {
                     >
                         Sign In
                     </button>
+
                 </form>
+                <button onClick={() => setOpenModal(!openModal)} className="my-5 text-blue-700 text-center">
+                    Forget Password ?
+                </button>
+
+                {
+                    openModal && <div className='fixed top-0 left-0 w-full h-full overflow-auto bg-black/50 z-10'>
+                        < ResetPassword isopen={openModal} setisOpen={setOpenModal} />
+                    </div>
+                }
             </div>
 
 

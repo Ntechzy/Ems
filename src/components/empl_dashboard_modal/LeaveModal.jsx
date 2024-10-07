@@ -1,30 +1,44 @@
+'use client'
 import { leaveValidation } from "@/Validation/LeaveValidation";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { set } from "mongoose";
+import { handleError, handleResponse } from "@/lib/helper/YupResponseHandler";
+
 
 const LeaveModal = ({ toggleLeaveModal, setLeaveFormErrors, handleInputChange, leaveDetails, leaveFormErrors }) => {
 
-    const validateForm = async () => {
+    const [manager, setManager] = useState()
+
+    const getManagerName = async () => {
         try {
-            await leaveValidation.validate(leaveDetails, { abortEarly: false });
-            setLeaveFormErrors({});
-            return true;
-        } catch (validationErrors) {
-            const formErrors = {};
-            validationErrors.inner.forEach((error) => {
-                formErrors[error.path] = error.message;
-            });
-            setLeaveFormErrors(formErrors);
-            return false;
+            const data = await axios.get('/api/department-managers')
+            setManager(data.data.department)
+        } catch (error) {
+            toast.error(error.response.message ? error.response.message : "Something Went wrong... ||  Please Try Again")
         }
-    };
+    }
+
+
+    useEffect(() => {
+        getManagerName()
+    }, [])
+
 
     const handleApplyLeave = async (e) => {
         e.preventDefault();
+        try {
+            await leaveValidation.validate(leaveDetails, { abortEarly: false });
 
-        const isValid = await validateForm();
-
-        if (isValid) {
-            console.log('Leave Details:', leaveDetails);
+            const response = await axios.post('/api/apply-leave', leaveDetails)
+            handleResponse(response)
             toggleLeaveModal();
+            return true;
+        } catch (error) {
+            const formErrors = handleError(error)
+            setLeaveFormErrors(formErrors);
+            return false;
         }
     };
     return (
@@ -37,8 +51,8 @@ const LeaveModal = ({ toggleLeaveModal, setLeaveFormErrors, handleInputChange, l
                 onClick={(e) => e.stopPropagation()}
             >
                 <h2 className="text-xl font-semibold mb-4">Apply Leave</h2>
- 
-                <form className="space-y-4"> 
+
+                <form className="space-y-4">
                     <div>
                         <label className="block text-gray-700">Leave Type</label>
                         <select
@@ -48,11 +62,35 @@ const LeaveModal = ({ toggleLeaveModal, setLeaveFormErrors, handleInputChange, l
                             className="w-full mt-1 p-2 border rounded"
                         >
                             <option value="" disabled>Select Leave Type</option>
-                            <option value="sick">Sick Leave</option>
+                            <option value="absent">Absent</option>
                             <option value="casual">Casual Leave</option>
+                            <option value="sick">Sick Leave</option>
                         </select>
                         {leaveFormErrors.leaveType && (
                             <div className="text-red-500 text-sm">{leaveFormErrors.leaveType}</div>
+                        )}
+                    </div>
+
+                    <div>
+                        <select
+                            name="managerToAsk"
+                            value={leaveDetails.managerToAsk}
+                            onChange={handleInputChange}
+                            className="w-full mt-1 p-2 border rounded"
+                        >
+                            <option value="" disabled>Select Manager</option>
+                            {
+                                manager && manager.manager && manager.manager.length > 0 && (
+                                    manager.manager.map((item, index) => (
+                                        <option key={index} value={item._id}>{item.name}</option>
+                                    ))
+
+                                )
+                            }
+
+                        </select>
+                        {leaveFormErrors.leaveType && (
+                            <div className="text-red-500 text-sm">{leaveFormErrors.managerToAsk}</div>
                         )}
                     </div>
 

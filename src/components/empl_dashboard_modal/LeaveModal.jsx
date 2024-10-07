@@ -41,6 +41,7 @@ const LeaveModal = ({ toggleLeaveModal, setLeaveFormErrors, handleInputChange, l
         } catch (error) {
             const formErrors = handleError(error)
             setLeaveFormErrors(formErrors);
+            setisSubmiting(false)
             return false;
         }
     };

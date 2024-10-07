@@ -3,7 +3,7 @@ export const OnBoarding = ({
 }) => (
     <div style={{ fontFamily: 'Arial, sans-serif', color: '#333', lineHeight: '1.6', padding: '20px', maxWidth: '600px', margin: '0 auto', borderRadius: '8px', border: '1px solid #ddd', boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }}>
         <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-            <img src="https://company-logo-url.com/logo.png" alt="Company Logo" style={{ maxWidth: '150px' }} />
+            <img src="https://media.licdn.com/dms/image/v2/D560BAQG5xHtNyuvN2w/company-logo_200_200/company-logo_200_200/0/1707762485397/ntechzy_logo?e=2147483647&v=beta&t=QloYtkuE_thYkMrC5bQJLMrlB3UwKOibD88Hy5V7SfE" alt="Company Logo" style={{ maxWidth: '150px' }} />
         </div>
 
         <div style={{ backgroundColor: '#007BFF', color: '#fff', padding: '20px', borderRadius: '8px', textAlign: 'center', animation: 'bounce 2s infinite' }}>
@@ -14,7 +14,7 @@ export const OnBoarding = ({
         <p style={{ textAlign: 'center' }}>
             We are excited to have you as part of our team. Your journey begins now!
         </p>
-        
+
         <p>
             To proceed, please log in to our company’s employee portal. Click the button below to access your account:
         </p>

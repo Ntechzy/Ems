@@ -44,12 +44,12 @@ function Navbar() {
                         </div>
                     </div>
                     {session && (session?.user.role === "admin" || session?.user.role === "super_admin") && isOpen && (
-                        <div className="md:hidden mt-4 space-y-2">
-                          <Link href="/all-employees" className="text-gray-200 hover:text-white">EMPLOYEES</Link>
-                                <Link href="/tickets" className="text-gray-200 hover:text-white uppercase">Raised Ticket</Link>
-                                <Link href="/" className="text-gray-200 hover:text-white uppercase">Offer Letter</Link>
-                                <Link href="/" className="text-gray-200 hover:text-white uppercase">Birth Date</Link>
-                                <Link href="/leave" className="text-gray-200 hover:text-white uppercase">Leave</Link>
+                        <div className="md:hidden mt-4 space-y-2 flex flex-col gap-2">
+                            <Link href="/all-employees" className="text-gray-200 hover:text-white">EMPLOYEES</Link>
+                            <Link href="/tickets" className="text-gray-200 hover:text-white uppercase">Raised Ticket</Link>
+                            <Link href="/" className="text-gray-200 hover:text-white uppercase">Offer Letter</Link>
+                            <Link href="/" className="text-gray-200 hover:text-white uppercase">Birth Date</Link>
+                            <Link href="/leave" className="text-gray-200 hover:text-white uppercase">Leave</Link>
                         </div>
                     )}
                 </div>}

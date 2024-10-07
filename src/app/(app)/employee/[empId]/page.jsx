@@ -570,7 +570,7 @@ const EmployeeProfile = ({ params }) => {
                             </div>
                             <div class="flex-1">
                                 <h2 class="font-bold m-0 text-[#114061]">No user found</h2>
-                                <p class="text-gray-600 text-sm md:text-xl">We couldn't find any users matching your search criteria.</p>
+                                <p class="text-gray-600 text-sm md:text-xl">We couldn&apos;t find any users matching your search criteria.</p>
                             </div>
                         </div>
 

@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { handleError, handleResponse } from "@/lib/helper/YupResponseHandler";
+import Loader from "../Loader";
 
 const LeaveModal = ({ toggleLeaveModal, setLeaveFormErrors, handleInputChange, leaveDetails, leaveFormErrors }) => {
 
@@ -151,7 +152,7 @@ const LeaveModal = ({ toggleLeaveModal, setLeaveFormErrors, handleInputChange, l
                         Cancel
                     </button>
                     <button disabled={isSubmiting} onClick={handleApplyLeave} className="bg-button_blue text-white py-2 px-4 rounded">
-                        {isSubmiting ? "Submit" : <Toast />}
+                        {isSubmiting ? "Submit" : <Loader />}
                     </button>
                 </div>
             </div>

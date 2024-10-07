@@ -187,8 +187,8 @@ const Table = ({ isModal, data, title = "Employees", subtitle = "Manage all your
             const isLocationMatch = filters.location.length === 0 || filters.location.includes(employee?.location);
             const isDepartmentMatch = filters.department === '' || (employee?.department?.toUpperCase()) === filters.department;
             const isStatusMatch = filters.currentStatus === '' || (employee?.status?.toUpperCase()) === filters.currentStatus.toUpperCase();
-
-            return isLocationMatch && isDepartmentMatch && isStatusMatch;
+            const isSameUser = session.user.id == employee.user_id;
+            return isLocationMatch && isDepartmentMatch && isStatusMatch && !isSameUser;
         });
         setFilteredData(filterData);
     }, [filters, data]);

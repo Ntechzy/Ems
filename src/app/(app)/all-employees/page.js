@@ -34,7 +34,7 @@ const Page = () => {
                 name: obj?.user_id?.name,
                 title: obj?.user_id?.designation,
                 location: obj?.user_id?.associated_with,
-                department: obj?.user_id?.department?.name,
+                department: obj?.user_id?.department?.name,     
                 status: (obj?.status) ? "Active":"Inactive",
                 joiningDate : joiningDate,
                 link: `/employee/${obj?.user_id?._id}`,

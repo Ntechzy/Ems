@@ -22,10 +22,15 @@ const leaveSchema = new mongoose.Schema({
         type: String,
         required: [true, "Reason for leave is required"]
     },
-    whoApprovedLeave: {
+    RequestedTo: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: [true, "Please provide who approved leave"]
+    },
+    isApproved: {
+        type: Boolean,
+        enum: [true, false, null],
+        default: null
     }
 });
 

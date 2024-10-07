@@ -270,6 +270,4 @@ const Table = ({ isModal, data, title = "Employees", subtitle = "Manage all your
     );
 };
 
-
-
 export default Table;

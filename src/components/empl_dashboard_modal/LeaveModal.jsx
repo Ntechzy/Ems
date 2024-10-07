@@ -3,7 +3,6 @@ import { leaveValidation } from "@/Validation/LeaveValidation";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { set } from "mongoose";
 import { handleError, handleResponse } from "@/lib/helper/YupResponseHandler";
 
 
@@ -35,8 +34,8 @@ const LeaveModal = ({ toggleLeaveModal, setLeaveFormErrors, handleInputChange, l
             const response = await axios.post('/api/apply-leave', leaveDetails)
 
             handleResponse(response)
-            setisSubmiting(false)
             toggleLeaveModal();
+            setisSubmiting(false)
 
             return true;
         } catch (error) {

@@ -3,10 +3,8 @@ import axios from "axios";
 import Input from "../Input";
 import toast from "react-hot-toast";
 const UpdateDetail = ({ toggleDetailsModal, setBasicDetails, basicDetails,
-    handleInputChange, userId, setIsDetailsModalOpen, isDetailsModalOpen,fetchUserDetailsFn
+    handleInputChange, userId, setIsDetailsModalOpen, isDetailsModalOpen, fetchUserDetailsFn
 }) => {
-    console.log("basicDetails dob: " , basicDetails.dob)
- 
 
     const handleSaveDetails = async (e) => {
         e.preventDefault();
@@ -32,8 +30,8 @@ const UpdateDetail = ({ toggleDetailsModal, setBasicDetails, basicDetails,
 
         } catch (error) {
             toast.error('Error updating account details:', error);
-        }finally{
-            document.body.style.overflow ="auto"; 
+        } finally {
+            document.body.style.overflow = "auto";
             setIsDetailsModalOpen(false);
         }
     };
@@ -140,15 +138,13 @@ const UpdateDetail = ({ toggleDetailsModal, setBasicDetails, basicDetails,
                         styles={{ border: "1px solid lightgray", color: "black" }}
                         labelStyles={{ color: "gray" }}
                         inputName={"address"}
-                    />
-{console.log(basicDetails.dob)}
-
+                    /> 
                     <div className="flex space-x-2">
                         <Input
                             label="dob"
                             name="Date of Birth"
                             type="date"
-                            value={ basicDetails.dob && basicDetails.dob != "N/A" ? new Date(basicDetails.dob).toISOString().split('T')[0]:""}
+                            value={basicDetails.dob && basicDetails.dob != "N/A" ? new Date(basicDetails.dob).toISOString().split('T')[0] : ""}
                             handleChange={(e) => handleInputChange(e, basicDetails, setBasicDetails)}
                             styles={{ border: "1px solid lightgray", color: "black" }}
                             labelStyles={{ color: "gray" }}

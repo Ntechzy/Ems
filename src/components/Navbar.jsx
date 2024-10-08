@@ -24,7 +24,7 @@ function Navbar() {
                                 <Link href="/all-employees" className="text-gray-200 hover:text-white">EMPLOYEES</Link>
                                 <Link href="/tickets" className="text-gray-200 hover:text-white uppercase">Raised Ticket</Link>
                                 <Link href="/" className="text-gray-200 hover:text-white uppercase">Offer Letter</Link>
-                                <Link href="/" className="text-gray-200 hover:text-white uppercase">Birth Date</Link>
+                                <Link href="/birthdays" className="text-gray-200 hover:text-white uppercase">BirthDays</Link>
                                 <Link href="/leave" className="text-gray-200 hover:text-white uppercase">Leave</Link>
                             </div>
                         }
@@ -48,7 +48,7 @@ function Navbar() {
                             <Link href="/all-employees" className="text-gray-200 hover:text-white">EMPLOYEES</Link>
                             <Link href="/tickets" className="text-gray-200 hover:text-white uppercase">Raised Ticket</Link>
                             <Link href="/" className="text-gray-200 hover:text-white uppercase">Offer Letter</Link>
-                            <Link href="/" className="text-gray-200 hover:text-white uppercase">Birth Date</Link>
+                            <Link href="/birthdays" className="text-gray-200 hover:text-white uppercase">BirthDays</Link>
                             <Link href="/leave" className="text-gray-200 hover:text-white uppercase">Leave</Link>
                         </div>
                     )}

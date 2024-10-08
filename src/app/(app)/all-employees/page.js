@@ -35,7 +35,7 @@ const Page = () => {
                 title: obj?.user_id?.designation,
                 location: obj?.user_id?.associated_with,
                 department: obj?.user_id?.department?.name,     
-                status: (obj?.status) ? "Active":"Inactive",
+                status: (obj?.status && obj?.user_id?.isFormCompleted) ? "Active":obj?.user_id?.isFormCompleted ? "Inactive" : "Pending",
                 joiningDate : joiningDate,
                 link: `/employee/${obj?.user_id?._id}`,
                 role: obj?.user_id?.role

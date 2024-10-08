@@ -53,11 +53,11 @@ const LeaveModal = ({ toggleLeaveModal, setLeaveFormErrors, handleInputChange, l
                 className="bg-white p-6 rounded-lg shadow-md absolute top-[50vh] translate-y-[-50%] w-[90%] md:w-[40%]"
                 onClick={(e) => e.stopPropagation()}
             >
-                <h2 className="text-xl font-semibold mb-4">Apply Leave</h2>
+                <h2 className="text-xl font-semibold mb-4 ">Apply Leave</h2>
 
                 <form className="space-y-4">
                     <div>
-                        <label className="block text-gray-700">Leave Type</label>
+                        <label className="block text-gray-700 ">Leave Type</label>
                         <select
                             name="leaveType"
                             value={leaveDetails.leaveType}

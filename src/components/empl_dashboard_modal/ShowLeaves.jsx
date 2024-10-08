@@ -57,7 +57,7 @@ const ShowLeaves = () => {
     };
 
     return (
-        <div className="mx-4 my-6 p-4">
+        <div className="">
 
             <div className="mb-4">
                 <Input

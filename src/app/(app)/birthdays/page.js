@@ -50,21 +50,24 @@ const Page = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-blue-300 to-blue-300 p-10">
-      <p className="text-5xl text-center font-bold drop-shadow-lg pb-9 text-red-500">Today&apos;s BirthDay</p>
-      <div className="flex items-center justify-center gap-12 overflow-x-auto h-full ">
+    <div className="min-h-screen bg-gradient-to-r from-blue-300 to-blue-300 p-4 sm:p-10">
+      <p className="text-3xl sm:text-5xl text-center font-bold drop-shadow-lg pb-6 sm:pb-9 text-red-500">
+        Today&apos;s BirthDay
+      </p>
+      <div className="flex flex-wrap justify-center gap-6 sm:gap-12 overflow-x-auto h-full">
         {
           birthdays.length ? birthdays.map((item, id) => {
             return (
               <BirthdayCard key={id} name={item.name} userId={item.userId} />
             );
           }) :
-            loading ?
-              <Loader /> :
-              <p className="text-4xl mt-12">No Birthday Today</p>
+            loading ? <Loader /> :
+              <p className="text-xl sm:text-4xl mt-8 sm:mt-12">No Birthday Today</p>
         }
       </div>
-      {init && birthdays.length && <Particles id="tsparticles" particlesLoaded={particlesLoaded} options={options} />}
+      {init && birthdays.length && (
+        <Particles id="tsparticles" particlesLoaded={particlesLoaded} options={options} />
+      )}
     </div>
   );
 };

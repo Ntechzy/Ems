@@ -3,6 +3,7 @@ import Input from "@/components/Input";
 import { first, second } from "@/data/form_field";
 import { basicDetailsSchema, moreDetailsSchema } from "@/Validation/EmpValid";
 import axios from "axios";
+import { signOut } from "next-auth/react";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -73,7 +74,8 @@ const EmpDetail = () => {
         const response = await axios.put("/api/updatedetail", data);
 
         if (response.status === 200) {
-          toast.success("Form submitted successfully"); 
+          toast.success("Form submitted successfully");
+          signOut(); 
           setData({
             father_name: "",
             dob: "",

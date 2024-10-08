@@ -79,7 +79,7 @@ export async function POST(req) {
         }
         if (role === 'admin') {
             await Department.findOneAndUpdate(
-                { name: department },
+                { _id: department },
                 { $push: { manager: user._id } },
                 { new: true }
             );

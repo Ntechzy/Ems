@@ -6,8 +6,7 @@ const UpdateDetail = ({ toggleDetailsModal, setBasicDetails, basicDetails,
     handleInputChange, userId, setIsDetailsModalOpen, isDetailsModalOpen,fetchUserDetailsFn
 }) => {
     console.log("basicDetails dob: " , basicDetails.dob)
-    const formatDateString = (new Date(basicDetails.dob)).toISOString().split('T')[0];
-    console.log("formatted date is: " , formatDateString)
+ 
 
     const handleSaveDetails = async (e) => {
         e.preventDefault();
@@ -142,13 +141,14 @@ const UpdateDetail = ({ toggleDetailsModal, setBasicDetails, basicDetails,
                         labelStyles={{ color: "gray" }}
                         inputName={"address"}
                     />
+{console.log(basicDetails.dob)}
 
                     <div className="flex space-x-2">
                         <Input
                             label="dob"
                             name="Date of Birth"
                             type="date"
-                            value={new Date(basicDetails.dob).toISOString().split('T')[0]}
+                            value={ basicDetails.dob && basicDetails.dob != "N/A" ? new Date(basicDetails.dob).toISOString().split('T')[0]:""}
                             handleChange={(e) => handleInputChange(e, basicDetails, setBasicDetails)}
                             styles={{ border: "1px solid lightgray", color: "black" }}
                             labelStyles={{ color: "gray" }}

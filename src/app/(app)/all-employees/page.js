@@ -4,7 +4,6 @@ import Table from '@/components/Table';
 import axiosRequest from '@/lib/axios';
 import React, { useEffect, useState } from 'react'
 
-
 const Page = () => { 
     const [tableData, setTableData] = useState([]);
     const [initialTableData , setInitialTableData] = useState([]);

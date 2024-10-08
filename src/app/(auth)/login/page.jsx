@@ -17,11 +17,13 @@ const Page = () => {
     })
     const [err, seterr] = useState()
     const [openModal, setOpenModal] = useState(false)
+    const [isLoading, setisLoading] = useState(false)
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
             await sinInValidate.validate(value, { abortEarly: false })
             seterr(null)
+            setisLoading(true)
             const data = await signIn('credentials', {
                 redirect: false,
                 username: value.username,
@@ -29,13 +31,16 @@ const Page = () => {
             })
             if (data.error) {
                 toast.error(data.error)
+                setisLoading(false)
                 console.log(data.error);
             }
             else {
                 toast.success('Login successful')
+                setisLoading(false)
                 router.push('/')
             }
         } catch (error) {
+            setisLoading(false)
             const newError = handleError(error);
             seterr(newError)
         }
@@ -77,25 +82,22 @@ const Page = () => {
                     </div>
 
                     <button
+                        disabled={isLoading}
                         type="submit"
                         className="bg-gradient-to-br from-[rgba(149,167,223,0.76)] to-[#326ba9] w-full text-white hover:text-blue-950 hover:bg-blue-950 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     >
-                        Sign In
+                        {isLoading ? <Loader /> : "Sign In"}
                     </button>
 
                 </form>
-
-
-                <button onClick={() => setOpenModal(!openModal)} className="my-4 md:my-5 text-blue-700 text-center">
-                    Forget Password?
+                <button onClick={() => setOpenModal(!openModal)} className="my-5 text-blue-700 text-center">
+                    Forget Password ?
                 </button>
- 
+
                 {
-                    openModal && (
-                        <div className="fixed top-0 left-0 w-full h-full overflow-auto bg-black/50 z-10">
-                            <ResetPassword isopen={openModal} setisOpen={setOpenModal} />
-                        </div>
-                    )
+                    openModal && <div className='fixed top-0 left-0 w-full h-full overflow-auto bg-black/50 z-10'>
+                        < ResetPassword isopen={openModal} setisOpen={setOpenModal} />
+                    </div>
                 }
             </div>
 

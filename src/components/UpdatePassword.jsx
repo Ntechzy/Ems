@@ -1,12 +1,11 @@
 'use client'
 import { password } from "@/Validation/AuthValidation"
-import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { IoCloseCircle } from "react-icons/io5"
 import Input from "./Input"
 import axios from "axios"
-import toast from "react-hot-toast"
 import { handleError, handleResponse } from "@/lib/helper/YupResponseHandler"
+import Loader from "./Loader"
 
 
 const UpdatePassword = ({ setisOpen }) => {
@@ -16,17 +15,20 @@ const UpdatePassword = ({ setisOpen }) => {
     })
 
     const [confirmPass, setConfirmPass] = useState("");
-
+    const [isLoading, setisLoading] = useState(false)
     const [err, seterr] = useState()
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
+            setisLoading(true)
             await password.validate({ ...value, confirmPass }, { abortEarly: false })
             seterr(null)
             const response = await axios.put('/api/reset-pass/update', value)
+            setisLoading(false)
             handleResponse(response)
         } catch (error) {
+            setisLoading(false)
             const newError = handleError(error)
             seterr(newError);
         }
@@ -70,7 +72,7 @@ const UpdatePassword = ({ setisOpen }) => {
                     type="submit"
                     className="bg-button_blue  w-full text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 >
-                    Sign In
+                    {isLoading ? <Loader /> : " Update Password"}
                 </button>
             </form>
         </div>

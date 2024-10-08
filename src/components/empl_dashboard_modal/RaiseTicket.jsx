@@ -26,11 +26,10 @@ const RaiseTicket = ({ toggleTicketModal }) => {
                 toast.success("Ticket raised successfully")
             }
             toggleTicketModal();
-        } catch (error) {
-            console.log(error.message);
-
+        } catch (error) { 
             toast.error("Failed to raise ticket");
         }
+        
     };
 
     return (

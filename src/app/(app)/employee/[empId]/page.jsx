@@ -51,18 +51,19 @@ const EmployeeProfile = ({ params }) => {
                 userId, ...{
                     name: basicDetails?.firstName + " " + basicDetails?.lastName,
                     email: basicDetails?.email,
-                    //   countryCode: '+91',
+                    countryCode: '+91',
                     mobile_no: basicDetails?.phone,
-                    //   secondaryEmail: '',
+                    secondaryEmail: '',
                     correspondence_address: basicDetails?.address,
                     associated_with: basicDetails?.location,
                     dob: basicDetails?.dob
                 }
             })
 
+            setIsDetailsModalOpen(!isDetailsModalOpen);
             if (response.status === 200) {
                 toast.success('Details updated successfully', { position: "top-center" });
-                await fetchUserDetails(userId);
+await fetchUserDetails(userId);
             }
 
         } catch (error) {
@@ -77,7 +78,6 @@ const EmployeeProfile = ({ params }) => {
         e.preventDefault();
 
         try {
-            console.log(accountDetails)
             const response = await axios.put('/api/user', {
                 userId, ...{
                     account_holder_name: accountDetails.holderName,
@@ -285,8 +285,6 @@ const EmployeeProfile = ({ params }) => {
                                 </div>
                             </div>
 
-
-
                             {/* Tabs */}
                             <div className="bg-white rounded-lg shadow-md mb-6 p-4">
                                 <ul className="flex border-b overflow-auto">
@@ -461,7 +459,6 @@ const EmployeeProfile = ({ params }) => {
                             {/* Raise Ticket Modal */}
                             {isTicketModalOpen && (
                                 <RaiseTicket toggleTicketModal={toggleTicketModal} />
-
                             )}
 
                             {/* Edit Details Modal */}

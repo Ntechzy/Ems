@@ -7,13 +7,10 @@ import { useSession } from "next-auth/react";
 import { DateIstConvert } from "@/lib/DateIstConvert";
 import toast from "react-hot-toast";
 import { handleResponse } from "@/lib/helper/YupResponseHandler";
-import { useRouter } from "next/navigation";
 
 const ShowLeaves = () => {
     const [searchTerm, setSearchTerm] = useState("");
-    const [leaveData, setLeaveData] = useState([]);
-
-    const router = useRouter()
+    const [leaveData, setLeaveData] = useState([]); 
     useEffect(() => {
         const fetchLeaveData = async () => {
             try {

@@ -7,24 +7,26 @@ import Input from "./Input"
 import axios from "axios"
 import toast from "react-hot-toast"
 import { handleError, handleResponse } from "@/lib/helper/YupResponseHandler"
+import Loader from "./Loader"
 
 
 const ResetPassword = ({ setisOpen }) => {
     const [empId, setempId] = useState(null)
     const [err, seterr] = useState()
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsloading] = useState(false)
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            setIsLoading(true)
+            setIsloading(true)
             const response = await axios.post('/api/sign-up/forget-password', { empId })
             handleResponse(response)
+            setIsloading(false)
             setisOpen(false)
-            setIsLoading(false)
         } catch (error) {
+            setIsloading(false)
             const newError = handleError(error)
             seterr(newError)
-            setIsLoading(false)
         }
     };
 
@@ -48,11 +50,11 @@ const ResetPassword = ({ setisOpen }) => {
                     {err && <div className='text-red-700 text-center'> {err}</div>}
                 </div>
                 <button
-                    type="submit"
                     disabled={isLoading}
-                    className={`${isLoading ?"bg-gray-800": "bg-button_blue"} w-full text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline`}
+                    type="submit"
+                    className="bg-button_blue  w-full text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 >
-                    Send mail
+                    {isLoading ? <Loader /> : "Send mail"}
                 </button>
             </form>
         </div>

@@ -6,8 +6,8 @@ import { signIn } from 'next-auth/react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { handleError } from '@/lib/helper/YupResponseHandler';
-import UpdatePassword from '@/components/UpdatePassword';
 import ResetPassword from '@/components/ResetPassword';
+import Loader from '@/components/Loader';
 
 const Page = () => {
     const router = useRouter()
@@ -65,16 +65,15 @@ const Page = () => {
                     Sign In
                 </h2>
 
-                <form onSubmit={handleSubmit} className="w-full max-w-sm">
-
-                    <div className="mb-6">
+                <form onSubmit={handleSubmit} className="w-full max-w-xs md:max-w-sm">
+                    <div className="mb-4 md:mb-6">
                         <Input label="username" handleChange={handleChange} value={value.username} name={"Enter your User name"} />
-                        {err && <div className='text-red-700 text-center'> {err["username"]}</div>}
+                        {err && <div className='text-red-700 text-center'>{err["username"]}</div>}
                     </div>
 
-                    <div className="mb-6">
+                    <div className="mb-4 md:mb-6">
                         <Input label="password" handleChange={handleChange} value={value.password} name={"Enter your password"} />
-                        {err && <div className='text-red-700 text-center'> {err["password"]}</div>}
+                        {err && <div className='text-red-700 text-center'>{err["password"]}</div>}
                     </div>
 
                     <button
@@ -86,18 +85,22 @@ const Page = () => {
 
                 </form>
 
-                <button onClick={() => setOpenModal(!openModal)} className="my-5 text-blue-700 text-center">
+
+                <button onClick={() => setOpenModal(!openModal)} className="my-4 md:my-5 text-blue-700 text-center">
                     Forget Password?
                 </button>
-
+ 
                 {
-                    openModal && <div className='fixed top-0 left-0 w-full h-full overflow-auto bg-black/50 z-10'>
-                        < ResetPassword isopen={openModal} setisOpen={setOpenModal} />
-                    </div>
+                    openModal && (
+                        <div className="fixed top-0 left-0 w-full h-full overflow-auto bg-black/50 z-10">
+                            <ResetPassword isopen={openModal} setisOpen={setOpenModal} />
+                        </div>
+                    )
                 }
             </div>
 
         </div>
+
     );
 }
 

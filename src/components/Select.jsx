@@ -11,7 +11,7 @@ const Select = ({options , selectedOptionValue ,userId , onChange})=>{
         <select className="p-2 cursor-pointer rounded-md" value={selectedOption} onChange={handleChange}>
             {
                 options.map((obj,i)=>(
-                    <option value={obj.value} selected={obj.value == selectedOption} >{obj.label}</option>
+                    <option key={i} value={obj.value} selected={obj.value == selectedOption} >{obj.label}</option>
                 ))
             }
         </select> 

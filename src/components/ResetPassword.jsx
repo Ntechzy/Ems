@@ -12,16 +12,19 @@ import { handleError, handleResponse } from "@/lib/helper/YupResponseHandler"
 const ResetPassword = ({ setisOpen }) => {
     const [empId, setempId] = useState(null)
     const [err, seterr] = useState()
-
+    const [isLoading, setIsLoading] = useState(false)
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
+            setIsLoading(true)
             const response = await axios.post('/api/sign-up/forget-password', { empId })
             handleResponse(response)
             setisOpen(false)
+            setIsLoading(false)
         } catch (error) {
             const newError = handleError(error)
             seterr(newError)
+            setIsLoading(false)
         }
     };
 
@@ -46,7 +49,8 @@ const ResetPassword = ({ setisOpen }) => {
                 </div>
                 <button
                     type="submit"
-                    className="bg-button_blue  w-full text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    disabled={isLoading}
+                    className={`${isLoading ?"bg-gray-800": "bg-button_blue"} w-full text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline`}
                 >
                     Send mail
                 </button>

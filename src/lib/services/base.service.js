@@ -50,4 +50,9 @@ export class BaseService {
         const updated_item = await this.#repository.Update(filter , dataToUpdate);
         return updated_item;
     }
+
+    async GetByFilters(filter){
+        const items = await this.#repository.GetByFilters(filter);
+        return items;
+    }
 }

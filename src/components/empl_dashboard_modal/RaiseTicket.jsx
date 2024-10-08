@@ -9,14 +9,13 @@ const RaiseTicket = ({ toggleTicketModal }) => {
     const [message, setMessage] = useState("");
     const { data: session } = useSession();
     const userId = session?.user?.id;
+
     const handleRaiseTicket = async (e) => {
         e.preventDefault();
         try {
             if (!userId) {
                 throw new Error("User not authenticated");
             }
-            console.log(message);
-
             const response = await axios.post("/api/resources/ticket", {
                 user: userId,
                 message: message.trim(),
@@ -24,9 +23,6 @@ const RaiseTicket = ({ toggleTicketModal }) => {
             console.log(typeof response.data.status);
 
             if (response.data.status == true) {
-
-                console.log("ok ok ok ");
-
                 toast.success("Ticket raised successfully")
             }
             toggleTicketModal();

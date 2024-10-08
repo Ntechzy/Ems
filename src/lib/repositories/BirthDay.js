@@ -12,4 +12,23 @@ export class BirthDay extends Base{
         const res = await this.#modelName.findOneAndUpdate(filter , dataToUpdate , {upsert:true,new:true});
         return res;
     }
+
+    async GetAllTodayBirthdays() {
+        const today = new Date();
+    
+        const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+        const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+    
+        const todayBirthdays = await this.#modelName.find({
+            date: {
+                $gte: startOfDay,
+                $lt: endOfDay    
+            }
+        });
+    
+        return todayBirthdays;
+    }
+    
+
+
 }

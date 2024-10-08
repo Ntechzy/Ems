@@ -9,7 +9,7 @@ const resend = new Resend(process.env.API_KEY);
 export const sendOnboarding = async (name, email, employee_id, password, link) => {
     try {
         await resend.emails.send({
-            from: 'onboarding@resend.dev',
+            from: 'onboarding@ems.ntechzy.in',
             to: email,
             subject: 'Onboading: Welcome To Ntechzy',
             react: OnBoarding({ name, email, employee_id, password, link })
@@ -32,7 +32,7 @@ export const sendOnboarding = async (name, email, employee_id, password, link) =
 export const resetMail = async (name, email, link) => {
     try {
         await resend.emails.send({
-            from: 'onboarding@resend.dev',
+            from: 'admin@ems.ntechzy.in',
             to: email,
             subject: 'Update your account to password Ntechzy Portal',
             react: Updatepassword({ name, link })
@@ -55,7 +55,7 @@ export const resetMail = async (name, email, link) => {
 export const leaveMail = async (name, email, leaveType, leaveFrom, leaveTo, reason) => {
     try {
         await resend.emails.send({
-            from: 'onboarding@resend.dev',
+            from: 'admin@ems.ntechzy.in',
             to: email,
             subject: `${name} :- Asking For ${leaveType} Leave `,
             react: LeaveRequestEmail({ name, leaveType, leaveFrom, leaveTo, reason })

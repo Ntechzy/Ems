@@ -29,6 +29,8 @@ const Registration = ({ close }) => {
         who_finalize_salary: ""
     })
 
+    console.log(value);
+    
     useEffect(() => {
         const fetchData = async () => {
             try {

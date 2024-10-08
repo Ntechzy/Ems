@@ -15,6 +15,7 @@ export async function POST(req) {
             salary, interview_done_by, who_finalize_salary
         } = await req.json();
 
+        console.log(who_finalize_salary);
 
         // Convert strings to ObjectId 
 
@@ -52,7 +53,7 @@ export async function POST(req) {
                 alloted_softwares,
                 salary,
                 interview_done_by,
-                who_finalize_salary
+                who_finalized_salary: who_finalize_salary
             });
         } else {
             user = await userModel.create({
@@ -73,7 +74,7 @@ export async function POST(req) {
                 alloted_softwares,
                 salary,
                 interview_done_by,
-                who_finalized_salary
+                who_finalized_salary: who_finalize_salary
             });
         }
         if (role === 'admin') {

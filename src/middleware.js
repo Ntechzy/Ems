@@ -25,7 +25,8 @@ export async function middleware(request) {
         if (role === 'user') {
             if (
                 url.pathname === '/' ||
-                url.pathname.startsWith('/employee/')
+                url.pathname.startsWith('/employee/') ||
+                url.pathname.startsWith('/birthday')
             ) {
                 if (!isFormCompleted && url.pathname.startsWith('/employee/')) {
                     return NextResponse.redirect(new URL('/', request.url));
@@ -44,7 +45,7 @@ export async function middleware(request) {
 
 
         // Admin Routes
-        if (role === 'admin' || role ==='super_admin') {
+        if (role === 'admin' || role === 'super_admin') {
             if (!isFormCompleted) {
                 if (url.pathname !== '/') {
                     return NextResponse.redirect(new URL('/', request.url));

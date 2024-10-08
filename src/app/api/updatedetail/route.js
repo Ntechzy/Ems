@@ -116,6 +116,7 @@ export async function PUT(req) {
       const updatedUser = await employeeModel.findOneAndUpdate(
         { user_id: id },
         {
+          user_id: id,
           permanent_address,
           correspondence_address,
           pan_card_no: encryptedPanCardNo,

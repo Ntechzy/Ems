@@ -25,7 +25,7 @@ export class Base {
     }
 
     async Update(filter , dataToUpdate){
-        const res = await this.#modelName.findOneAndUpdate(filter , dataToUpdate);
+        const res = await this.#modelName.findOneAndUpdate(filter , dataToUpdate ,{new:true});
         return res;
     }
 

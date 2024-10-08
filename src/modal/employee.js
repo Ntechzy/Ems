@@ -123,10 +123,10 @@ employeeSchema.path('alloted_softwares').validate(function (value) {
   return value.length > 0;
 }, 'At least one software must be allocated.');
 
-// employeeSchema.pre(/^find/, function (next) {
-//   this.populate('user_id');
-//   next();
-// });
+employeeSchema.pre(['find', 'findOne', 'findOneAndUpdate', 'updateOne', 'updateMany'],  function() {
+  this.where({ status: true});
+});
+
 
 const employeeModel =
   mongoose.models.Emp || mongoose.model("Emp", employeeSchema);

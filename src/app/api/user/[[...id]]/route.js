@@ -4,12 +4,13 @@ import { AppError } from "@/lib/errors/AppError";
 import { isValidDate } from "@/lib/helper/isValidDate";
 import { AppResponse } from "@/lib/helper/responseJson";
 import { isUserAuthenticated, validateRole } from "@/lib/helper/ValidateUser"
-import { BirthDay, Employee, User } from "@/lib/repositories";
-import { BirthDayService, EmployeeService, UserService } from "@/lib/services";
+import { BirthDay, Department, Employee, User } from "@/lib/repositories";
+import { BirthDayService, DepartmentService, EmployeeService, UserService } from "@/lib/services";
 
 const employeeService = new EmployeeService(new Employee());
-const userService = new UserService(new User());
 const birthDayService = new BirthDayService(new BirthDay(), employeeService);
+const departmentService = new DepartmentService(new Department());
+const userService = new UserService(new User() , departmentService);
 let appResponse;
 
 export async function GET(req, res) {

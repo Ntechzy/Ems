@@ -177,15 +177,17 @@ const Table = ({ isModal, data, title = "Employees", subtitle = "Manage all your
         // remove Role from tableHeaders ( To be added)
         if((session?.user.role == "super_admin") && data && data.length){
             let arr = tableHeaders;
-            arr.splice(arr.length - 1, 0, "Role")
-            arr.find(elem=>elem == "Role") && setTableHeaders(arr)
+            if(!arr.find(elem=>elem == "Role")){
+                arr.splice(arr.length - 1, 0, "Role");
+                setTableHeaders(arr);
+            }
         } ;
     }, [data])
 
     useEffect(() => {
         let filterData = data.filter((employee) => {
             const isLocationMatch = filters.location.length === 0 || filters.location.includes(employee?.location);
-            const isDepartmentMatch = filters.department === '' || (employee?.department?.toUpperCase()) === filters.department;
+            const isDepartmentMatch = filters.department === '' || (employee?.department?.toUpperCase()) === filters.department.toUpperCase();
             const isStatusMatch = filters.currentStatus === '' || (employee?.status?.toUpperCase()) === filters.currentStatus.toUpperCase();
             const isSameUser = session.user.id == employee.user_id;
             return isLocationMatch && isDepartmentMatch && isStatusMatch && !isSameUser;

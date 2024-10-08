@@ -134,7 +134,8 @@ const Registration = ({ close }) => {
                                     options={associated_with.map(item => ({ value: item.name, label: item.name }))}
                                     value={value.associated_with}
                                     defaultOption="Select Associated With"
-                                    onChange={handleChange}
+                                    onChange={handleChange} 
+                                    
                                 />
                                 {err && <div className='text-red-700 text-center'> {err["associated_with"]}</div>}
                             </div>

@@ -47,19 +47,21 @@ const Page = () => {
     };
 
     return (
-        <div className="flex min-h-screen">
+        <div className="flex flex-col md:flex-row min-h-screen">
 
-            <div className="flex flex-col items-center justify-center w-1/2 bg-gradient-to-r  from-[rgba(2,7,23,0.76)] to-[#114061] ">
-                <h1 className="text-4xl font-bold  mb-4 text-white">
+            {/* Left Section */}
+            <div className="flex flex-col items-center justify-center w-full md:w-1/2 bg-gradient-to-r from-[rgba(2,7,23,0.76)] to-[#114061] p-8">
+                <h1 className="text-3xl md:text-4xl font-bold mb-4 text-white text-center">
                     Welcome to Ntechzy pvt. ltd.
                 </h1>
-                <h2 className='text-white'>
+                <h2 className="text-white text-center">
                     Together, We Create the Solutions of Tomorrow.
                 </h2>
             </div>
 
-            <div className="flex flex-col items-center justify-center w-1/2 bg-white px-10 py-20">
-                <h2 className="text-2xl font-bold mb-8">
+            {/* Right Section */}
+            <div className="flex flex-col items-center justify-center w-full md:w-1/2 bg-white px-6 md:px-10 py-10 md:py-20">
+                <h2 className="text-2xl font-bold mb-8 text-center">
                     Sign In
                 </h2>
 
@@ -77,14 +79,15 @@ const Page = () => {
 
                     <button
                         type="submit"
-                        className=" bg-gradient-to-br  from-[rgba(149,167,223,0.76)] to-[#326ba9] w-full text-white hover:text-blue-950 hover:bg-blue-950 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        className="bg-gradient-to-br from-[rgba(149,167,223,0.76)] to-[#326ba9] w-full text-white hover:text-blue-950 hover:bg-blue-950 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     >
                         Sign In
                     </button>
 
                 </form>
+
                 <button onClick={() => setOpenModal(!openModal)} className="my-5 text-blue-700 text-center">
-                    Forget Password ?
+                    Forget Password?
                 </button>
 
                 {
@@ -93,7 +96,6 @@ const Page = () => {
                     </div>
                 }
             </div>
-
 
         </div>
     );

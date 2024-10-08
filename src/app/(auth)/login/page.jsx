@@ -7,7 +7,7 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { handleError } from '@/lib/helper/YupResponseHandler';
 import ResetPassword from '@/components/ResetPassword';
-import Loader from '@/components/Loader';
+import Loader from '@/components/Loader'; 
 
 const Page = () => {
     const router = useRouter()

@@ -41,34 +41,7 @@ export async function PUT(req) {
       const encryptedBankName = encrypt(bank_name);
       const encryptedIfscCode = encrypt(ifsc_code);
       const encryptedAccountNumber = encrypt(account_number);
-      console.log("Encrypted Request data:", {
-        permanent_address,
-        correspondence_address,
-        encryptedPanCardNo,
-        encryptedAadhaarNo,
-        encryptedAccountHolderName,
-        encryptedBankName,
-        encryptedIfscCode,
-        encryptedAccountNumber,
-      });
-      console.log("Request data:", {
-        permanent_address,
-        correspondence_address,
-        pan_card_no,
-        aadhaar_no,
-        father_name,
-        dob,
-        date_of_joining,
-        salary_slot,
-        blood_group,
-        marital_status,
-        highest_qualification,
-        account_holder_name , 
-        bank_name,           
-        ifsc_code ,           
-        account_number, 
-      });
-
+    
       // Convert date strings to Date objects
       // const dobDate = new Date(dob.split("/").join("-"));
       // const dateOfJoining = new Date(
@@ -111,7 +84,7 @@ export async function PUT(req) {
   //  console.log("day",day);
    
       const  id =session.user.id 
-      console.log(id);
+      console.log("user id",id);
       
       const updatedUser = await employeeModel.findOneAndUpdate(
         { user_id: id },
@@ -135,7 +108,7 @@ export async function PUT(req) {
         },
         { new: true }
       );
-      console.log(updatedUser);
+      console.log(updatedUser); 
       const updatedIt = await userModel.findByIdAndUpdate(
         { _id: id }, 
         {

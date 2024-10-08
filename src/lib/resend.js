@@ -64,9 +64,7 @@ export const leaveMail = async (name, email, leaveType, leaveFrom, leaveTo, reas
             sucess: true,
             message: "Email for password change sent sucessfully ! "
         }
-    } catch (error) {
-        console.log("error", error);
-
+    } catch (error) { 
         return {
             sucess: false,
             message: "Unable to send leave Request for now ! try again later ",

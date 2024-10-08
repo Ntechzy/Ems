@@ -1,6 +1,6 @@
 'use client'
-import { useEffect, useMemo, useState } from "react";
-import Particles, { initParticlesEngine } from "@tsparticles/react";
+import { useEffect, useState } from "react";
+import { initParticlesEngine } from "@tsparticles/react";
 import { fireworks } from "@tsparticles/fireworks"
 import BirthdayCard from "@/components/BirthDayCard";
 import toast from "react-hot-toast";
@@ -8,28 +8,21 @@ import axiosRequest from "@/lib/axios";
 import Loader from "@/components/Loader";
 
 const Page = () => {
-  const [init, setInit] = useState(false);
   const [birthdays, setBirthdays] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    initParticlesEngine(async (engine) => {
-      let particleAnimation = await fireworks(engine, { sounds: true });
-      setTimeout(() => {
-        particleAnimation.stop();
-      }, 10000);
-    }).then(() => {
-      setInit(true);
-    });
-  }, []);
+    if(birthdays.length){
+      initParticlesEngine(async (engine) => {
+        let particleAnimation = await fireworks(engine, { sounds: true });
+        setTimeout(() => {
+          particleAnimation.stop();
+        }, 10000);
+      });
+    }
+  }, [birthdays]);
 
-  const particlesLoaded = (container) => {
-    console.log(container);
-  };
-
-  let options = useMemo(() => ({
-    duration: 3
-  }), []);
+  
 
   const fetchTodaysBirthdays = async () => {
     const todaysdate = new Date();
@@ -50,11 +43,9 @@ const Page = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-blue-300 to-blue-300 p-4 sm:p-10">
-      <p className="text-3xl sm:text-5xl text-center font-bold drop-shadow-lg pb-6 sm:pb-9 text-red-500">
-        Today&apos;s BirthDay
-      </p>
-      <div className="flex flex-wrap justify-center gap-6 sm:gap-12 overflow-x-auto h-full">
+    <div className="min-h-screen bg-gradient-to-b from-blue-100 to-blue-500 p-2 md:p-10">
+      <p className="text-3xl md:text-5xl text-center font-bold drop-shadow-lg pb-9 text-red-500 mt-9 md:mt-0">Today&apos;s BirthDay</p>
+      <div className="flex items-center justify-center gap-12 overflow-x-auto h-full flex-col md:flex-row">
         {
           birthdays.length ? birthdays.map((item, id) => {
             return (
@@ -65,9 +56,6 @@ const Page = () => {
               <p className="text-xl sm:text-4xl mt-8 sm:mt-12">No Birthday Today</p>
         }
       </div>
-      {init && birthdays.length && (
-        <Particles id="tsparticles" particlesLoaded={particlesLoaded} options={options} />
-      )}
     </div>
   );
 };

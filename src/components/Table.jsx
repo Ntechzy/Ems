@@ -143,8 +143,8 @@ const Table = ({ isModal, data, title = "Employees", subtitle = "Manage all your
                 locations: locations,
                 department: '',
                 departments: departments,
-                currentStatus: "",
-                status: ["Active", "Inactive"]
+                currentStatus: '',
+                status: ["Active", "Inactive","Pending"]
             })
         }
     }
@@ -247,6 +247,7 @@ const Table = ({ isModal, data, title = "Employees", subtitle = "Manage all your
                                     <Select options={availableRole} selectedOptionValue={employee.role} onChange={handleRoleChangeDropdown} userId={employee.user_id}  />
                                 </td>}
                                 <td className="py-2 px-4 border">
+                                    {console.log("employee status" , employee.status)}
                                     <div className={`inline-block px-2 py-1 text-xs rounded-full text-white ${employee.status === "Active" ? "bg-green-500" : employee.status === "Pending" ? "bg-blue-500" : "bg-red-500"}`}>
                                         {employee.status}
                                     </div>

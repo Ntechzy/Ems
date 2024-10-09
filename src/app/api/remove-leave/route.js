@@ -1,3 +1,5 @@
+import dbconn from "@/lib/dbconn";
+import Leave from "@/modal/leave";
 
 export async function DELETE(req) {
     await dbconn()

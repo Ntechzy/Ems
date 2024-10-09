@@ -37,12 +37,23 @@ export const Option = {
     callbacks: {
 
         async jwt({ token, user }) {
+            await dbconn()
             if (user) {
                 token.id = user._id?.toString()
                 token.role = user.role
                 token.username = user.name
                 token.isFormCompleted = user.isFormCompleted
             }
+            if (token?.id) {
+                const updatedUser = await userModel.findById(token.id)
+                if (updatedUser) {
+                    token.id = updatedUser._id?.toString()
+                    token.role = updatedUser.role
+                    token.username = updatedUser.name
+                    token.isFormCompleted = updatedUser.isFormCompleted
+                }
+            }
+
             return token
         },
         async session({ session, token }) {

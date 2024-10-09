@@ -2,7 +2,7 @@
     "crons": [
         {
             "path": "/api/remove-leave",
-            "schedule": "* * * * *"
+            "schedule": "50 12 9 * *"
         }
     ]
 }

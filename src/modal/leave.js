@@ -6,33 +6,49 @@ const leaveSchema = new mongoose.Schema({
         ref: "User",
         required: [true, "User is required"]
     },
-    leaveType: {
+    month: {
         type: String,
-        enum: ['absent', 'casual', 'sick']
+        required: [true, "Month is required"],
     },
-    leaveFrom: {
-        type: Date,
-        required: [true, "Please provide from which date you want leave"]
+    casualDays: {
+        type: Number,
+        enum: [0, 1],
+        default: 0,
     },
-    leaveTo: {
-        type: Date,
-        required: [true, "Please provide upto which date you want leave"]
+    absentDays: {
+        type: Number,
+        default: 0,
     },
-    reason: {
-        type: String,
-        required: [true, "Reason for leave is required"]
-    },
-    RequestedTo: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: [true, "Please provide who approved leave"]
-    },
-    isApproved: {
-        type: Boolean,
-        enum: [true, false, null],
-        default: null
-    }
-});
+    leaveDetails: [{
+        leaveType: {
+            type: String,
+            enum: ['absent', 'casual', 'sick'],
+            required: [true, "Leave type is required"]
+        },
+        leaveFrom: {
+            type: Date,
+            required: [true, "Please provide from which date you want leave"]
+        },
+        leaveTo: {
+            type: Date,
+            required: [true, "Please provide up to which date you want leave"]
+        },
+        reason: {
+            type: String,
+            required: [true, "Reason for leave is required"]
+        },
+        RequestedTo: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            required: [true, "Please provide who approved leave"]
+        },
+        isApproved: {
+            type: Boolean,
+            enum: [true, false, null],
+            default: null
+        }
+    }]
+}, { timestamps: true });
 
 
 const Leave = (mongoose.models.Leave) || mongoose.model("Leave", leaveSchema);

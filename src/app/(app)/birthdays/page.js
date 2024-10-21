@@ -12,7 +12,7 @@ const Page = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if(birthdays.length){
+    if (birthdays.length) {
       initParticlesEngine(async (engine) => {
         let particleAnimation = await fireworks(engine, { sounds: true });
         setTimeout(() => {
@@ -22,7 +22,7 @@ const Page = () => {
     }
   }, [birthdays]);
 
-  
+
 
   const fetchTodaysBirthdays = async () => {
     const todaysdate = new Date();
@@ -45,7 +45,7 @@ const Page = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-100 to-blue-500 p-2 md:p-10">
       <p className="text-3xl md:text-5xl text-center font-bold drop-shadow-lg pb-9 text-red-500 mt-9 md:mt-0">Today&apos;s BirthDay</p>
-      <div className="flex items-center justify-center gap-12 overflow-x-auto h-full flex-col md:flex-row">
+      <div className="flex items-center hide-scrollbar justify-center gap-12 overflow-x-auto h-full flex-col md:flex-row">
         {
           birthdays.length ? birthdays.map((item, id) => {
             return (
@@ -59,5 +59,14 @@ const Page = () => {
     </div>
   );
 };
+
+const styles = `
+.hide-scrollbar {
+    overflow-x: hidden;
+}
+    .hide-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+`;
 
 export default Page;

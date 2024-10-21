@@ -61,7 +61,7 @@ export const Option = {
                 session.user = {
                     id: token.id?.toString(),
                     role: token.role,
-                    username: token.username,
+                    username: token.username, 
                     isFormCompleted: token.isFormCompleted
                 };
             }

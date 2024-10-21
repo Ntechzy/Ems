@@ -106,7 +106,7 @@ const Table = ({ isModal, data, title = "Employees", subtitle = "Manage all your
         status: ["Active", "Inactive"]
     });
     const [filteredData, setFilteredData] = useState(data);
-    const [tableHeaders , setTableHeaders] = useState(["ID", "Name", "Location", "Department", "Date of Joining", "Status"])
+    const [tableHeaders, setTableHeaders] = useState(["ID", "Name", "Location", "Department", "Date of Joining", "Status"])
     const availableRole = [{ label: "Employee", value: "user" }, { label: "Hr", value: "admin" }];
     const { data: session } = useSession();
     const handleSearchSubmit = (e) => {
@@ -144,7 +144,7 @@ const Table = ({ isModal, data, title = "Employees", subtitle = "Manage all your
                 department: '',
                 departments: departments,
                 currentStatus: '',
-                status: ["Active", "Inactive","Pending"]
+                status: ["Active", "Inactive", "Pending"]
             })
         }
     }
@@ -175,13 +175,13 @@ const Table = ({ isModal, data, title = "Employees", subtitle = "Manage all your
     useEffect(() => {
         handlePrepareFilterOptions();
         // remove Role from tableHeaders ( To be added)
-        if((session?.user.role == "super_admin") && data && data.length){
+        if ((session?.user.role == "super_admin") && data && data.length) {
             let arr = tableHeaders;
-            if(!arr.find(elem=>elem == "Role")){
+            if (!arr.find(elem => elem == "Role")) {
                 arr.splice(arr.length - 1, 0, "Role");
                 setTableHeaders(arr);
             }
-        } ;
+        };
     }, [data])
 
     useEffect(() => {
@@ -245,16 +245,20 @@ const Table = ({ isModal, data, title = "Employees", subtitle = "Manage all your
                                 <td className="py-2 px-4 border text-center">
                                     <span className="inline-block bg-gray-200 text-gray-700 text-xs px-2 py-1 rounded">{employee.joiningDate}</span>
                                 </td>
-                                {session?.user.role == "super_admin" && <td className="py-2 px-4 border text-center">
-                                    <Select options={availableRole} selectedOptionValue={employee.role} onChange={handleRoleChangeDropdown} userId={employee.user_id}  />
-                                </td>}
+                                {
+                                    (session?.user.role == "super_admin" || session?.user.role == "admin") && <td className="py-2 px-4 border text-center">
+                                        <Select options={availableRole} selectedOptionValue={employee.role} onChange={handleRoleChangeDropdown} userId={employee.user_id} />
+                                    </td>
+                                }
                                 <td className="py-2 px-4 border">
-                                    {console.log("employee status" , employee.status)}
+                                    {console.log("employee status", employee.status)}
                                     <div className={`inline-block px-2 py-1 text-xs rounded-full text-white ${employee.status === "Active" ? "bg-green-500" : employee.status === "Pending" ? "bg-blue-500" : "bg-red-500"}`}>
                                         {employee.status}
                                     </div>
                                 </td>
                             </tr>
+
+
                         )) :
                             !loading ?
                                 <tr className="text-center" >

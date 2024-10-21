@@ -52,19 +52,19 @@ export const resetMail = async (name, email, link) => {
 }
 
 
-export const leaveMail = async (name, email, leaveType, leaveFrom, leaveTo, reason) => {
+export const leaveMail = async (name, email, leaveType, leaveFrom, leaveTo, reason, approvedDays) => {
     try {
         await resend.emails.send({
             from: 'admin@ems.ntechzy.in',
             to: email,
             subject: `${name} :- Asking For ${leaveType} Leave `,
-            react: LeaveRequestEmail({ name, leaveType, leaveFrom, leaveTo, reason })
+            react: LeaveRequestEmail({ name, leaveType, leaveFrom, leaveTo, reason, approvedDays })
         });
         return {
             sucess: true,
             message: "Email for password change sent sucessfully ! "
         }
-    } catch (error) { 
+    } catch (error) {
         return {
             sucess: false,
             message: "Unable to send leave Request for now ! try again later ",

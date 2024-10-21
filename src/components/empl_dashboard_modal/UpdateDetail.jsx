@@ -2,30 +2,44 @@
 import axios from "axios";
 import Input from "../Input";
 import toast from "react-hot-toast";
+import { useEffect, useState } from "react";
 const UpdateDetail = ({ toggleDetailsModal, setBasicDetails, basicDetails,
-    handleInputChange, userId, setIsDetailsModalOpen, isDetailsModalOpen, fetchUserDetailsFn
+    userId, setIsDetailsModalOpen
 }) => {
+    const [localDetails, setLocalDetails] = useState(basicDetails);
+
+    useEffect(() => {
+        setLocalDetails(basicDetails);
+    }, [basicDetails]);
+
+    const handleInputChangeLocal = (e) => {
+        const { name, value } = e.target;
+        setLocalDetails((prevDetails) => ({
+            ...prevDetails,
+            [name]: value,
+        }));
+    };
 
     const handleSaveDetails = async (e) => {
         e.preventDefault();
 
         try {
+            setBasicDetails(localDetails);
             const response = await axios.put('/api/user', {
                 userId, ...{
-                    name: basicDetails?.firstName + " " + basicDetails?.lastName,
-                    email: basicDetails?.email,
+                    name: localDetails?.firstName + " " + localDetails?.lastName,
+                    email: localDetails?.email,
                     countryCode: '+91',
-                    mobile_no: basicDetails?.phone,
+                    mobile_no: localDetails?.phone,
                     secondaryEmail: '',
-                    correspondence_address: basicDetails?.address,
-                    associated_with: basicDetails?.location,
-                    dob: basicDetails?.dob
+                    correspondence_address: localDetails?.address,
+                    associated_with: localDetails?.location,
+                    dob: localDetails?.dob
                 }
             })
 
             if (response.status === 200) {
                 toast.success('Details updated successfully');
-                await fetchUserDetailsFn();
             }
 
         } catch (error) {
@@ -48,8 +62,8 @@ const UpdateDetail = ({ toggleDetailsModal, setBasicDetails, basicDetails,
                         label="work-email"
                         name="Work Email"
                         type="email"
-                        value={basicDetails.workEmail}
-                        handleChange={(e) => handleInputChange(e, basicDetails, setBasicDetails)}
+                        value={localDetails.workEmail}
+                        handleChange={handleInputChangeLocal}
                         styles={{ border: "1px solid lightgray", color: "black" }}
                         labelStyles={{ color: "gray" }}
                         inputName={"workEmail"}
@@ -62,8 +76,8 @@ const UpdateDetail = ({ toggleDetailsModal, setBasicDetails, basicDetails,
                                 label="first-name"
                                 name="First Name"
                                 type="text"
-                                value={basicDetails.firstName}
-                                handleChange={(e) => handleInputChange(e, basicDetails, setBasicDetails)}
+                                value={localDetails.firstName}
+                                handleChange={handleInputChangeLocal}
                                 styles={{ border: "1px solid lightgray", color: "black" }}
                                 labelStyles={{ color: "gray" }}
                                 inputName={"firstName"}
@@ -72,12 +86,13 @@ const UpdateDetail = ({ toggleDetailsModal, setBasicDetails, basicDetails,
 
                         {/* Last Name */}
                         <div className="w-1/2">
+
                             <Input
                                 label="last-name"
                                 name="Last Name"
                                 type="text"
-                                value={basicDetails.lastName}
-                                handleChange={(e) => handleInputChange(e, basicDetails, setBasicDetails)}
+                                value={localDetails.lastName}
+                                handleChange={handleInputChangeLocal}
                                 styles={{ border: "1px solid lightgray", color: "black" }}
                                 labelStyles={{ color: "gray" }}
                                 inputName={"lastName"}
@@ -92,8 +107,8 @@ const UpdateDetail = ({ toggleDetailsModal, setBasicDetails, basicDetails,
                                 label="country-code"
                                 name="Country Code"
                                 type="text"
-                                value={basicDetails.countryCode}
-                                handleChange={(e) => handleInputChange(e, basicDetails, setBasicDetails)}
+                                value={localDetails.countryCode}
+                                handleChange={handleInputChangeLocal}
                                 styles={{ border: "1px solid lightgray", color: "black" }}
                                 labelStyles={{ color: "gray" }}
                                 inputName={"countryCode"}
@@ -106,8 +121,8 @@ const UpdateDetail = ({ toggleDetailsModal, setBasicDetails, basicDetails,
                                 label="phone-number"
                                 name="Phone Number"
                                 type="text"
-                                value={basicDetails.phoneNumber}
-                                handleChange={(e) => handleInputChange(e, basicDetails, setBasicDetails)}
+                                value={localDetails.phoneNumber}
+                                handleChange={handleInputChangeLocal}
                                 styles={{ border: "1px solid lightgray", color: "black" }}
                                 labelStyles={{ color: "gray" }}
                                 inputName={"phoneNumber"}
@@ -121,8 +136,8 @@ const UpdateDetail = ({ toggleDetailsModal, setBasicDetails, basicDetails,
                         label="location"
                         name="Location"
                         type="text"
-                        value={basicDetails.location}
-                        handleChange={(e) => handleInputChange(e, basicDetails, setBasicDetails)}
+                        value={localDetails.location}
+                        handleChange={handleInputChangeLocal}
                         styles={{ border: "1px solid lightgray", color: "black" }}
                         labelStyles={{ color: "gray" }}
                         inputName={"location"}
@@ -133,19 +148,19 @@ const UpdateDetail = ({ toggleDetailsModal, setBasicDetails, basicDetails,
                         label="address"
                         name="Address"
                         type="text"
-                        value={basicDetails.address}
-                        handleChange={(e) => handleInputChange(e, basicDetails, setBasicDetails)}
+                        value={localDetails.address}
+                        handleChange={handleInputChangeLocal}
                         styles={{ border: "1px solid lightgray", color: "black" }}
                         labelStyles={{ color: "gray" }}
                         inputName={"address"}
-                    /> 
+                    />
                     <div className="flex space-x-2">
                         <Input
                             label="dob"
                             name="Date of Birth"
                             type="date"
-                            value={basicDetails.dob && basicDetails.dob != "N/A" ? new Date(basicDetails.dob).toISOString().split('T')[0] : ""}
-                            handleChange={(e) => handleInputChange(e, basicDetails, setBasicDetails)}
+                            value={localDetails.dob && localDetails.dob != "N/A" ? new Date(localDetails.dob).toISOString().split('T')[0] : ""}
+                            handleChange={handleInputChangeLocal}
                             styles={{ border: "1px solid lightgray", color: "black" }}
                             labelStyles={{ color: "gray" }}
                             inputName={"dob"}

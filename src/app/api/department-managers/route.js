@@ -15,13 +15,22 @@ export async function GET(req) {
 
     try {
         const session = await getServerSession(Option);
+        console.log(session.user.status);
+
 
         const id = req.nextUrl.searchParams.get('id');
 
-        if (!session && !id) {
+        if (!session) {
             return Response.json({
                 success: false,
                 message: 'Please Login'
+            }, { status: 401 });
+        }
+
+        if (!session.user.status) {
+            return Response.json({
+                success: false,
+                message: 'You Are not an active employee'
             }, { status: 401 });
         }
 
@@ -51,7 +60,7 @@ export async function GET(req) {
 
         return Response.json({
             success: true,
-            message:"",
+            message: "",
             department,
         }, { status: 200 });
 

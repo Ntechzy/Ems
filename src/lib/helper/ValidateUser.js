@@ -7,9 +7,9 @@ export const isUserAuthenticated = async (req, res) => {
         ...res,
         getHeader: (name) => res.headers?.get(name),
         setHeader: (name, value) => res.headers?.set(name, value),
-    }, Option); 
+    }, Option);
 
-    if (session && session.user) {
+    if (session && session.user && session?.user?.status) {
         return session.user;
     } else {
         throw new AppError("You are not signed in. Please login to continue.", 401);
@@ -17,7 +17,6 @@ export const isUserAuthenticated = async (req, res) => {
 }
 
 export const validateRole = (sessionUser, allowedRolesArr) => {
-    console.log(sessionUser)
     if (sessionUser && (allowedRolesArr.includes(sessionUser?.role))) {
         return true;
     } else {

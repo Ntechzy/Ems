@@ -1,5 +1,5 @@
 export const LeaveRequestEmail = ({
-    name, leaveType, leaveFrom, leaveTo, reason, approvedDays
+    name, leaveType, leaveFrom, leaveTo, reason
 }) => (
     <div style={{ fontFamily: 'Arial, sans-serif', color: '#333', lineHeight: '1.6', padding: '20px', maxWidth: '600px', margin: '0 auto', borderRadius: '8px', border: '1px solid #ddd', boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }}>
         <div style={{ textAlign: 'center', marginBottom: '20px' }}>
@@ -23,18 +23,6 @@ export const LeaveRequestEmail = ({
             <li><b>Leave To:</b> {leaveTo}</li>
             <li><b>Reason:</b> {reason}</li>
         </ul>
-
-        {approvedDays && approvedDays.length > 0 && (
-            <div style={{ marginTop: '20px', color: '#333' }}>
-                <h4 style={{ color: '#007BFF' }}>Approved Casual Leave Days:</h4>
-                <ul style={{ listStyleType: 'none', padding: 0 }}>
-                    {approvedDays.map((date, index) => (
-                        <li key={index}>{date}</li>
-                    ))}
-                </ul>
-                <p style={{ color: '#555' }}>These days are automatically allowed as it is casual leave.</p>
-            </div>
-        )}
 
         <p style={{ textAlign: 'center', marginTop: '30px', color: '#555' }}>
             Please review the request and respond at your earliest convenience. Thank you!

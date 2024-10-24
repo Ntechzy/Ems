@@ -10,26 +10,31 @@ import { BirthDayService, DepartmentService, EmployeeService, UserService } from
 const employeeService = new EmployeeService(new Employee());
 const birthDayService = new BirthDayService(new BirthDay(), employeeService);
 const departmentService = new DepartmentService(new Department());
-const userService = new UserService(new User() , departmentService);
+const userService = new UserService(new User(), departmentService);
 let appResponse;
 
 export async function GET(req, res) {
-  await dbconn();
+    await dbconn();
 
     try {
         appResponse = new AppResponse();
         const params = res.params;
         const searchParams = req.nextUrl.searchParams;
         const sessionUser = await isUserAuthenticated(req, res);
+
+
         if (sessionUser) {
             const userIdArr = params.id;
+
             if (userIdArr) {
                 const userId = userIdArr[0];
                 if (!userId) {
                     throw new AppError("Please provide correct data", 400);
-                }
+                } 
                 const user = await employeeService.GetById(userId, req, res);
                 appResponse.data = user;
+ 
+
 
             } else if (validateRole(sessionUser, ["super_admin", "admin"])) {
                 const pageNo = parseInt(searchParams.get("page")) || 1;

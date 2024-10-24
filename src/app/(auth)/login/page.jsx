@@ -31,8 +31,7 @@ const Page = () => {
             })
             if (data.error) {
                 toast.error(data.error)
-                setisLoading(false)
-                console.log(data.error);
+                setisLoading(false) 
             }
             else {
                 toast.success('Login successful')

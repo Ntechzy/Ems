@@ -52,13 +52,13 @@ export const resetMail = async (name, email, link) => {
 }
 
 
-export const leaveMail = async (name, email, leaveType, leaveFrom, leaveTo, reason, approvedDays) => {
+export const leaveMail = async (name, email, leaveType, leaveFrom, leaveTo, reason) => {
     try {
         await resend.emails.send({
             from: 'admin@ems.ntechzy.in',
             to: email,
             subject: `${name} :- Asking For ${leaveType} Leave `,
-            react: LeaveRequestEmail({ name, leaveType, leaveFrom, leaveTo, reason, approvedDays })
+            react: LeaveRequestEmail({ name, leaveType, leaveFrom, leaveTo, reason })
         });
         return {
             sucess: true,

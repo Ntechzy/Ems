@@ -8,6 +8,28 @@ export const calculateLeaveDays = (fromDate, toDate) => {
     return days;
 };
 
+const isHolidayOrSunday = (date) => {
+    const dayOfWeek = date.getDay();
+
+    return dayOfWeek === 0;
+}
+
+export const countLeaveDays = (fromDate, toDate) => {
+    let count = 0;
+    let currentDate = new Date(fromDate);
+
+    if (toDate < fromDate) {
+        throw new Error("Invalid date range: The end date must be after the start date.");
+    }
+    while (currentDate <= toDate) {
+        if (!isHolidayOrSunday(currentDate)) {
+            count++;
+        }
+        currentDate.setDate(currentDate.getDate() + 1);
+    }
+    return count;
+}
+
 export const getNextMonth = (currentMonth) => {
     const [year, monthIndex] = currentMonth.split('-').map(Number);
     let nextMonthIndex = monthIndex;

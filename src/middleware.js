@@ -52,8 +52,7 @@ export async function middleware(request) {
                 }
                 return NextResponse.next();
             }
-            if (isFormCompleted && url.pathname === '/') {
-                console.log("inside2");
+            if (isFormCompleted && url.pathname === '/') { 
                 return NextResponse.redirect(new URL(`/employee/${token.id}`, request.url));
             }
 

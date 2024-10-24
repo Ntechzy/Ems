@@ -5,8 +5,7 @@ import { resetMail } from "@/lib/resend";
 export async function POST(req) {
     await dbconn()
     try {
-        const { empId } = await req.json()
-        console.log(empId);
+        const { empId } = await req.json() 
 
         if (!empId) {
             return Response.json({

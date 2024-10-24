@@ -14,7 +14,7 @@ const LeaveModal = ({ toggleLeaveModal, setLeaveFormErrors, handleInputChange, l
             const data = await axios.get('/api/department-managers')
             setManager(data.data.department)
         } catch (error) {
-            toast.error(error.response.message ? error.response.message : "Something Went wrong... ||  Please Try Again")
+            toast.error(error.response.data.message ? error.response.data.message : "Something Went wrong... ||  Please Try Again")
         }
     }
 
@@ -68,6 +68,7 @@ const LeaveModal = ({ toggleLeaveModal, setLeaveFormErrors, handleInputChange, l
                             <option value="absent">Absent</option>
                             <option value="casual">Casual Leave</option>
                             <option value="sick">Sick Leave</option>
+                            <option value="short">Short Leave</option>
                         </select>
                         {leaveFormErrors.leaveType && (
                             <div className="text-red-500 text-sm">{leaveFormErrors.leaveType}</div>

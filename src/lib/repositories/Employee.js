@@ -8,7 +8,7 @@ export class Employee extends Base{
         this.#modelName = employeeModel;
     }
 
-    async Get(filter){
+    async Get(filter){ 
         const res = await this.#modelName.findOne(filter).populate({
             path:"user_id",
             populate:{path:"department"}

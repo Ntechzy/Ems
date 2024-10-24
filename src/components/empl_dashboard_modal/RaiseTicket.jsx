@@ -19,9 +19,7 @@ const RaiseTicket = ({ toggleTicketModal }) => {
             const response = await axios.post("/api/resources/ticket", {
                 user: userId,
                 message: message.trim(),
-            });
-            console.log(typeof response.data.status);
-
+            });  
             if (response.data.status == true) {
                 toast.success("Ticket raised successfully")
             }

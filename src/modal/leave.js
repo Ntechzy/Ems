@@ -19,10 +19,14 @@ const leaveSchema = new mongoose.Schema({
         type: Number,
         default: 0,
     },
+    shortDays: {
+        type: Number,
+        default: 0
+    }, 
     leaveDetails: [{
         leaveType: {
             type: String,
-            enum: ['absent', 'casual', 'sick'],
+            enum: ['absent', 'casual', 'sick', 'short'],
             required: [true, "Leave type is required"]
         },
         leaveFrom: {
@@ -41,12 +45,12 @@ const leaveSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
             required: [true, "Please provide who approved leave"]
-        },
+        }, 
         isApproved: {
             type: Boolean,
             enum: [true, false, null],
             default: null
-        }
+        },
     }]
 }, { timestamps: true });
 

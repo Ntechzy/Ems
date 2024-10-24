@@ -8,7 +8,7 @@ export const SelectField = ({ label, options, value, onChange, id, defaultOption
         >
             <option value="" selected disabled >{defaultOption}</option >
             {options.map((option, i) => (
-                <option key={i} value={option.value}>{option.label}</option>
+                <option key={i} value={option.value ? option.value : option}>{option.label ? option.label : option}</option>
             ))}
         </select>
     );

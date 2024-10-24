@@ -75,7 +75,7 @@ const EmpDetail = () => {
 
         if (response.status === 200) {
           toast.success("Form submitted successfully");
-          signOut(); 
+          signOut();
           setData({
             father_name: "",
             dob: "",
@@ -95,8 +95,6 @@ const EmpDetail = () => {
           });
         } else {
           toast.error("Failed to submit form");
-          console.log("failed");
- 
         }
       } catch (error) {
         toast.error("Error submitting form");
@@ -134,8 +132,8 @@ const EmpDetail = () => {
         <div className="flex justify-between items-center mb-6">
           <div
             className={`${step === 0
-                ? "bg-blue-600 text-white"
-                : "bg-gray-200 text-gray-600"
+              ? "bg-blue-600 text-white"
+              : "bg-gray-200 text-gray-600"
               } rounded-full p-4 w-12 h-12 flex items-center justify-center font-bold`}
           >
             1
@@ -143,8 +141,8 @@ const EmpDetail = () => {
           <div className="flex-grow h-1 bg-gray-300 mx-4"></div>
           <div
             className={`${step === 1
-                ? "bg-blue-600 text-white"
-                : "bg-gray-200 text-gray-600"
+              ? "bg-blue-600 text-white"
+              : "bg-gray-200 text-gray-600"
               } rounded-full p-4 w-12 h-12 flex items-center justify-center font-bold`}
           >
             2

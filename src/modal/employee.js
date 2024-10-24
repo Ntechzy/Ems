@@ -72,9 +72,7 @@ const employeeSchema = new mongoose.Schema(
       required: [true, "Who finalized salary is required"]
     },
     salary_slot: {
-      type: Number,
-      // default: null,
-
+      type: Number, 
     },
     account_holder_name: {
       type: String,
@@ -100,13 +98,7 @@ const employeeSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
-   
-    // leaves: [
-    //   {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: 'Leave'
-    //   }
-    // ],
+    
     profile_photo: {
       client_id: String,
       cloud_url: String
@@ -123,9 +115,7 @@ employeeSchema.path('alloted_softwares').validate(function (value) {
   return value.length > 0;
 }, 'At least one software must be allocated.');
 
-employeeSchema.pre(['find', 'findOne', 'findOneAndUpdate', 'updateOne', 'updateMany'],  function() {
-  this.where({ status: true});
-});
+
 
 
 const employeeModel =

@@ -155,8 +155,7 @@ export async function POST(req, res) {
         appResponse.data = resData;
 
         return Response.json(appResponse.getResponse(), { status: 201 });
-      } else if (resourceName.toLowerCase() == "software") {
-        console.log("inside software..");
+      } else if (resourceName.toLowerCase() == "software") { 
         data.version = reqBody.value;
         const resData = await softwareService.Create(data);
 

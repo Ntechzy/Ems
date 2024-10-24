@@ -4,9 +4,7 @@ import userModel from "@/modal/user";
 export async function PUT(req) {
     await dbconn()
     try {
-        const { token, newPass } = await req.json()
-        console.log(token, newPass);
-
+        const { token, newPass } = await req.json() 
         const user = await userModel.findOne({ resetToken: token, resetTokenExpiration: { $gt: Date.now() } })
         if (!user) {
             return Response.json({

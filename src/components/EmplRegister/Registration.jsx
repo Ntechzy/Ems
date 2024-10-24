@@ -8,7 +8,7 @@ import { RegistrationValidate } from '@/Validation/AuthValidation'
 import CheckboxGroup from '../CheckboxGroup'
 import axios from 'axios'
 import toast from 'react-hot-toast'
-import { SelectField } from './SelectField' 
+import { SelectField } from './SelectField'
 import { handleError, handleResponse } from '@/lib/helper/YupResponseHandler'
 const Registration = ({ close }) => {
     const [data, setData] = useState(null)
@@ -28,9 +28,8 @@ const Registration = ({ close }) => {
         interview_done_by: "",
         who_finalize_salary: ""
     })
+ 
 
-    console.log(value);
-    
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -56,12 +55,10 @@ const Registration = ({ close }) => {
         } else {
             setValue({ ...value, [fieldName]: selected.filter(item => item !== e.target.value) });
         }
-    } 
+    }
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        console.log("Starting submission...");
-
+        e.preventDefault(); 
         try {
             await RegistrationValidate.validate(value, { abortEarly: false });
 
@@ -137,7 +134,6 @@ const Registration = ({ close }) => {
                                     value={value.associated_with}
                                     defaultOption="Select Associated With"
                                     onChange={handleChange} 
-                                    
                                 />
                                 {err && <div className='text-red-700 text-center'> {err["associated_with"]}</div>}
                             </div>

@@ -1,4 +1,5 @@
 import axiosRequest from "@/lib/axios";
+import { handleError, handleResponse } from "@/lib/helper/YupResponseHandler";
 
 export const fetchUserDetails = async (userId) => {
     try {
@@ -7,7 +8,7 @@ export const fetchUserDetails = async (userId) => {
         if (res.status !== 200) {
             throw new Error('Error fetching user details');
         }
-        
+
         const userDetails = await res.data.data
 
         const employee = {
@@ -57,5 +58,15 @@ export const fetchUserDetails = async (userId) => {
         return employee;
     } catch (err) {
         console.error(err);
+    }
+};
+
+
+export const deactivateUser = async (userId) => {
+    try {
+        const res = await axiosRequest.put(`/admin-actions`, { id: userId });
+        handleResponse(res)
+    } catch (err) {
+        handleError(err)
     }
 };

@@ -4,6 +4,11 @@ import employeeModel from "@/modal/employee";
 import Leave from "@/modal/leave";
 import userModel from "@/modal/user";
 import { leaveMail } from "@/lib/resend";
+import { processLeave } from "@/lib/helper/ProcessLeave";
+import mongoose from "mongoose";
+import { countLeaveDays } from "@/lib/helper/CalculateLeaveDays";
+import { getNextMonth } from "@/lib/helper/CalculateLeaveDays";
+
 
 export async function POST(req, res) {
     await dbconn()
@@ -11,8 +16,7 @@ export async function POST(req, res) {
         const user = await isUserAuthenticated(req, res)
 
         const { leaveType, managerToAsk, startDate, endDate, reason } = await req.json()
-        let casualLeaveAutoApproved = false;
-        let approvedDays = [];
+
         const employee = await employeeModel.findOne({ user_id: user.id })
 
         const leaveFrom = new Date(startDate)
@@ -38,81 +42,28 @@ export async function POST(req, res) {
         const startMonth = `${leaveFrom.getFullYear()}-${leaveFrom.getMonth() + 1}`;
         const endMonth = `${leaveTo.getFullYear()}-${leaveTo.getMonth() + 1}`;
 
-        const processLeave = async (month, fromDate, toDate) => {
-
-            let leaveDoc = await Leave.findOne({ user: user.id, month }) || new Leave({
-                user: user.id,
-                month,
-                casualDays: 0,
-                absentDays: 0,
-                leaveDetails: []
-            });
-
-            const leaveDays = (toDate.getDate() - fromDate.getDate()) + 1;
-            if (leaveDays < 0) {
-                throw new Error("Invalid date: The end date must be after the start date.");
-            }
-            if (leaveType === 'casual') {
-                if (leaveDoc.casualDays !== 0) {
-                    throw new Error("You have already taken your casual leave for this month.");
-                }
-                if (leaveDays > 1) {
-                    throw new Error(`You requested for ${leaveDays} days but your organization only allow 1 casual leave a month`);
-                }
-                leaveDoc.casualDays = 1;
-                casualLeaveAutoApproved = true;
-                approvedDays.push(fromDate.toISOString().split('T')[0]);
-            } else {
-                leaveDoc.absentDays += leaveDays - (leaveDoc.casualDays > 0 ? 0 : 1);
-                if (leaveDoc.casualDays === 0) {
-                    leaveDoc.casualDays = 1
-                    casualLeaveAutoApproved = true;
-                    approvedDays.push(fromDate.toISOString().split('T')[0]);
-                }
-
-            }
-
-            leaveDoc.leaveDetails.push({
-                leaveType,
-                leaveFrom: fromDate,
-                leaveTo: toDate,
-                reason,
-                RequestedTo: managerToAsk,
-                isApproved: leaveType === 'casual' ? true : null
-            });
-
-            await leaveDoc.save();
-        };
-
-
         const leaveFrom_ = leaveFrom.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
         const leaveTo_ = leaveTo.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
 
-
-
         if (startMonth === endMonth) {
-            await processLeave(startMonth, leaveFrom, leaveTo);
+            await processLeave(user.id, startMonth, leaveFrom, leaveTo, leaveType, managerToAsk, reason);
         } else {
             const lastDayOfStartMonth = new Date(leaveFrom.getFullYear(), leaveFrom.getMonth() + 1, 0);
             lastDayOfStartMonth.setHours(23, 59, 59, 999);
 
             const firstDayOfEndMonth = new Date(leaveTo.getFullYear(), leaveTo.getMonth(), 1);
+
             firstDayOfEndMonth.setHours(23, 59, 59, 999);
+            await processLeave(user.id, startMonth, leaveFrom, lastDayOfStartMonth, leaveType, managerToAsk, reason);
 
-            await processLeave(startMonth, leaveFrom, lastDayOfStartMonth);
+            await processLeave(user.id, endMonth, firstDayOfEndMonth, leaveTo, leaveType, managerToAsk, reason);
 
-            await processLeave(endMonth, firstDayOfEndMonth, leaveTo);
         }
 
-        let message;
-        if (casualLeaveAutoApproved) {
-            message = `Casual leave has been automatically approved for the following days: ${approvedDays.join(', ')}.`;
-        } else {
-            message = 'Leave request submitted successfully.';
-        }
+        let message = 'Leave request submitted successfully.';
 
 
-        const emailRes = await leaveMail(user.username, isManager.email, leaveType, leaveFrom_, leaveTo_, reason, approvedDays);
+        const emailRes = await leaveMail(user.username, isManager.email, leaveType, leaveFrom_, leaveTo_, reason);
 
         if (!emailRes.sucess) {
             return Response.json(
@@ -126,11 +77,8 @@ export async function POST(req, res) {
             );
         }
 
-
-
         return Response.json({ success: true, message }, { status: 200 });
     } catch (error) {
-
         return Response.json({
             success: false,
             message: error.message || "Some error occurred"
@@ -143,58 +91,132 @@ export async function GET(req, res) {
     await dbconn()
     try {
         const user = await isUserAuthenticated(req, res)
-        if (!user.role == 'admin' || !user.role == "super_admin") {
+
+        if (!user) {
             return Response.json({
                 success: false,
-                message: 'You are not authorized to perform this action'
-            }, { status: 401 })
+                message: 'You are not Login to perform this action'
+            }, { status: 401 });
+        }
+
+        const url = new URL(req.url);
+
+        // for all common user also  
+
+        const userId = url.searchParams.get('userId');
+
+        const userIdObjectId = userId && new mongoose.Types.ObjectId(userId);
+        const view = url.searchParams.get('view') || 'self';
+        const month = url.searchParams.get('month');
+
+        const nextMonth = getNextMonth(month);
+
+        let matchQuery = {};
+
+        if (view === "all" && (user.role === 'super_admin' || user.role === 'admin')) {
+            if (month) {
+                matchQuery = {
+                    $or: [
+                        { month },
+                        { month: nextMonth }
+                    ]
+                }
+            } else {
+
+                return Response.json({
+                    success: false,
+                    message: 'Some API Parameter is missing'
+                }, { status: 400 })
+            }
+        }
+        else {
+            if (user.role === 'user' && userId != user.id) {
+                return Response.json({
+                    success: false,
+                    message: 'You are not authorized to view other users leave details.'
+                }, { status: 403 });
+            }
+            if (!userIdObjectId) {
+                return Response.json({
+                    success: false,
+                    message: 'Some API Parameter is missing'
+                }, { status: 400 })
+            }
+
+            matchQuery = {
+                user: userIdObjectId,
+                $or: [
+                    { month },
+                    { month: nextMonth }
+                ]
+            }
         }
 
         const leave = await Leave.aggregate([
             {
+                $match: matchQuery
+            },
+            {
                 $lookup: {
-                    from: "users",  
+                    from: "users",
                     localField: "user",
                     foreignField: "_id",
-                    as: "userDetails" 
+                    as: "userDetails"
                 }
             },
             {
-                $unwind: "$userDetails" 
+                $unwind: "$userDetails"
             },
             {
-                $unwind: "$leaveDetails" 
+                $unwind: "$leaveDetails"
+            },
+            {
+                $group: {
+                    _id: "$user",
+                    totalCasualDays: { $sum: "$casualDays" },
+                    totalAbsentDays: { $sum: "$absentDays" },
+                    totalShortLeave: { $sum: "$shortDays" },
+                    userData: { $first: "$userDetails" },
+                    leaveData: { $push: "$$ROOT" }
+                }
+            },
+            {
+                $unwind: "$leaveData"
             },
             {
                 $project: {
                     user: {
-                        _id: "$userDetails._id",
-                        name: "$userDetails.name"
+                        name: "$userData.name"
                     },
-                    month: 1,
-                    casualDays: 1,
-                    absentDays: 1,
-                    leaveType: "$leaveDetails.leaveType",
-                    leaveFrom: "$leaveDetails.leaveFrom",
-                    leaveTo: "$leaveDetails.leaveTo",
-                    reason: "$leaveDetails.reason",
-                    RequestedTo: "$leaveDetails.RequestedTo",
-                    isApproved: "$leaveDetails.isApproved"
+                    autoApprovedDate: "$leaveData.autoApprovedDate",
+                    leaveType: "$leaveData.leaveDetails.leaveType",
+                    leaveId: "$leaveData.leaveDetails._id",
+                    leaveFrom: "$leaveData.leaveDetails.leaveFrom",
+                    leaveTo: "$leaveData.leaveDetails.leaveTo",
+                    reason: "$leaveData.leaveDetails.reason",
+                    RequestedTo: "$leaveData.leaveDetails.RequestedTo",
+                    isApproved: "$leaveData.leaveDetails.isApproved",
+                    totalCasualDays: 1,
+                    totalAbsentDays: 1,
+                    totalShortLeave: 1
                 }
             },
             {
                 $sort: {
-                    _id: -1  
+                    _id: -1
                 }
             }
         ]);
 
         return Response.json({
             success: true,
+            message: 'Leave Details Fetched Successfully',
             leave
-        }, { status: 200 })
+        }, { status: 200 });
 
     } catch (error) {
+        console.log(error);
+
         return Response.json({
             success: false,
             message: "Something Went Wrong",
@@ -208,6 +230,7 @@ export async function PUT(req, res) {
     try {
         const user = await isUserAuthenticated(req, res)
         const { leave_id, requested_to, is_approved } = await req.json()
+
 
         // checking for the authorize
 
@@ -225,7 +248,9 @@ export async function PUT(req, res) {
             }, { status: 400 })
         }
 
-        const leave = await Leave.findById(leave_id)
+        const leave = await Leave.findOne({ "leaveDetails._id": leave_id });
+
+        const leaveDetailIndex = leave.leaveDetails.findIndex(detail => detail._id.toString() === leave_id);
 
         if (!leave) {
             return Response.json({
@@ -234,17 +259,38 @@ export async function PUT(req, res) {
             }, { status: 404 });
         }
 
-        if (leave.RequestedTo != requested_to) {
+        if (leave.leaveDetails[leaveDetailIndex].RequestedTo != requested_to) {
             return Response.json({
                 success: false,
                 message: 'Requested Id is Wrong'
             }, { status: 403 })
         }
 
-        leave.isApproved = (is_approved === "Approve");
+
+        if (is_approved === "Remove") {
+            const from = leave.leaveDetails[leaveDetailIndex].leaveFrom;
+            const to = leave.leaveDetails[leaveDetailIndex].leaveTo;
+
+            const calculate = countLeaveDays(from, to)
+
+            if (leave.leaveDetails[leaveDetailIndex].leaveType == "casual") {
+                leave.casualDays = leave.casualDays - 1
+            }
+            else {
+
+                leave.absentDays = leave.absentDays - calculate
+            }
+
+            leave.leaveDetails[leaveDetailIndex].isApproved = false
+            leave.save()
+            return Response.json({
+                success: true,
+                message: `Leave ${is_approved} successfully`,
+            }, { status: 200 })
+        }
+
+        leave.leaveDetails[leaveDetailIndex].isApproved = (is_approved === "Approve");
         await leave.save();
-
-
         return Response.json({
             success: true,
             message: `Leave ${is_approved} successfully`,

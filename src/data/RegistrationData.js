@@ -1,10 +1,4 @@
 export const fields = [
-    // {
-    //     "name": "Employee ID",
-    //     "label": "employee_id",
-    //     "type": "text",
-    //     "placeholder": "Enter Employee ID",
-    // },
     {
         "name": "Name",
         "label": "name",

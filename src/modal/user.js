@@ -45,6 +45,10 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    status: {
+      type: Boolean,
+      default: true
+    },
     department: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Department',
@@ -56,7 +60,7 @@ const userSchema = new mongoose.Schema(
     },
     resetTokenExpiration: {
       type: Date,
-      detfault: null,
+      default: null,
     }
   },
   { timestamps: true }

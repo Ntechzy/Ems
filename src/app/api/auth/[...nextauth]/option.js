@@ -20,6 +20,9 @@ export const Option = {
                         throw new Error("User Not Found")
                     }
 
+                    if (!user.status) {
+                        throw new Error("User is not active")
+                    }
                     const checkPassword = await bcrypt.compare(credentials.password, user.password)
                     if (!checkPassword) {
                         throw new Error("Invalid Password")
@@ -37,12 +40,14 @@ export const Option = {
     callbacks: {
 
         async jwt({ token, user }) {
+
             await dbconn()
             if (user) {
                 token.id = user._id?.toString()
                 token.role = user.role
                 token.username = user.name
                 token.isFormCompleted = user.isFormCompleted
+                token.status = user.status
             }
             if (token?.id) {
                 const updatedUser = await userModel.findById(token.id)
@@ -51,9 +56,9 @@ export const Option = {
                     token.role = updatedUser.role
                     token.username = updatedUser.name
                     token.isFormCompleted = updatedUser.isFormCompleted
+                    token.status = updatedUser.status
                 }
             }
-
             return token
         },
         async session({ session, token }) {
@@ -61,11 +66,13 @@ export const Option = {
                 session.user = {
                     id: token.id?.toString(),
                     role: token.role,
-                    username: token.username, 
-                    isFormCompleted: token.isFormCompleted
+                    username: token.username,
+                    isFormCompleted: token.isFormCompleted,
+                    status: token.status
                 };
             }
             return session
+
         },
     },
     session: {

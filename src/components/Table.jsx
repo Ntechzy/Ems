@@ -107,7 +107,7 @@ const Table = ({ isModal, data, title = "Employees", subtitle = "Manage all your
     });
     const [filteredData, setFilteredData] = useState(data);
     const [tableHeaders, setTableHeaders] = useState(["ID", "Name", "Location", "Department", "Date of Joining", "Status"])
-    const availableRole = [{ label: "Employee", value: "user" }, { label: "Hr", value: "admin" }];
+    const availableRole = [{ label: "Employee", value: "user" }, { label: "Hr", value: "admin" }, { label: "Super_admin", value: "super_admin" }];
     const { data: session } = useSession();
     const handleSearchSubmit = (e) => {
         setSeachVal(e.target.value);
@@ -246,12 +246,11 @@ const Table = ({ isModal, data, title = "Employees", subtitle = "Manage all your
                                     <span className="inline-block bg-gray-200 text-gray-700 text-xs px-2 py-1 rounded">{employee.joiningDate}</span>
                                 </td>
                                 {
-                                    (session?.user.role == "super_admin" || session?.user.role == "admin") && <td className="py-2 px-4 border text-center">
+                                    (session?.user.role == "super_admin") && <td className="py-2 px-4 border text-center">
                                         <Select options={availableRole} selectedOptionValue={employee.role} onChange={handleRoleChangeDropdown} userId={employee.user_id} />
                                     </td>
                                 }
                                 <td className="py-2 px-4 border">
-                                    {console.log("employee status", employee.status)}
                                     <div className={`inline-block px-2 py-1 text-xs rounded-full text-white ${employee.status === "Active" ? "bg-green-500" : employee.status === "Pending" ? "bg-blue-500" : "bg-red-500"}`}>
                                         {employee.status}
                                     </div>

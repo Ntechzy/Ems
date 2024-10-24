@@ -16,7 +16,8 @@ import JobDetails from "@/components/empl_dashboard_component/JobDetails";
 import AccountDetails from "@/components/empl_dashboard_component/AccountDetails";
 import HardwareAssigned from "@/components/empl_dashboard_component/HardwareAssigned";
 import SoftwareLicenses from "@/components/empl_dashboard_component/SoftwareLicenses";
-import { fetchUserDetails } from "../empl_dashboard_component/FetchUserDetail";
+import { deactivateUser, fetchUserDetails } from "../empl_dashboard_function/FetchUserDetail";
+import { getCurrentMonth } from "@/lib/helper/GetCurrentMonth";
 
 const Dashboard = ({ userId }) => {
     const [leaveFormErrors, setLeaveFormErrors] = useState({});
@@ -44,28 +45,6 @@ const Dashboard = ({ userId }) => {
         ifsc_code: employee?.accountDetails.ifscCode,
         account_number: employee?.accountDetails.accountNumber,
     });
-
-    const handleSaveAccountDetails = async (e) => {
-        e.preventDefault();
-
-        try {
-            const response = await axios.put('/api/user', {
-                userId, ...{
-                    account_holder_name: accountDetails.holderName,
-                    bank_name: accountDetails?.bank_name,
-                    ifsc_code: accountDetails?.ifsc_code,
-                    account_number: accountDetails?.account_number,
-                }
-            })
-            if (response.status === 200) {
-                toast.success('Account Details updated successfully', { position: "top-center" });
-                await fetchUserDetails(userId);
-            }
-        } catch (error) {
-        } finally {
-            toggleAccountModal();
-        }
-    };
 
     const [basicDetails, setBasicDetails] = useState({
         firstName: employee?.firstName,
@@ -141,6 +120,7 @@ const Dashboard = ({ userId }) => {
                 ifscCode: data?.accountDetails.ifscCode,
                 accountNumber: data?.accountDetails.accountNumber,
             });
+
         } catch (err) {
             toast.error("Something Went Wrong ")
             console.error(err);
@@ -154,10 +134,11 @@ const Dashboard = ({ userId }) => {
             getData(userId);
         }
     }, [userId]);
+ 
 
     return (
         <div
-            className={`bg-gray-100 min-h-screen p-6 ${(loading || !employee) && "flex justify-center items-center"
+            className={`bg-gray-100 min-h-screen md:p-6 p-2 ${(loading || !employee) && "flex justify-center items-center"
                 }`}
         >
             {loading ? (
@@ -183,18 +164,25 @@ const Dashboard = ({ userId }) => {
                                     </p>
                                 </div>
                             </div>
-                            <div className="grid  grid-cols-2 md: md:grid-cols-4 items-center text-sm md:text-base gap-4">
+                            <div className="grid grid-cols-2 md:grid-cols-3 items-center text-sm md:text-base gap-4">
                                 <Link href={"/birthdays"}>
-                                    <button className="bg-yellow-500 text-white py-1 md:py-2 px-3 md:px-4 rounded">
+                                    <button className="bg-yellow-500 w-full text-white py-1 md:py-2 px-3 md:px-4 rounded">
                                         BirthDays 🎂
                                     </button>
                                 </Link>
-                                {session?.user?.role === "admin" &&
+                                {(session?.user?.role === "admin" || session?.user?.role === "super_admin") &&
                                     employee?.status == "Active" && (
-                                        <button className="bg-red-500 text-white py-1 md:py-2 px-3 md:px-4 rounded">
-                                            Discontinue
-                                        </button>
-                                    )}
+                                        <>
+                                            <button onClick={() => deactivateUser(employee.user_id)} className="bg-red-500 text-white py-1 md:py-2 px-3 md:px-4 rounded">
+                                                Discontinue
+                                            </button>
+
+                                            <button className="bg-red-500 text-white py-1 md:py-2 px-3 md:px-4 rounded">
+                                                Send Warning
+                                            </button>
+                                        </ >
+                                    )
+                                }
 
                                 {!(
                                     session?.user?.role == "admin" && session?.user?.id != userId
@@ -204,14 +192,18 @@ const Dashboard = ({ userId }) => {
                                             onClick={toggleLeaveModal}
                                             className="bg-button_blue text-white p-2 md:py-2  md:px-4 rounded mr-4 flex gap-2 items-center "
                                         >
-                                            <FaRegCalendarAlt />
+                                            <span className="md:flex hidden">
+                                                <FaRegCalendarAlt />
+                                            </span>
                                             Apply Leave
                                         </button>
                                         <button
                                             onClick={toggleTicketModal}
                                             className="bg-yellow-600 text-white py-1 md:py-2 px-3 md:px-4 rounded flex gap-2 items-center"
                                         >
-                                            <FaTicketAlt />
+                                            <span className="md:flex hidden">
+                                                <FaTicketAlt />
+                                            </span>
                                             Raise Ticket
                                         </button>
                                     </>
@@ -279,7 +271,7 @@ const Dashboard = ({ userId }) => {
                         )}
                         {activeTab === "Hardware" && <HardwareAssigned employee={employee} />}
                         {activeTab === "Software" && <SoftwareLicenses employee={employee} />}
-                        {activeTab === "Leave" && <ShowLeaves />}
+                        {activeTab === "Leave" && <ShowLeaves month={getCurrentMonth()} id={userId} />}
                     </div>
 
                     {isLeaveModalOpen && (

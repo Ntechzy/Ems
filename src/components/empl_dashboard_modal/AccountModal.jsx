@@ -22,12 +22,11 @@ const AccountModal = ({ toggleAccountModal,
         }));
     };
 
-    const handleSaveAccountDetails = async (e) => { 
+    const handleSaveAccountDetails = async (e) => {
 
         e.preventDefault();
 
         try {
-            console.log("local change", localDetails);
             setAccountDetails(localDetails)
 
             const response = await axios.put('/api/user', {
@@ -38,8 +37,6 @@ const AccountModal = ({ toggleAccountModal,
                     account_number: localDetails?.accountNumber,
                 }
             })
-
-            console.log(response);
 
             if (response.status === 200) {
                 toast.success('Account Details updated successfully', { position: "top-center" });

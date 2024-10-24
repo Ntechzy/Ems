@@ -10,22 +10,24 @@ export const calculateLeaveDays = (fromDate, toDate) => {
 
 const isHolidayOrSunday = (date) => {
     const dayOfWeek = date.getDay();
-
     return dayOfWeek === 0;
 }
 
 export const countLeaveDays = (fromDate, toDate) => {
     let count = 0;
     let currentDate = new Date(fromDate);
+    let endDate = new Date(toDate)
 
     if (toDate < fromDate) {
         throw new Error("Invalid date range: The end date must be after the start date.");
     }
-    while (currentDate <= toDate) {
+    while (currentDate <= endDate) {
+
         if (!isHolidayOrSunday(currentDate)) {
             count++;
         }
         currentDate.setDate(currentDate.getDate() + 1);
+        currentDate.setHours(0, 0, 0, 0);
     }
     return count;
 }

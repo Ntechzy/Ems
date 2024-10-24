@@ -65,6 +65,7 @@ const Page = () => {
 
             <div className='p-10'>
                 <div className='flex justify-center items-center'>
+
                     <form className="flex flex-col justify-center items-center p-4 border rounded-lg shadow-md bg-white">
                         <label htmlFor="file-upload" className="mb-2 text-lg font-semibold text-gray-700">
                             Upload Official Leave
@@ -85,6 +86,8 @@ const Page = () => {
                 </div>
                 <Table data={tableData} handleSearchChange={handleSearch} isModal={setisModal} loading={loading} />
             </div>
+
+
             {isModal &&
                 <div className='fixed top-0 left-0 w-full h-full overflow-auto bg-black/50 z-10'>
                     <Registration close={setisModal} />

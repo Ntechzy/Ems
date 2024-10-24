@@ -85,6 +85,8 @@ const ShowLeaves = ({ showAllLeaves = false, month, id }) => {
         leave.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+    console.log(filteredData);
+
     const handleApproval = async (action, leaveId, requestedTo) => {
         try {
             const response = await axios.put('/api/apply-leave', {

@@ -56,6 +56,7 @@ export async function POST(req, res) {
             firstDayOfEndMonth.setHours(23, 59, 59, 999);
             await processLeave(user.id, startMonth, leaveFrom, lastDayOfStartMonth, leaveType, managerToAsk, reason);
 
+
             await processLeave(user.id, endMonth, firstDayOfEndMonth, leaveTo, leaveType, managerToAsk, reason);
 
         }
@@ -104,6 +105,7 @@ export async function GET(req, res) {
         // for all common user also  
 
         const userId = url.searchParams.get('userId');
+        console.log("userId", userId);
 
         const userIdObjectId = userId && new mongoose.Types.ObjectId(userId);
         const view = url.searchParams.get('view') || 'self';
@@ -207,6 +209,8 @@ export async function GET(req, res) {
                 }
             }
         ]);
+
+
 
         return Response.json({
             success: true,

@@ -30,7 +30,6 @@ export async function processLeave(userId, month, fromDate, toDate, leaveType, m
         }
         leaveDoc.shortDays += 1;
     } else {
-        console.log(leaveDoc.absentDays)
         leaveDoc.absentDays += leaveDays
     }
 

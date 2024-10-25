@@ -8,6 +8,7 @@ import { processLeave } from "@/lib/helper/ProcessLeave";
 import mongoose from "mongoose";
 import { countLeaveDays } from "@/lib/helper/CalculateLeaveDays";
 import { getNextMonth } from "@/lib/helper/CalculateLeaveDays";
+import ExtraLeave from "@/modal/extrasLeave";
 
 
 export async function POST(req, res) {
@@ -166,59 +167,60 @@ export async function GET(req, res) {
 
         const leave = await Leave.aggregate([
             {
-                $match: matchQuery
+                $match: matchQuery,
             },
             {
                 $lookup: {
                     from: "users",
                     localField: "user",
                     foreignField: "_id",
-                    as: "userDetails"
-                }
+                    as: "userDetails",
+                },
             },
             {
-                $unwind: "$userDetails"
+                $unwind: "$userDetails",
             },
+            // Flattening the leaveDetails array without grouping it into a single document
             {
-                $unwind: "$leaveDetails"
+                $unwind: "$leaveDetails",
             },
             {
                 $group: {
-                    _id: "$user",
+                    _id: {
+                        user: "$user",
+                        leaveId: "$leaveDetails._id", // Separate each leave entry based on its unique leave ID
+                    },
                     totalCasualDays: { $sum: "$casualDays" },
                     totalAbsentDays: { $sum: "$absentDays" },
                     totalShortLeave: { $sum: "$shortDays" },
                     userData: { $first: "$userDetails" },
-                    leaveData: { $push: "$$ROOT" }
-                }
-            },
-            {
-                $unwind: "$leaveData"
+                    leaveDetails: { $first: "$leaveDetails" }, // Get each leave record individually
+                },
             },
             {
                 $project: {
                     user: {
-                        name: "$userData.name"
+                        name: "$userData.name",
                     },
-                    autoApprovedDate: "$leaveData.autoApprovedDate",
-                    leaveType: "$leaveData.leaveDetails.leaveType",
-                    leaveId: "$leaveData.leaveDetails._id",
-                    leaveFrom: "$leaveData.leaveDetails.leaveFrom",
-                    leaveTo: "$leaveData.leaveDetails.leaveTo",
-                    reason: "$leaveData.leaveDetails.reason",
-                    RequestedTo: "$leaveData.leaveDetails.RequestedTo",
-                    isApproved: "$leaveData.leaveDetails.isApproved",
+                    leaveType: "$leaveDetails.leaveType",
+                    leaveId: "$leaveDetails._id",
+                    leaveFrom: "$leaveDetails.leaveFrom",
+                    leaveTo: "$leaveDetails.leaveTo",
+                    reason: "$leaveDetails.reason",
+                    RequestedTo: "$leaveDetails.RequestedTo",
+                    isApproved: "$leaveDetails.isApproved",
                     totalCasualDays: 1,
                     totalAbsentDays: 1,
-                    totalShortLeave: 1
-                }
+                    totalShortLeave: 1,
+                },
             },
             {
                 $sort: {
-                    _id: -1
-                }
-            }
+                    _id: -1,
+                },
+            },
         ]);
+
 
 
 
@@ -284,9 +286,9 @@ export async function PUT(req, res) {
         if (is_approved === "Remove") {
             const from = leave.leaveDetails[leaveDetailIndex].leaveFrom;
             const to = leave.leaveDetails[leaveDetailIndex].leaveTo;
+            const officialOff = await ExtraLeave.find({})
+            const calculate = countLeaveDays(from, to, officialOff)
 
-            const calculate = countLeaveDays(from, to)
-            
             if (leave.leaveDetails[leaveDetailIndex].leaveType == "casual") {
                 leave.casualDays = leave.casualDays - 1
             }

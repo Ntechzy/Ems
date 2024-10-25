@@ -1,5 +1,6 @@
 import Leave from "@/modal/leave";
 import { countLeaveDays } from "./CalculateLeaveDays";
+import ExtraLeave from "@/modal/extrasLeave";
 
 export async function processLeave(userId, month, fromDate, toDate, leaveType, managerToAsk, reason) {
     let leaveDoc = await Leave.findOne({ user: userId, month }) || new Leave({
@@ -10,7 +11,9 @@ export async function processLeave(userId, month, fromDate, toDate, leaveType, m
         shortDays: 0,
         leaveDetails: []
     });
-    const leaveDays = countLeaveDays(fromDate, toDate);
+
+    const officialOff = await ExtraLeave.find({})
+    const leaveDays = countLeaveDays(fromDate, toDate, officialOff);
 
     if (leaveType === 'casual') {
         if (leaveDoc.casualDays !== 0) {

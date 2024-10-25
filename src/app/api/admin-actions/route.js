@@ -1,13 +1,12 @@
 import dbconn from "@/lib/dbconn";
-import { isUserAuthenticated } from "@/lib/helper/ValidateUser"; 
-import officialLeave from "@/modal/officialLeave";
+import { isUserAuthenticated } from "@/lib/helper/ValidateUser";
+import ExtraLeave from "@/modal/extrasLeave";
 import userModel from "@/modal/user";
 
 export async function PUT(req, res) {
     await dbconn();
 
     try {
-        console.log("ok");
         const authenticatedUser = await isUserAuthenticated(req, res);
 
         if (!authenticatedUser) {
@@ -91,7 +90,7 @@ export async function POST(req, res) {
             date: new Date(date),
         }));
 
-        await officialLeave.insertMany(leavesToInsert);
+        await ExtraLeave.insertMany(leavesToInsert);
 
         return Response.json({
             success: true,

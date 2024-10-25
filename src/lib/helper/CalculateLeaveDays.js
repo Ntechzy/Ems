@@ -1,4 +1,7 @@
-import OfficialLeave from "@/modal/officialLeave";
+// import ExtaLeaveModal from "@/modal/extrasLeave";
+
+import { loadGetInitialProps } from "next/dist/shared/lib/utils";
+
 
 export const calculateLeaveDays = (fromDate, toDate) => {
 
@@ -12,28 +15,32 @@ export const calculateLeaveDays = (fromDate, toDate) => {
 
 
 
-const isHolidayOrSunday = async (date) => {
+const isHolidayOrSunday = (date, officialOff) => {
     const dayOfWeek = date.getDay();
-    // const officialOff = await OfficialLeave.findOne({ date: date })
-    return dayOfWeek === 0;
+    const is_Off = officialOff.some(holiday =>
+        new Date(holiday.date).setHours(0, 0, 0, 0) === date.setHours(0, 0, 0, 0)
+    );
+
+    return dayOfWeek === 0 || is_Off;
 }
 
-export const countLeaveDays = (fromDate, toDate) => {
+export const countLeaveDays = (fromDate, toDate, officialOff) => {
     let count = 0;
     let currentDate = new Date(fromDate);
     let endDate = new Date(toDate)
+
 
     if (toDate < fromDate) {
         throw new Error("Invalid date range: The end date must be after the start date.");
     }
     while (currentDate <= endDate) {
-
-        if (!isHolidayOrSunday(currentDate)) {
+        if (!isHolidayOrSunday(currentDate, officialOff)) {
             count++;
         }
         currentDate.setDate(currentDate.getDate() + 1);
         currentDate.setHours(0, 0, 0, 0);
     }
+
     return count;
 }
 

@@ -52,6 +52,7 @@ const ShowLeaves = ({ showAllLeaves = false, month, id }) => {
                     isApproved: leave.isApproved,
                     leaveId: leave.leaveId,
                 }));
+                console.log(transformedData);
 
                 const sortedData = transformedData.sort((a, b) => {
                     if (a.isApproved === null && b.isApproved !== null) return -1;

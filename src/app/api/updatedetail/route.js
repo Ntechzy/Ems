@@ -11,7 +11,7 @@ import { uploadToCloudinary } from "../upload/route";
 // import { getDataUri } from "@/lib/helper/dataUri";
 
 export async function PUT(req) {
-
+  console.log("PUT request received");
   await dbconn();
   const session = await getServerSession(Option);
 
@@ -34,6 +34,73 @@ export async function PUT(req) {
         ifsc_code ,          
         account_number   
       } = await req.json();
+    if (session && session.user) {
+      const formData = await req.formData();
+      console.log([...formData.entries()]);
+      const permanent_address = formData.get("permanent_address");
+      const correspondence_address = formData.get("correspondence_address");
+      const pan_card_no = formData.get("pan_card_no");
+      const aadhaar_no = formData.get("aadhaar_no");
+      const father_name = formData.get("father_name");
+      const dob = formData.get("dob");
+      const date_of_joining = formData.get("date_of_joining");
+      const salary_slot = formData.get("salary_slot");
+      const blood_group = formData.get("blood_group");
+      const marital_status = formData.get("marital_status");
+      const highest_qualification = formData.get("highest_qualification");
+      const account_holder_name = formData.get("account_holder_name");
+      const bank_name = formData.get("bank_name");
+      const ifsc_code = formData.get("ifsc_code");
+      const account_number = formData.get("account_number");
+      const profile_photo = formData.get("profile_photo");
+
+      // console.log(profile_photo);
+      // let profilePhotoData = {};
+      // console.log("okokok");
+
+      // if (profile_photo && profile_photo.size > 0) {
+      //   // Upload to Cloudinary
+      //   console.log("File being uploaded hahahaah:", profile_photo);
+        
+      //   const uploadResult = await uploadToCloudinary(profile_photo, "ems");
+
+      //   console.log(uploadResult, "uploadResult");
+
+      //   // Store both client_id and cloud_url
+      //   profilePhotoData = {
+      //     client_id: uploadResult.public_id,
+      //     cloud_url: uploadResult.secure_url,
+      //   };
+
+      //   console.log("profilePhotoData", profilePhotoData);
+      // }
+      // console.log("profilePhotoData", profilePhotoData);
+      // console.log(client_id, cloud_url);
+
+
+
+      let profilePhotoData = {};
+
+      if (profile_photo && profile_photo.size > 0) {
+        // Convert the file to a Data URI
+        // const fileUri = await getDataUri(profile_photo);
+        // console.log("File being uploaded:", fileUri);
+
+        // Upload to Cloudinary
+        const buffer = await profile_photo.arrayBuffer();
+        const uploadResult = await uploadToCloudinary(Buffer.from(buffer), "ems");
+        console.log(uploadResult, "uploadResult");
+
+        // Store both client_id and cloud_url
+        profilePhotoData = {
+          client_id: uploadResult.public_id,
+          cloud_url: uploadResult.url,
+        };
+      }
+      console.log("profilePhotoData", profilePhotoData);
+
+
+
 
       const encryptedPanCardNo = encrypt(pan_card_no);
       const encryptedAadhaarNo = encrypt(aadhaar_no);
@@ -56,17 +123,16 @@ export async function PUT(req) {
 
       const [day, month, year] = salarySlotTrimmed.split("-").map(Number); // Split and convert to numbers
 
-      const [day, month, year] = salary_slot.split('-').map(Number); // Split and convert to numbers
-
+      console.log(day, month, year);
       // Create a new Date object (month is 0-indexed in JavaScript)
       const dateObject = new Date(year, month - 1, day);
 
-      // Validate that the date is valid
+      // // Validate that the date is valid
       if (isNaN(dateObject.getTime())) {
-        return res.status(400).json({ error: 'Invalid date' });
+        return new Response("Invalid date format", { status: 400 });
       }
 
-      // Extract the day from the Date object
+      // // Extract the day from the Date object
       const extractedDay = dateObject.getDate(); // This gets the day (1-31)
 
       console.log("extractedDay", extractedDay);
@@ -105,10 +171,11 @@ export async function PUT(req) {
       const updatedIt = await userModel.findByIdAndUpdate(
         { _id: id },
         {
-          isFormCompleted: true
+          isFormCompleted: true,
         },
         { new: true }
       );
+      console.log("updatedIt", updatedIt);
 
       if (!updatedUser) {
         return Response.json(

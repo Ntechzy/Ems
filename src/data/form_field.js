@@ -83,5 +83,10 @@ export const first=[
         "name": "Account Number",
          "type": "text"
       },
+      {
+        "label": "profile_photo",
+        "name": "Profile Photo",
+         "type": "file"
+      },
     
 ]

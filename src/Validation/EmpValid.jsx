@@ -36,5 +36,14 @@ export const moreDetailsSchema = Yup.object({
   account_number: Yup.string()
     .matches(/^[0-9]{9,18}$/, "Account number should be between 9 and 18 digits")
     .required("Account number is required"),
+
+    profile_photo: Yup.mixed()
+    .required("Profile photo is required")
+    .test("fileSize", "File size is too large", value => {
+      return value && value.size <= 2000000; // Limit to 2MB
+    })
+    .test("fileType", "Unsupported file format, only JPG/PNG/JPEG are allowed", value => {
+      return value && (value.type === "image/jpeg" || value.type === "image/png" || value.type === "image/jpg" );
+    }),
 });
 

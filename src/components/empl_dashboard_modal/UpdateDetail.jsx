@@ -20,25 +20,31 @@ const UpdateDetail = ({ toggleDetailsModal, setBasicDetails, basicDetails,
         }));
     };
 
+    console.log(localDetails);
+    
+
+
     const handleSaveDetails = async (e) => {
         e.preventDefault();
 
         try {
+            
             setBasicDetails(localDetails);
+           
             const response = await axios.put('/api/user', {
                 userId, ...{
                     name: localDetails?.firstName + " " + localDetails?.lastName,
-                    email: localDetails?.email,
+                    email: localDetails?.workEmail,
                     countryCode: '+91',
-                    mobile_no: localDetails?.phone,
+                    mobile_no: localDetails?.phoneNumber,
                     secondaryEmail: '',
                     correspondence_address: localDetails?.address,
                     associated_with: localDetails?.location,
                     dob: localDetails?.dob
                 }
             })
-
             if (response.status === 200) {
+                
                 toast.success('Details updated successfully');
             }
 

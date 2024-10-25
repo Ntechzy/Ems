@@ -7,6 +7,8 @@ import dobModel from "@/modal/birthday";
 import { encrypt } from "@/lib/encrypt";
 import userModel from "@/modal/user";
 import { date } from "yup";
+import { uploadToCloudinary } from "../upload/route";
+// import { getDataUri } from "@/lib/helper/dataUri";
 
 export async function PUT(req) {
 
@@ -16,21 +18,21 @@ export async function PUT(req) {
   try {
     if (session && session.user && session.user.status) {
       const {
-        permanent_address,
-        correspondence_address,
-        pan_card_no,
-        aadhaar_no,
-        father_name,
+        permanent_address ,
+        correspondence_address ,
+        pan_card_no ,
+        aadhaar_no ,
+        father_name ,
         dob,
         date_of_joining,
-        salary_slot,
-        blood_group,
-        marital_status,
-        highest_qualification,
-        account_holder_name,
-        bank_name,
-        ifsc_code,
-        account_number
+        salary_slot ,
+        blood_group ,
+        marital_status ,
+        highest_qualification ,
+        account_holder_name , 
+        bank_name ,       
+        ifsc_code ,          
+        account_number   
       } = await req.json();
 
       const encryptedPanCardNo = encrypt(pan_card_no);
@@ -40,12 +42,8 @@ export async function PUT(req) {
       const encryptedIfscCode = encrypt(ifsc_code);
       const encryptedAccountNumber = encrypt(account_number);
 
-      // Convert date strings to Date objects
-      // const dobDate = new Date(dob.split("/").join("-"));
-      // const dateOfJoining = new Date(
-      //   date_of_joining.split("/").join("-")
-      // ); 
-      const dob_date = new Date(Date.now(dob))
+      // console.log(session.user);
+      const dob_date = new Date(Date.now(dob));
       const dob_id = await dobModel.create({
         name: session.user.username,
         date: dob_date,
@@ -53,10 +51,10 @@ export async function PUT(req) {
 
       const doj = new Date(Date.now(date_of_joining));
 
-      // const salary_date=new Date(Date.now(salary_slot))
-      // const salary_date = new Date(salary_slot);
-      // const day=salary_date.split('-')[0];
+      const salarySlotTrimmed = salary_slot.trim(); // Ensure no leading/trailing spaces
+      console.log("Salary slot after trimming:", salarySlotTrimmed);
 
+      const [day, month, year] = salarySlotTrimmed.split("-").map(Number); // Split and convert to numbers
 
       const [day, month, year] = salary_slot.split('-').map(Number); // Split and convert to numbers
 
@@ -71,12 +69,15 @@ export async function PUT(req) {
       // Extract the day from the Date object
       const extractedDay = dateObject.getDate(); // This gets the day (1-31)
 
+      console.log("extractedDay", extractedDay);
 
+      console.log("salary date", day);
 
       //   const day  = salary_date.split('-')[2];
       //  console.log("day",day);
 
-      const id = session.user.id
+      const id = session.user.id;
+      console.log("user id", id);
 
       const updatedUser = await employeeModel.findOneAndUpdate(
         { user_id: id },
@@ -97,6 +98,7 @@ export async function PUT(req) {
           bank_name: encryptedBankName,
           ifsc_code: encryptedIfscCode,
           account_number: encryptedAccountNumber,
+          profile_photo: profilePhotoData,
         },
         { new: true }
       );
@@ -109,10 +111,11 @@ export async function PUT(req) {
       );
 
       if (!updatedUser) {
-        return Response.json({
-          success: false,
-          message: "User not found",
-        },
+        return Response.json(
+          {
+            success: false,
+            message: "User not found",
+          },
           {
             status: 404,
             headers: { "Content-Type": "application/json" },
@@ -120,31 +123,35 @@ export async function PUT(req) {
         );
       }
 
-      return Response.json({
-        success: true,
-        user: updatedUser,
-        message: "Details Updated Successfully",
-      },
-        {
-          status: 200,
-        }
+      return Response.json(
+        JSON.stringify(
+          {
+            success: true,
+            user: updatedUser,
+            message: "Details Updated Successfully",
+          },
+          {
+            status: 200,
+          }
+        )
       );
     } else {
-      return Response.json(
-        {
+      return (
+        Response.json({
           success: false,
           message: "Please Login",
         }),
         { status: 401, headers: { "Content-Type": "application/json" } }
-
+      );
     }
   } catch (error) {
     console.error("Error while processing request:", error);
-    return Response.json({
-      success: false,
-      message: "Error While Updating the Details",
-      error: error.message,
-    },
+    return Response.json(
+      {
+        success: false,
+        message: "Error While Updating the Details",
+        error: error.message,
+      },
       {
         status: 500,
         headers: { "Content-Type": "application/json" },

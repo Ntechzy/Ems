@@ -1,13 +1,31 @@
 'use client'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { IoLogOut } from "react-icons/io5";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
-
+import axios from 'axios';
 function Navbar() {
     const [isOpen, setIsOpen] = React.useState(false);
     const { data: session, status } = useSession()
+    const [employeePhoto, setEmployeePhoto] = useState(null);
+
+    useEffect(() => {
+        if (session && session.user.id) {
+            const fetchEmployeePhoto = async () => {
+                try {
+                    const response = await axios.get(`/api/user/${session.user.id}`);
+                    console.log(response);
+                    
+                    setEmployeePhoto(response.data.data.profile_photo.cloud_url);
+                } catch (error) {
+                    console.error('Error fetching employee photo:', error);
+                }
+            };
+            fetchEmployeePhoto();
+        }
+    }, [session]);
+
     return (
         <>
             {
@@ -36,7 +54,7 @@ function Navbar() {
 
                             </div>
                             <Link href={"/"} className="flex items-center space-x-4">
-                                <img src="https://img.freepik.com/free-photo/beautiful-male-half-length-portrait-isolated-white-studio-background-young-emotional-hindu-man-blue-shirt-facial-expression-human-emotions-advertising-concept-standing-smiling_155003-25250.jpg?w=826&t=st=1727176643~exp=1727177243~hmac=d883f4c6ab692bb09bd6684c8e42efc270bca8adb3487e5b4b5a5eaaaf36fab3" alt="Profile picture of a person" className="rounded-full w-10 h-10" />
+                                <img src={employeePhoto} alt="Profile picture of a person" className="rounded-full w-10 h-10" />
                             </Link>
                         </div>
                         <div className="md:hidden">

@@ -100,8 +100,8 @@ const employeeSchema = new mongoose.Schema(
     },
     
     profile_photo: {
-      client_id: String,
-      cloud_url: String
+      client_id: {type: String},
+      cloud_url: {type: String},
     }
   }, {
   timestamps: true

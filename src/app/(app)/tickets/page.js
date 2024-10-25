@@ -65,7 +65,7 @@ const Tickets = () => {
     );
   }
 
-  // Render tickets
+  // Render tickets 
   return (
     <div className="container mx-auto p-6 bg-gray-100">
       <h1 className="text-4xl font-bold text-center mb-8 text-gray-800">Ticket Dashboard</h1>
@@ -86,7 +86,7 @@ const Tickets = () => {
             </p>
             <p className="text-sm text-gray-500 p-1 rounded mb-2">
               {ticket?.user?.employee_id}
-            </p>
+            </p> 
             <h2 className="text-lg font-normal mb-2 text-gray-700 bg-gray-300 p-1 rounded">{ticket.message}</h2>
             <p className="text-gray-500 text-xs bg-gray-200 p-1 rounded-lg mt-4 text-right">
               <strong>Created At:</strong> {new Date(ticket.createdAt).toLocaleString()}

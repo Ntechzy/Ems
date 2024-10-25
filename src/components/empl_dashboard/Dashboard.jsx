@@ -62,6 +62,7 @@ const Dashboard = ({ userId }) => {
     });
 
 
+
     const handleInputChange = (
         e,
         detailsObj = leaveDetails,

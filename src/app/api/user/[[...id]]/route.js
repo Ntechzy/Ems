@@ -97,13 +97,16 @@ export async function PUT(req, res) {
     try {
         const appResponse = new AppResponse();
         await dbconn();
-
+   
         const { userId, name, email, mobile_no, correspondence_address, associated_with, account_holder_name, bank_name, ifsc_code, account_number, dob } = await req.json();
         const dataToUpdate = {};
 
 
+
         if (name) dataToUpdate.name = name;
         if (email) dataToUpdate.email = email;
+        console.log(email);
+        
         if (mobile_no) dataToUpdate.mobile_no = mobile_no;
         if (correspondence_address) dataToUpdate.correspondence_address = correspondence_address;
         if (associated_with) dataToUpdate.associated_with = associated_with;

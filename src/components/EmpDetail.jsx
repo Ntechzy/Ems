@@ -24,14 +24,33 @@ const EmpDetail = () => {
     account_holder_name: "",
     bank_name: "",
     ifsc_code: "",
-    account_number: ""
+    account_number: "",
+    profile_photo: "",
   });
 
   const [errors, setErrors] = useState({});
   const [step, setStep] = useState(0);
 
+  // const handleChange = (e) => {
+  //   setData({ ...data, [e.target.id]: e.target.value });
+  //   setErrors({});
+  // };
+
   const handleChange = (e) => {
-    setData({ ...data, [e.target.id]: e.target.value });
+    const { id, type,value } = e.target;
+  
+    
+    if (type === 'file') {
+      const imagefile = e.target.files[0];
+      // console.log(file);
+      setData({ ...data, [id]: imagefile }); 
+      console.log(data);
+
+    } else {
+      setData({ ...data, [id]: value });
+      console.log(data);
+      
+    }
     setErrors({});
   };
 
@@ -67,11 +86,20 @@ const EmpDetail = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log(data);
+    
     const isValid = await validateStep();
     if (isValid) {
       try {
-
-        const response = await axios.put("/api/updatedetail", data);
+        const formData = new FormData();
+        for (const key in data) {
+          formData.append(key, data[key]);
+        }
+        const response = await axios.put("/api/updatedetail", formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
 
         if (response.status === 200) {
           toast.success("Form submitted successfully");
@@ -91,7 +119,8 @@ const EmpDetail = () => {
             account_holder_name: "",
             bank_name: "",
             ifsc_code: "",
-            account_number: ""
+            account_number: "",
+            profile_photo: "",
           });
         } else {
           toast.error("Failed to submit form");
@@ -111,7 +140,7 @@ const EmpDetail = () => {
           name={item.name}
           label={item.label}
           handleChange={handleChange}
-          value={data[item.label]}
+          value={item.type!=="file" ? data[item.label] :undefined }
           type={item.type}
         />
         {errors[item.label] && (

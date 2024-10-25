@@ -5,7 +5,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { handleError, handleResponse } from "@/lib/helper/YupResponseHandler";
 import Loader from "../Loader";
-const LeaveModal = ({ toggleLeaveModal, setLeaveFormErrors, handleInputChange, leaveDetails, leaveFormErrors }) => {
+const LeaveModal = ({ toggleLeaveModal, setLeaveFormErrors, handleInputChange, leaveDetails, leaveFormErrors, userId }) => {
 
     const [manager, setManager] = useState()
     const [isSubmiting, setisSubmiting] = useState(false)
@@ -30,7 +30,7 @@ const LeaveModal = ({ toggleLeaveModal, setLeaveFormErrors, handleInputChange, l
             await leaveValidation.validate(leaveDetails, { abortEarly: false });
 
             setisSubmiting(true)
-            const response = await axios.post('/api/apply-leave', leaveDetails)
+            const response = await axios.post('/api/apply-leave', { ...leaveDetails, userId })
 
             handleResponse(response)
             toggleLeaveModal();

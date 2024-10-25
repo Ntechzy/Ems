@@ -59,3 +59,60 @@ export async function PUT(req, res) {
         }, { status: 500 });
     }
 }
+
+
+// for adding official leave
+
+export async function POST(req, res) {
+    await dbconn();
+
+    try {
+        const authenticatedUser = await isUserAuthenticated(req, res);
+
+        if (!authenticatedUser) {
+            return Response.json({
+                success: false,
+                message: 'You are not logged in to perform this action',
+            }, { status: 401 });
+        }
+
+        if (authenticatedUser.role === "user") {
+            return Response.json({
+                success: false,
+                message: 'You are not authorized to perform this action',
+            }, { status: 403 });
+        }
+
+
+        const { dates } = await req.json();
+
+        if (!Array.isArray(dates) || dates.length === 0) {
+            return Response.json({
+                success: false,
+                message: 'Invalid input. Please provide a non-empty array of dates.',
+            }, { status: 400 });
+        }
+
+        const uniqueLeaves = dates.map(date => new Date(date).toISOString()).filter((date, index, self) => self.indexOf(date) === index);
+
+        const leavesToInsert = uniqueLeaves.map(date => ({
+            date: new Date(date),
+        }));
+
+        await OfficialLeave.insertMany(leavesToInsert);
+
+        return Response.json({
+            success: true,
+            message: 'Official leave days added successfully.',
+        }, { status: 201 });
+    } catch (error) {
+        return Response.json({
+            success: false,
+            message: "Some error occurred",
+            error: error.message || 'Internal Server Error',
+        }, { status: 500 });
+    }
+}
+
+
+

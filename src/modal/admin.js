@@ -1,19 +1,17 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
-const adminSchema = new mongoose.Schema({
-    name: {
-        type: String,
+const officialLeaveSchema = new mongoose.Schema({
+    date: {
+        type: Date,
         required: true,
-        trim: true
+        unique: true,
     },
-   id:{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-   }
-}, { timestamps: true });
+    createdAt: {
+        type: Date,
+        default: Date.now,
+    },
+});
 
-// Create the model
-const Admin = mongoose.model('Admin', adminSchema);
+const OfficialLeave = mongoose.model('OfficialLeave', officialLeaveSchema);
 
-export default Admin;
+module.exports = OfficialLeave;

@@ -14,10 +14,20 @@ export async function POST(req, res) {
     await dbconn()
     try {
         const user = await isUserAuthenticated(req, res)
+        console.log(user.role);
 
-        const { leaveType, managerToAsk, startDate, endDate, reason } = await req.json()
+        const { leaveType, managerToAsk, startDate, endDate, reason, userId } = await req.json()
 
-        const employee = await employeeModel.findOne({ user_id: user.id })
+        console.log("managerToAsk", leaveType);
+
+        if (userId !== user._id && user.role !== "admin" && user.role !== "super_admin") {
+            return Response.json({
+                success: false,
+                message: 'You can only apply for your own leave'
+            }, { status: 401 });
+        }
+
+        const employee = await employeeModel.findOne({ user_id: userId })
 
         const leaveFrom = new Date(startDate)
         const leaveTo = new Date(endDate)
@@ -46,7 +56,7 @@ export async function POST(req, res) {
         const leaveTo_ = leaveTo.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
 
         if (startMonth === endMonth) {
-            await processLeave(user.id, startMonth, leaveFrom, leaveTo, leaveType, managerToAsk, reason);
+            await processLeave(userId, startMonth, leaveFrom, leaveTo, leaveType, managerToAsk, reason);
         } else {
             const lastDayOfStartMonth = new Date(leaveFrom.getFullYear(), leaveFrom.getMonth() + 1, 0);
             lastDayOfStartMonth.setHours(23, 59, 59, 999);
@@ -54,10 +64,10 @@ export async function POST(req, res) {
             const firstDayOfEndMonth = new Date(leaveTo.getFullYear(), leaveTo.getMonth(), 1);
 
             firstDayOfEndMonth.setHours(23, 59, 59, 999);
-            await processLeave(user.id, startMonth, leaveFrom, lastDayOfStartMonth, leaveType, managerToAsk, reason);
+            await processLeave(userId, startMonth, leaveFrom, lastDayOfStartMonth, leaveType, managerToAsk, reason);
 
 
-            await processLeave(user.id, endMonth, firstDayOfEndMonth, leaveTo, leaveType, managerToAsk, reason);
+            await processLeave(userId, endMonth, firstDayOfEndMonth, leaveTo, leaveType, managerToAsk, reason);
 
         }
 
@@ -276,12 +286,11 @@ export async function PUT(req, res) {
             const to = leave.leaveDetails[leaveDetailIndex].leaveTo;
 
             const calculate = countLeaveDays(from, to)
-
+            
             if (leave.leaveDetails[leaveDetailIndex].leaveType == "casual") {
                 leave.casualDays = leave.casualDays - 1
             }
             else {
-
                 leave.absentDays = leave.absentDays - calculate
             }
 

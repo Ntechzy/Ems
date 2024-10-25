@@ -30,9 +30,6 @@ const Dashboard = ({ userId }) => {
     const [isUpdatePass, setisUpdatePass] = useState(false);
     const [loading, setLoading] = useState(true);
 
-    console.log("userId", userId);
-
-
     const { data: session, status } = useSession();
     const [leaveDetails, setLeaveDetails] = useState({
         leaveType: "",
@@ -284,6 +281,7 @@ const Dashboard = ({ userId }) => {
                             handleInputChange={handleInputChange}
                             setLeaveFormErrors={setLeaveFormErrors}
                             leaveDetails={leaveDetails}
+                            userId={userId}
                             leaveFormErrors={leaveFormErrors}
                         />
                     )}

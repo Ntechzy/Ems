@@ -30,7 +30,6 @@ export const Option = {
                     else {
                         return user
                     }
-
                 } catch (error) {
                     throw new Error(error)
                 }

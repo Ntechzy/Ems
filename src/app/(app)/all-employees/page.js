@@ -1,13 +1,19 @@
 'use client'
 import Registration from '@/components/EmplRegister/Registration';
 import Table from '@/components/Table';
-import axiosRequest from '@/lib/axios';;
+import axiosRequest from '@/lib/axios'; import { handleError, handleResponse } from '@/lib/helper/YupResponseHandler';
+;
 import React, { useEffect, useState } from 'react'
-
+import { DayPicker } from 'react-day-picker';
+import "react-day-picker/style.css";
+import toast from 'react-hot-toast';
 const Page = () => {
     const [tableData, setTableData] = useState([]);
+    const [selected, setSelected] = useState();
     const [initialTableData, setInitialTableData] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [isModal, setisModal] = useState(false);
+
     const handleSearch = (searchVal) => {
         if (searchVal == "") {
             setTableData(initialTableData);
@@ -21,8 +27,6 @@ const Page = () => {
             })
         );
     }
-
-    const [isModal, setisModal] = useState(false);
 
     const fetchEmployees = async () => {
         try {
@@ -56,33 +60,52 @@ const Page = () => {
         }
     }
 
+    const handleSelect = (dates) => {
+        const selectedDatesArray = Array.isArray(dates) ? dates : dates ? [dates] : [];
+
+        const utcDates = selectedDatesArray.map(date => {
+            const utcDate = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+            return utcDate.toISOString().split('T')[0];
+        });
+
+        setSelected(utcDates);
+    };
+
     useEffect(() => {
         fetchEmployees();
     }, [])
+
+    const handleSubmit = async () => {
+        if (!selected) {
+            toast.error('Please select at least one date.');
+            return;
+        }
+
+        try {
+            const response = await axios.post('/api/official-leave', selected);
+            handleResponse(response)
+            setSelected([]);
+        } catch (error) {
+            handleError(error)
+        }
+    };
+    console.log(selected);
+
 
     return (
         <>
 
             <div className='p-10'>
-                <div className='flex justify-center items-center'>
-
-                    <form className="flex flex-col justify-center items-center p-4 border rounded-lg shadow-md bg-white">
-                        <label htmlFor="file-upload" className="mb-2 text-lg font-semibold text-gray-700">
-                            Upload Official Leave
-                        </label>
-                        <input
-                            type="file"
-                            id="file-upload"
-                            required
-                            className="mb-4 w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        />
-                        <button
-                            type="submit"
-                            className="px-4 py-2 bg-[#1d6ba3] text-white font-semibold rounded-md transition duration-200 ease-in-out"
-                        >
-                            Upload
-                        </button>
-                    </form>
+                <div>
+                    <DayPicker
+                        mode="multiple"
+                        selected={selected && selected.map(date => new Date(date))}
+                        onSelect={handleSelect}
+                        disabled={{ before: new Date() }}
+                    />
+                    <button onClick={handleSubmit} className="mt-4 p-2 bg-button_blue text-white rounded">
+                        Submit Official Leave Days
+                    </button>
                 </div>
                 <Table data={tableData} handleSearchChange={handleSearch} isModal={setisModal} loading={loading} />
             </div>

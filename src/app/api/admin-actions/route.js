@@ -1,5 +1,6 @@
 import dbconn from "@/lib/dbconn";
-import { isUserAuthenticated } from "@/lib/helper/ValidateUser";
+import { isUserAuthenticated } from "@/lib/helper/ValidateUser"; 
+import officialLeave from "@/modal/officialLeave";
 import userModel from "@/modal/user";
 
 export async function PUT(req, res) {
@@ -60,7 +61,6 @@ export async function PUT(req, res) {
     }
 }
 
-
 // for adding official leave
 
 export async function POST(req, res) {
@@ -69,20 +69,12 @@ export async function POST(req, res) {
     try {
         const authenticatedUser = await isUserAuthenticated(req, res);
 
-        if (!authenticatedUser) {
-            return Response.json({
-                success: false,
-                message: 'You are not logged in to perform this action',
-            }, { status: 401 });
-        }
-
         if (authenticatedUser.role === "user") {
             return Response.json({
                 success: false,
                 message: 'You are not authorized to perform this action',
             }, { status: 403 });
         }
-
 
         const { dates } = await req.json();
 
@@ -99,13 +91,15 @@ export async function POST(req, res) {
             date: new Date(date),
         }));
 
-        await OfficialLeave.insertMany(leavesToInsert);
+        await officialLeave.insertMany(leavesToInsert);
 
         return Response.json({
             success: true,
             message: 'Official leave days added successfully.',
-        }, { status: 201 });
+        }, { status: 200 });
     } catch (error) {
+        console.log(error);
+
         return Response.json({
             success: false,
             message: "Some error occurred",

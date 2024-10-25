@@ -82,14 +82,15 @@ const Page = () => {
         }
 
         try {
-            const response = await axios.post('/api/official-leave', selected);
+            console.log("selected", selected);
+
+            const response = await axiosRequest.post('/admin-actions', { dates: selected });
             handleResponse(response)
             setSelected([]);
         } catch (error) {
             handleError(error)
         }
     };
-    console.log(selected);
 
 
     return (

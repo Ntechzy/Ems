@@ -6,8 +6,11 @@ import Department from "@/modal/department";
 
 const fetchDepartment = async (id) => {
     return Department.findById(id)
-        .populate('manager', 'name email')
-        .select('manager');
+        .populate({
+            path: 'manager',
+            select: 'name email',
+            match: { status: true, isFormCompleted: true }
+        }).select('manager');
 };
 
 export async function GET(req) {
@@ -46,6 +49,7 @@ export async function GET(req) {
             }
 
             department = await fetchDepartment(user.department);
+            console.log(department);
 
         } else {
             department = await fetchDepartment(id);

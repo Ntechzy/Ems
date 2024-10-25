@@ -18,6 +18,8 @@ export const handleError = (error) => {
             newError[elem.path] = elem.message;
         });
     } else {
+        console.log(error);
+
         toast.error(error.response?.data.message || "Unexpected error occurred");
         if (error.response?.data.error) {
             toast.error(error.response.data.error);

@@ -1,3 +1,5 @@
+import OfficialLeave from "@/modal/officialLeave";
+
 export const calculateLeaveDays = (fromDate, toDate) => {
 
     if (toDate < fromDate) {
@@ -8,8 +10,11 @@ export const calculateLeaveDays = (fromDate, toDate) => {
     return days;
 };
 
-const isHolidayOrSunday = (date) => {
+
+
+const isHolidayOrSunday = async (date) => {
     const dayOfWeek = date.getDay();
+    // const officialOff = await OfficialLeave.findOne({ date: date })
     return dayOfWeek === 0;
 }
 

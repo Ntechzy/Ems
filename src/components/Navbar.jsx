@@ -15,8 +15,6 @@ function Navbar() {
             const fetchEmployeePhoto = async () => {
                 try {
                     const response = await axios.get(`/api/user/${session.user.id}`);
-                    console.log(response);
-                    
                     setEmployeePhoto(response.data.data.profile_photo.cloud_url);
                 } catch (error) {
                     console.error('Error fetching employee photo:', error);

@@ -1,6 +1,8 @@
-import { Schema, model } from 'mongoose';
 
-const officialLeaveSchema = new Schema({
+
+import mongoose from "mongoose";
+
+const officialLeaveSchema = new mongoose.Schema({
     date: {
         type: Date,
         required: true,
@@ -12,7 +14,7 @@ const officialLeaveSchema = new Schema({
     },
 });
 
-const OfficialLeave = (mongoose.models.OfficialLeave) || mongoose.model("OfficialLeave", officialLeaveSchema);
+
+const OfficialLeave = mongoose.models.OfficialLeave || mongoose.model("OfficialLeave", officialLeaveSchema);
+
 export default OfficialLeave;
-
-

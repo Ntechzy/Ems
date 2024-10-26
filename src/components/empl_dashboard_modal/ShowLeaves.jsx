@@ -7,7 +7,7 @@ import { useSession } from "next-auth/react";
 import { DateIstConvert } from "@/lib/DateIstConvert";
 import toast from "react-hot-toast";
 import { handleResponse } from "@/lib/helper/YupResponseHandler";
-import { getNextMonth } from "@/lib/helper/CalculateLeaveDays";
+import { calculateLeaveDays, getNextMonth } from "@/lib/helper/CalculateLeaveDays";
 
 const ShowLeaves = ({ showAllLeaves = false, month, id }) => {
     const [searchTerm, setSearchTerm] = useState("");
@@ -31,12 +31,9 @@ const ShowLeaves = ({ showAllLeaves = false, month, id }) => {
                 let url = '';
 
                 if (showAllLeaves && (session?.user?.role === "admin" || session?.user?.role === "super_admin")) {
-                    console.log("a");
 
                     url = `/api/apply-leave?view=all&month=${month}`;
                 } else {
-                    console.log(id);
-
                     url = `/api/apply-leave?userId=${id}&month=${month}`;
                 }
 
@@ -51,9 +48,9 @@ const ShowLeaves = ({ showAllLeaves = false, month, id }) => {
                     requestedTo: leave.RequestedTo,
                     isApproved: leave.isApproved,
                     leaveId: leave.leaveId,
+                    requestedDays: leave.requestedDays,
+                    absent: leave.totalAbsentDays,
                 }));
-                console.log(transformedData);
-
                 const sortedData = transformedData.sort((a, b) => {
                     if (a.isApproved === null && b.isApproved !== null) return -1;
                     if (a.isApproved !== null && b.isApproved === null) return 1;
@@ -86,7 +83,6 @@ const ShowLeaves = ({ showAllLeaves = false, month, id }) => {
         leave.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    console.log(filteredData);
 
     const handleApproval = async (action, leaveId, requestedTo) => {
         try {
@@ -114,10 +110,10 @@ const ShowLeaves = ({ showAllLeaves = false, month, id }) => {
 
                     return (
                         <div key={key} className={`flex justify-between ${bgColor} rounded-md p-3 ${hoverBgColor} transition duration-200`}>
-                            <span className="font-medium text-gray-700">Total {key.charAt(0).toUpperCase() + key.slice(1)} Leave:</span>
+                            <span className="font-medium text-gray-700">Monthly {key.charAt(0).toUpperCase() + key.slice(1)} Leave:</span>
                             <span className={`font-semibold ${textColor}`}>
                                 {value}
-                                {key === 'casual' ? '/12' : key === 'shortLeave' ? '/24' : ''}
+                                {key === 'casual' ? '/1' : key === 'shortLeave' ? '/2' : ''}
                             </span>
                         </div>
                     );
@@ -162,6 +158,7 @@ const ShowLeaves = ({ showAllLeaves = false, month, id }) => {
                             <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Leave From</th>
                             <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Leave To</th>
                             <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Leave Type</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Requested Days</th>
                             <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Status</th>
                         </tr>
                     </thead>
@@ -173,6 +170,7 @@ const ShowLeaves = ({ showAllLeaves = false, month, id }) => {
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-700">{DateIstConvert(leave.leaveFrom)}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-700">{DateIstConvert(leave.leaveTo)}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-700">{leave.leaveType}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-green-700 font-extrabold ">{leave.requestedDays}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-700">
                                         {leave.isApproved === null ?
                                             <span className="text-yellow-600">Pending...</span> :

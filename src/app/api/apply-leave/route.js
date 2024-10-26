@@ -116,7 +116,6 @@ export async function GET(req, res) {
         // for all common user also  
 
         const userId = url.searchParams.get('userId');
-        console.log("userId", userId);
 
         const userIdObjectId = userId && new mongoose.Types.ObjectId(userId);
         const view = url.searchParams.get('view') || 'self';
@@ -180,7 +179,6 @@ export async function GET(req, res) {
             {
                 $unwind: "$userDetails",
             },
-            // Flattening the leaveDetails array without grouping it into a single document
             {
                 $unwind: "$leaveDetails",
             },
@@ -188,13 +186,13 @@ export async function GET(req, res) {
                 $group: {
                     _id: {
                         user: "$user",
-                        leaveId: "$leaveDetails._id", // Separate each leave entry based on its unique leave ID
+                        leaveId: "$leaveDetails._id",
                     },
                     totalCasualDays: { $sum: "$casualDays" },
                     totalAbsentDays: { $sum: "$absentDays" },
                     totalShortLeave: { $sum: "$shortDays" },
                     userData: { $first: "$userDetails" },
-                    leaveDetails: { $first: "$leaveDetails" }, // Get each leave record individually
+                    leaveDetails: { $first: "$leaveDetails" },
                 },
             },
             {
@@ -209,6 +207,7 @@ export async function GET(req, res) {
                     reason: "$leaveDetails.reason",
                     RequestedTo: "$leaveDetails.RequestedTo",
                     isApproved: "$leaveDetails.isApproved",
+                    requestedDays: "$leaveDetails.requestedDays",
                     totalCasualDays: 1,
                     totalAbsentDays: 1,
                     totalShortLeave: 1,
@@ -220,7 +219,6 @@ export async function GET(req, res) {
                 },
             },
         ]);
-
 
 
 

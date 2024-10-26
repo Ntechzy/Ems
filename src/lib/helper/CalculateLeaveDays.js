@@ -1,14 +1,10 @@
-// import ExtaLeaveModal from "@/modal/extrasLeave";
-
-import { loadGetInitialProps } from "next/dist/shared/lib/utils";
-
 
 export const calculateLeaveDays = (fromDate, toDate) => {
-
     if (toDate < fromDate) {
         throw new Error("Invalid date range: The end date must be after the start date.");
     }
-    const days = (toDate.getDate() - fromDate.getDate()) + 1;
+    const days = (new Date(toDate).getDate() - new Date(fromDate).getDate()) + 1;
+    console.log(days, "days");
 
     return days;
 };

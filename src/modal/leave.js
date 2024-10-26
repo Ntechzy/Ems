@@ -22,7 +22,7 @@ const leaveSchema = new mongoose.Schema({
     shortDays: {
         type: Number,
         default: 0
-    }, 
+    },
     leaveDetails: [{
         leaveType: {
             type: String,
@@ -45,7 +45,11 @@ const leaveSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
             required: [true, "Please provide who approved leave"]
-        }, 
+        },
+        requestedDays: {
+            type: Number,
+            default: 0
+        },
         isApproved: {
             type: Boolean,
             enum: [true, false, null],

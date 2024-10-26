@@ -95,8 +95,7 @@ export async function GET(req, { params }) {
       
  
       const all_tickets = await ticketService.GetAll();
-      appResponse.data = all_tickets;
-
+      appResponse.data = all_tickets; 
       return Response.json(appResponse.getResponse(), { status: 200 });
     }
     else{

@@ -2,7 +2,7 @@
 import Registration from '@/components/EmplRegister/Registration';
 import Table from '@/components/Table';
 import axiosRequest from '@/lib/axios'; import { handleError, handleResponse } from '@/lib/helper/YupResponseHandler';
-;
+import { FaCalendarDay } from "react-icons/fa6";
 import React, { useEffect, useState } from 'react'
 import { DayPicker } from 'react-day-picker';
 import "react-day-picker/style.css";
@@ -13,7 +13,7 @@ const Page = () => {
     const [initialTableData, setInitialTableData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isModal, setisModal] = useState(false);
-
+    const [isCalendar, setisCalendar] = useState(false)
     const handleSearch = (searchVal) => {
         if (searchVal == "") {
             setTableData(initialTableData);
@@ -96,18 +96,25 @@ const Page = () => {
     return (
         <>
 
-            <div className='p-10'>
-                <div>
-                    <DayPicker
-                        mode="multiple"
-                        selected={selected && selected.map(date => new Date(date))}
-                        onSelect={handleSelect}
-                        disabled={{ before: new Date() }}
-                    />
-                    <button onClick={handleSubmit} className="mt-4 p-2 bg-button_blue text-white rounded">
-                        Submit Official Leave Days
-                    </button>
+            <div className='p-10 relative'>
+                <div className='flex text-4xl text-button_blue justify-center '>
+                    <FaCalendarDay className='cursor-pointer' onClick={() => setisCalendar(!isCalendar)} />
                 </div>
+                {isCalendar &&
+                    <div className='flex justify-center items-center flex-col'>
+
+                        <DayPicker
+                            className=' '
+                            mode="multiple"
+                            selected={selected && selected.map(date => new Date(date))}
+                            onSelect={handleSelect}
+                            disabled={{ before: new Date() }}
+                        />
+                        <button onClick={handleSubmit} className="mt-4 p-2 bg-button_blue text-white rounded">
+                            Submit Official Leave Days
+                        </button>
+                    </div>
+                }
                 <Table data={tableData} handleSearchChange={handleSearch} isModal={setisModal} loading={loading} />
             </div>
 

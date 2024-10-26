@@ -18,7 +18,8 @@ export async function PUT(req) {
   const session = await getServerSession(Option);
 
   try {
-    if (session && session.user&& session.user.status) {
+   
+    if (session && session.user && session.user.status) {
       const formData = await req.formData();
       console.log([...formData.entries()]);
       const permanent_address = formData.get("permanent_address").trim();
@@ -45,7 +46,7 @@ export async function PUT(req) {
       // if (profile_photo && profile_photo.size > 0) {
       //   // Upload to Cloudinary
       //   console.log("File being uploaded hahahaah:", profile_photo);
-        
+
       //   const uploadResult = await uploadToCloudinary(profile_photo, "ems");
 
       //   console.log(uploadResult, "uploadResult");
@@ -210,4 +211,4 @@ export async function PUT(req) {
       }
     );
   }
-}
+} 

@@ -42,6 +42,7 @@ export async function processLeave(userId, month, fromDate, toDate, leaveType, m
         leaveFrom: fromDate,
         leaveTo: toDate,
         reason,
+        requestedDays: leaveDays,
         RequestedTo: managerToAsk,
         isApproved: null
     });

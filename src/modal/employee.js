@@ -6,26 +6,32 @@ const employeeSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
+   
     },
     permanent_address: {
       type: String,
       default: "",
+      trim: true,
     },
     correspondence_address: {
       type: String,
       default: "",
+      trim: true,
     },
     pan_card_no: {
       type: String,
       default: "",
+      trim: true,
     },
     aadhaar_no: {
       type: String,
       default: "",
+      trim: true,
     },
     father_name: {
       type: String,
       default: "",
+      trim: true,
     },
     dob: {
       type: mongoose.Schema.Types.ObjectId,
@@ -42,14 +48,17 @@ const employeeSchema = new mongoose.Schema(
     blood_group: {
       type: String,
       default: "",
+      trim: true,
     },
     marital_status: {
       type: String,
       default: "",
+      trim: true,
     },
     highest_qualification: {
       type: String,
-      default: ""
+      default: "",
+      trim: true,
     },
     alloted_hardwares: [{
       type: mongoose.Schema.Types.ObjectId,
@@ -80,15 +89,18 @@ const employeeSchema = new mongoose.Schema(
     },
     bank_name: {
       type: String,
-      default: null
+      default: null,
+      trim: true,
     },
     ifsc_code: {
       type: String,
-      default: null
+      default: null,
+      trim: true,
     },
     account_number: {
       type: String,
-      default: null
+      default: null,
+      trim: true,
     },
     monthy_percentage: {
       type: String,

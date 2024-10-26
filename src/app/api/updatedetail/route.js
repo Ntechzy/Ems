@@ -9,6 +9,8 @@ import userModel from "@/modal/user";
 import { date } from "yup";
 import { uploadToCloudinary } from "../upload/route";
 // import { getDataUri } from "@/lib/helper/dataUri";
+import { uploadToCloudinary } from "../upload/route";
+// import { getDataUri } from "@/lib/helper/dataUri";
 
 export async function PUT(req) {
   console.log("PUT request received");
@@ -16,42 +18,24 @@ export async function PUT(req) {
   const session = await getServerSession(Option);
 
   try {
-    if (session && session.user && session.user.status) {
-      const {
-        permanent_address ,
-        correspondence_address ,
-        pan_card_no ,
-        aadhaar_no ,
-        father_name ,
-        dob,
-        date_of_joining,
-        salary_slot ,
-        blood_group ,
-        marital_status ,
-        highest_qualification ,
-        account_holder_name , 
-        bank_name ,       
-        ifsc_code ,          
-        account_number   
-      } = await req.json();
-    if (session && session.user) {
+    if (session && session.user&& session.user.status) {
       const formData = await req.formData();
       console.log([...formData.entries()]);
-      const permanent_address = formData.get("permanent_address");
-      const correspondence_address = formData.get("correspondence_address");
-      const pan_card_no = formData.get("pan_card_no");
-      const aadhaar_no = formData.get("aadhaar_no");
-      const father_name = formData.get("father_name");
-      const dob = formData.get("dob");
-      const date_of_joining = formData.get("date_of_joining");
-      const salary_slot = formData.get("salary_slot");
-      const blood_group = formData.get("blood_group");
-      const marital_status = formData.get("marital_status");
-      const highest_qualification = formData.get("highest_qualification");
-      const account_holder_name = formData.get("account_holder_name");
-      const bank_name = formData.get("bank_name");
-      const ifsc_code = formData.get("ifsc_code");
-      const account_number = formData.get("account_number");
+      const permanent_address = formData.get("permanent_address").trim();
+      const correspondence_address = formData.get("correspondence_address").trim();
+      const pan_card_no = formData.get("pan_card_no").trim();
+      const aadhaar_no = formData.get("aadhaar_no").trim();
+      const father_name = formData.get("father_name").trim();
+      const dob = formData.get("dob").trim();
+      const date_of_joining = formData.get("date_of_joining").trim();
+      const salary_slot = formData.get("salary_slot").trim();
+      const blood_group = formData.get("blood_group").trim();
+      const marital_status = formData.get("marital_status").trim();
+      const highest_qualification = formData.get("highest_qualification").trim();
+      const account_holder_name = formData.get("account_holder_name").trim();
+      const bank_name = formData.get("bank_name").trim();
+      const ifsc_code = formData.get("ifsc_code").trim();
+      const account_number = formData.get("account_number").trim();
       const profile_photo = formData.get("profile_photo");
 
       // console.log(profile_photo);
@@ -164,6 +148,7 @@ export async function PUT(req) {
           bank_name: encryptedBankName,
           ifsc_code: encryptedIfscCode,
           account_number: encryptedAccountNumber,
+          profile_photo: profilePhotoData,
           profile_photo: profilePhotoData,
         },
         { new: true }

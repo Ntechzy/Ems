@@ -43,11 +43,14 @@ export const fetchUserDetails = async (userId) => {
                 ifscCode: userDetails.ifsc_code || "N/A",
                 accountNumber: userDetails.account_number || "N/A",
             },
+            aadhaarNo: userDetails.aadhaar_no || "N/A", 
+            pan_No: userDetails.pan_card_no || "N/A", 
             hardware:
                 userDetails.alloted_hardwares?.map((hardware) => ({
                     name: hardware.name,
                     model: hardware.model || "N/A",
                 })) || [],
+                
             software:
                 userDetails.alloted_softwares?.map((software) => ({
                     name: software.name,

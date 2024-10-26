@@ -2,6 +2,7 @@ import { Resend } from 'resend';
 import { OnBoarding } from '../../email/Onboarding';
 import { Updatepassword } from '../../email/Updatepassword';
 import { LeaveRequestEmail } from '../../email/Leave';
+import { WarninTemplate } from '../../email/WarningTemplate';
 
 
 const resend = new Resend(process.env.API_KEY);
@@ -68,6 +69,26 @@ export const leaveMail = async (name, email, leaveType, leaveFrom, leaveTo, reas
         return {
             sucess: false,
             message: "Unable to send leave Request for now ! try again later ",
+            error
+        }
+    }
+} 
+export const WarningMail = async (warningMessage, email) => {
+    try {
+        await resend.emails.send({
+            from: 'admin@ems.ntechzy.in',
+            to: email,
+            subject: `Warning Mail `,
+            react: WarninTemplate({warningMessage})
+        });
+        return {
+            sucess: true,
+            message: "Email Send Succesfully"
+        }
+    } catch (error) {
+        return {
+            sucess: false,
+            message: "Unable to send Mail ",
             error
         }
     }

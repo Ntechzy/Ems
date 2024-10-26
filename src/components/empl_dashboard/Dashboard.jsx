@@ -18,9 +18,12 @@ import HardwareAssigned from "@/components/empl_dashboard_component/HardwareAssi
 import SoftwareLicenses from "@/components/empl_dashboard_component/SoftwareLicenses";
 import { deactivateUser, fetchUserDetails } from "../empl_dashboard_function/FetchUserDetail";
 import { getCurrentMonth } from "@/lib/helper/GetCurrentMonth";
+import WarningMail from "../empl_dashboard_modal/WarningMail";
+import { set } from "mongoose";
 
 const Dashboard = ({ userId }) => {
     const [leaveFormErrors, setLeaveFormErrors] = useState({});
+    const [isWarningModalOpen, setIsWarningModalOpen] = useState(false);
     const [activeTab, setActiveTab] = useState("Employees");
     const [isLeaveModalOpen, setIsLeaveModalOpen] = useState(false);
     const [isTicketModalOpen, setIsTicketModalOpen] = useState(false);
@@ -56,6 +59,9 @@ const Dashboard = ({ userId }) => {
         address: employee?.address,
         location: employee?.location,
         dob: employee?.dob,
+        pan_card_no: employee?.pan_card_no,
+        aadhaar_no: employee?.aadhaar_no,
+        designation: employee?.designation, 
     });
 
 
@@ -84,6 +90,11 @@ const Dashboard = ({ userId }) => {
         setIsTicketModalOpen(!isTicketModalOpen);
         document.body.style.overflow = !isTicketModalOpen ? "hidden" : "auto";
     };
+    const toggleHandleWarning = () => {
+        window.scrollTo({ top: 0 });
+       setIsWarningModalOpen(!isWarningModalOpen);
+        document.body.style.overflow = !isWarningModalOpen ? "hidden" : "auto";
+    };
 
     const toggleDetailsModal = () => {
         window.scrollTo({ top: 0 });
@@ -102,8 +113,11 @@ const Dashboard = ({ userId }) => {
     const getData = async (userId) => {
         try {
             const data = await fetchUserDetails(userId)
+console.log(data,"gfhjklhgjkytrhjygyrtfhdrytjyuyj5jujy");
 
             setEmployee(data);
+           
+            
             setBasicDetails({
                 firstName: data?.firstName,
                 lastName: data?.lastName,
@@ -114,6 +128,9 @@ const Dashboard = ({ userId }) => {
                 address: data?.address,
                 location: data?.location,
                 dob: data?.dob,
+                pan_card_no: data?.pan_No,
+                aadhaar_no: data?.aadhaarNo,
+                designation: data?.jobTitle,
             });
             setAccountDetails({
                 holderName: data?.accountDetails.holderName,
@@ -122,6 +139,7 @@ const Dashboard = ({ userId }) => {
                 accountNumber: data?.accountDetails.accountNumber,
             });
 
+                // console.log(basicDetails.designation, "employee");
         } catch (err) {
             toast.error("Something Went Wrong ")
             console.error(err);
@@ -135,7 +153,7 @@ const Dashboard = ({ userId }) => {
             getData(userId);
         }
     }, [userId]);
-
+    console.log(employee, "employee");
 
     return (
         <div
@@ -178,9 +196,10 @@ const Dashboard = ({ userId }) => {
                                                 Discontinue
                                             </button>
 
-                                            <button className="bg-red-500 text-white py-1 md:py-2 px-3 md:px-4 rounded">
+                                            <button className="bg-red-500 text-white py-1 md:py-2 px-3 md:px-4 rounded" onClick={toggleHandleWarning}>
                                                 Send Warning
                                             </button>
+
                                         </ >
                                     )
                                 }
@@ -220,6 +239,10 @@ const Dashboard = ({ userId }) => {
                             <div>
                                 <span className="text-gray-600">Department: </span>
                                 <span className="font-semibold">{employee?.department}</span>
+                            </div>
+                            <div>
+                                <span className="text-gray-600">Designation: </span>
+                                <span className="font-semibold">{employee?.jobTitle}</span>
                             </div>
                             <div>
                                 <span className="text-gray-600">Status: </span>
@@ -288,6 +311,9 @@ const Dashboard = ({ userId }) => {
 
                     {isTicketModalOpen && (
                         <RaiseTicket toggleTicketModal={toggleTicketModal} />
+                    )}
+                    {isWarningModalOpen && (
+                        <WarningMail toggleHandleWarning={toggleHandleWarning} />
                     )}
 
                     {isDetailsModalOpen && (

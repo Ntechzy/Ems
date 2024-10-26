@@ -3,6 +3,7 @@ import Loader from '@/components/Loader';
 import axios from 'axios';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { FaUser, FaTrashAlt } from 'react-icons/fa';
 
 const Tickets = () => {
@@ -20,8 +21,9 @@ const Tickets = () => {
         } else {
           setError('Failed to fetch tickets');
         }
-      } catch (err) {
-        setError(err.message);
+      } catch (err) { 
+        toast.error(err.response.data.error.message || err.message);
+        setError(err.response.data.error.message || err.message);
       } finally {
         setLoading(false);
       }
@@ -37,12 +39,12 @@ const Tickets = () => {
         const response = await axios.delete(`/api/resources/ticket/?ticketId=${ticketId}`);
         if (response.data.status) {
           setTickets(tickets.filter(ticket => ticket._id !== ticketId));
-          alert("Ticket deleted successfully");
+          toast.success("Ticket deleted successfully");
         } else {
-          alert('Failed to delete ticket');
+          toast.error('Failed to delete ticket');
         }
       } catch (err) {
-        alert(err.message);
+        toast.error(err.message);
       }
     }
   };

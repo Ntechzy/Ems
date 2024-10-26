@@ -18,6 +18,9 @@ import {
   TicketService,
 } from "@/lib/services";
 import TicketModel from "@/modal/ticket";
+import { use } from "react";
+import { Option } from "../../auth/[...nextauth]/option";
+import { getServerSession } from "next-auth";
 
 const hardwareRepo = new Hardware();
 const hardwareService = new HardwareService(hardwareRepo);
@@ -87,10 +90,24 @@ export async function GET(req, { params }) {
 
       return Response.json(appResponse.getResponse(), { status: 200 });
     } else if (resourceName.toLowerCase() == "ticket") {
+      const session = await getServerSession(Option);
+    if(session.user.role == "super_admin"){
+      
+ 
       const all_tickets = await ticketService.GetAll();
       appResponse.data = all_tickets;
 
       return Response.json(appResponse.getResponse(), { status: 200 });
+    }
+    else{
+      appResponse.status = false;
+      appResponse.message = "No Data for this resource";
+      appResponse.error = { message: "Not Authorized" };
+
+      return Response.json(appResponse.getResponse(), {
+        status: 400,
+      });
+    }
     } else {
       appResponse.status = false;
       appResponse.message = "No Data for this resource";

@@ -15,13 +15,13 @@ export async function POST(req, res) {
     await dbconn()
     try {
         const user = await isUserAuthenticated(req, res)
-        console.log(user.role);
-
         const { leaveType, managerToAsk, startDate, endDate, reason, userId } = await req.json()
 
         console.log("managerToAsk", leaveType);
 
-        if (userId !== user._id && user.role !== "admin" && user.role !== "super_admin") {
+
+        console.log(user.id, "ye bvaala ");
+        if (userId !== user.id && user.role !== "admin" && user.role !== "super_admin") {
             return Response.json({
                 success: false,
                 message: 'You can only apply for your own leave'

@@ -313,7 +313,7 @@ console.log(data,"gfhjklhgjkytrhjygyrtfhdrytjyuyj5jujy");
                         <RaiseTicket toggleTicketModal={toggleTicketModal} />
                     )}
                     {isWarningModalOpen && (
-                        <WarningMail toggleHandleWarning={toggleHandleWarning} />
+                        <WarningMail toggleHandleWarning={toggleHandleWarning} id={userId} />
                     )}
 
                     {isDetailsModalOpen && (

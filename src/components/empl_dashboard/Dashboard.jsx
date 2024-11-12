@@ -157,7 +157,7 @@ console.log(data,"gfhjklhgjkytrhjygyrtfhdrytjyuyj5jujy");
 
     return (
         <div
-            className={`bg-gray-100 min-h-screen md:p-6 p-2 ${(loading || !employee) && "flex justify-center items-center"
+            className={`bg-gray-100 min-h-screen  md:p-6 p-2 ${(loading || !employee) && "flex justify-center items-center"
                 }`}
         >
             {loading ? (
@@ -231,7 +231,7 @@ console.log(data,"gfhjklhgjkytrhjygyrtfhdrytjyuyj5jujy");
                             </div>
                         </div>
                         {/* Manager, Department, and Status */}
-                        <div className="mt-4 flex space-x-4 text-sm md:text-base">
+                        <div className="mt-4 md:flex md:items-center md:space-x-5 space-y-2 md:space-y-0 text-sm md:text-base">
                             <div>
                                 <span className="text-gray-600">Manager: </span>
                                 <span className="font-semibold">{employee?.manager}</span>

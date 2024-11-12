@@ -5,7 +5,7 @@ import UpdatePassword from '../UpdatePassword';
 const BasicDetails = ({ employee, toggleDetailsModal, isUpdatePass, setisUpdatePass }) => {
     return (
         <div>
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center ">
                 <h3 className="text-xl font-semibold text-gray-800">Basic details</h3>
                 <div className="flex gap-5 justify-center items-center">
 
@@ -33,7 +33,7 @@ const BasicDetails = ({ employee, toggleDetailsModal, isUpdatePass, setisUpdateP
                 )}
             </div>
 
-            <div className="grid grid-cols-2 gap-6 mt-4">
+            <div className="grid md:grid-cols-2 grid-cols-1 gap-6 mt-4 ">
                 <div>
                     <p className="text-gray-500">First name</p>
                     <p>{employee?.firstName}</p>
@@ -48,11 +48,11 @@ const BasicDetails = ({ employee, toggleDetailsModal, isUpdatePass, setisUpdateP
                 </div>
                 <div>
                     <p className="text-gray-500">Location</p>
-                    <p>{employee?.location}</p>
+                    <p className='whitespace-normal break-words'>{employee?.location}</p>
                 </div>
                 <div>
-                    <p className="text-gray-500">Address</p>
-                    <p>{employee?.address}</p>
+                    <p className="text-gray-500 ">Address</p>
+                    <p className='whitespace-normal break-words'>{employee?.address}</p>
                 </div>
                 <div>
                     <p className="text-gray-500">AdharCard Number</p>

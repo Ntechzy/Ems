@@ -9,7 +9,7 @@ export const fetchUserDetails = async (userId) => {
             throw new Error('Error fetching user details');
         }
 
-        const userDetails = await res.data.data
+        const userDetails = await res.data.data 
 
         const employee = {
             profilePicture:
@@ -59,6 +59,35 @@ export const fetchUserDetails = async (userId) => {
         };
 
         return employee;
+    } catch (err) {
+        console.error(err);
+    }
+};
+export const rescueUser = async (userId) => {
+    try {
+        const res = await axiosRequest.get(`/user/${userId}`,{
+            params: {
+                barcodeOnly:true
+            }
+        });
+
+        if (res.status !== 200) {
+            throw new Error('Error fetching user details');
+        }
+
+        const userDetails = await res.data.data 
+ 
+        
+            // Return only the details needed for the barcode
+           const userData= {
+                name: userDetails?.user_id?.name,
+                email: userDetails?.user_id?.email,
+                phone: userDetails?.user_id?.mobile_no,
+                companyName: userDetails?.user_id?.associated_with || "N/A"
+            };
+            return userData;
+ 
+       
     } catch (err) {
         console.error(err);
     }

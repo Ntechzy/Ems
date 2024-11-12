@@ -4,7 +4,7 @@ const JobDetails = ({ employee }) => {
     return (
         <div>
             <h3 className="text-xl font-semibold text-gray-800">Job details</h3>
-            <div className="grid grid-cols-2 gap-6 mt-4">
+            <div className="grid md:grid-cols-2 grid-cols-1 gap-6 mt-4">
                 <div>
                     <p className="text-gray-500">ID</p>
                     <p>{employee?.employeeID}</p>

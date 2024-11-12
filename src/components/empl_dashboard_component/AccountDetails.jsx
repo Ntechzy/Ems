@@ -12,7 +12,7 @@ const AccountDetails = ({ employee, toggleAccountModal }) => {
                     onClick={toggleAccountModal}
                 />
             </div>
-            <div className="grid grid-cols-2 gap-6 mt-4">
+            <div className="grid md:grid-cols-2 grid-cols-1  gap-6 mt-4">
                 <div>
                     <p className="text-gray-500">Holder Name</p>
                     <p>{employee?.holderName}</p>

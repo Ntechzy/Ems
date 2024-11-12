@@ -1,3 +1,4 @@
+import { sendDocument } from '@/lib/resend';
 import ejs from 'ejs';
 import path from 'path';
 import puppeteer from 'puppeteer';
@@ -7,11 +8,16 @@ export async function POST(req) {
     try {
         const { action, documentType, formData, requestId } = await req.json();
 
-        console.log(formData);
 
         if (!requestId) {
-            return Response.json({ message: "Request ID is required" }, { status: 400 })
-        }
+            return Response.json(
+                {
+                    sucess: false,
+                    message: "No request id found",
+                },
+                { status: 400 }
+            );
+        } 
 
         const template = templates[documentType];
 
@@ -29,8 +35,10 @@ export async function POST(req) {
         const pdfBuffer = await page.pdf({ format: 'A4' });
         await browser.close();
 
+
         if (action == 'preview') {
-            tempStorage[requestId] = { pdfBuffer };
+            tempStorage[requestId] = { pdfBuffer, formData, documentType };
+
             return new Response(pdfBuffer, {
                 status: 200,
                 headers: {
@@ -38,23 +46,36 @@ export async function POST(req) {
                     'Content-Disposition': 'inline; filename="generated-document.pdf"',
                 },
             });
+
         }
 
         if (action === 'confirm') {
-            const storedData = tempStorage[requestId];
-            if (!storedData) {
-                return new Response(JSON.stringify({ message: 'Preview data not found' }), { status: 404 });
+            const message = await sendDocument(documentType, formData.email, pdfBuffer)
+      
+
+            if (!message.sucess) {
+                return Response.json(
+                    {
+                        sucess: false,
+                        message: "Warning not sent",
+                    },
+                    { status: 400 }
+                );
             }
 
-            delete tempStorage[requestId];
 
-            return Response.json({ message: "Email sent successfully" }, { status: 200 })
+            return Response.json(
+                {
+                    sucess: true,
+                    message: "Email sent successfully"
+                }
+                , { status: 200 })
         }
 
-    } catch (error) {
-        console.log(error);
 
-        return Response.json({ message: "Something went wrong" }, { status: 500 })
+    } catch (error) { 
+
+        return Response.json({ sucess: true, message: "Something went wrong" }, { status: 500 })
     }
 }
 

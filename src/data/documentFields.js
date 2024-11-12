@@ -1,7 +1,8 @@
 export const documentFields = {
-    
+
     experienceLetter: [
         { label: "Name", name: "name", type: "text" },
+        { label: "Email", name: "email", type: "email" },
         {
             label: "Company",
             name: "company",
@@ -14,6 +15,7 @@ export const documentFields = {
     ],
     AppoinmentLetter: [
         { label: "Name", name: "employeeName", type: "text" },
+        { label: "Email", name: "email", type: "email" },
         {
             label: "Company",
             name: "company",

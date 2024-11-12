@@ -4,6 +4,7 @@ import Loader from '@/components/Loader';
 import { documentFields } from '@/data/documentFields';
 import axios from 'axios';
 import React, { useState } from 'react'
+import toast from 'react-hot-toast';
 import { v4 as uuidv4 } from 'uuid';
 
 const Page = () => {
@@ -20,22 +21,11 @@ const Page = () => {
         setFormData({});
     }
 
-    const handleSubmit = async () => {
-        setIsLoading(true);
-        try {
-            console.log("Document sent:", { documentType, formData });
-        } catch (error) {
-            console.error("Failed to send document", error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
 
     const [pdfUrl, setPdfUrl] = useState()
 
     const handlePreview = async () => {
         const requestId = uuidv4();
-        console.log(requestId);
         try {
             const response = await axios.post('/api/admin-actions/genrate',
                 {
@@ -44,24 +34,36 @@ const Page = () => {
                     formData,
                     requestId
                 }, {
-                // Specify that we expect a binary response (blob)
                 responseType: 'blob',
             }
             );
 
-
-
-            console.log(response);
-
             const pdfBlob = new Blob([response.data], { type: 'application/pdf' });
-            console.log(pdfBlob);
 
             const pdfUrl = URL.createObjectURL(pdfBlob);
-            console.log(pdfUrl);
-
             setPdfUrl(pdfUrl);
         } catch (err) {
-            console.error('Failed to generate PDF:', err);
+            toast.error(err.message)
+        }
+    };
+
+
+    const handleSubmit = async () => {
+        const requestId = uuidv4();
+        try {
+            const response = await axios.post('/api/admin-actions/genrate',
+                {
+                    action: 'confirm',
+                    formData,
+                    documentType,
+                    requestId
+                }
+            );
+
+            toast.success(response.data.message)
+            console.log(response);
+        } catch (err) {
+            toast.error(err.message)
         }
     };
 
@@ -119,7 +121,7 @@ const Page = () => {
                 documentType &&
 
 
-                <div className="flex items-center space-x-4">
+                <div className="flex justify-center items-center m-auto ">
                     <button
                         className='bg-button_blue p-2 md:w-auto flex justify-center items-center m-auto rounded-xl text-white text-lg'
                         onClick={handleSubmit}
@@ -127,13 +129,18 @@ const Page = () => {
                     >
                         {isLoading ? <Loader /> : 'Send Document'}
                     </button>
+                    <button
+                        className='bg-button_blue p-2 md:w-auto flex justify-center items-center m-auto rounded-xl text-white text-lg'
+                        onClick={handlePreview}
+                        disabled={isLoading}
+                    >
+                        {isLoading ? <Loader /> : 'Preview PDF'}
+                    </button>
                 </div>
             }
 
 
             <div>
-                <button onClick={handlePreview}>Preview PDF</button>
-
                 {pdfUrl && (
 
                     <>

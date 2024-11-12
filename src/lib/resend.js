@@ -72,15 +72,47 @@ export const leaveMail = async (name, email, leaveType, leaveFrom, leaveTo, reas
             error
         }
     }
-} 
+}
 export const WarningMail = async (warningMessage, email) => {
     try {
         await resend.emails.send({
             from: 'admin@ems.ntechzy.in',
             to: email,
             subject: `Warning Mail `,
-            react: WarninTemplate({warningMessage})
+            react: WarninTemplate({ warningMessage })
         });
+        return {
+            sucess: true,
+            message: "Email Send Succesfully"
+        }
+    } catch (error) {
+        return {
+            sucess: false,
+            message: "Unable to send Mail ",
+            error
+        }
+    }
+}
+
+export const sendDocument = async (documentType, email, pdfBuffer) => {
+    console.log(pdfBuffer, "here you have to send this ");
+    const bufferContent = Buffer.isBuffer(pdfBuffer) ? pdfBuffer : Buffer.from(pdfBuffer);
+    try {
+        const response = await resend.emails.send({
+            from: 'admin@ems.ntechzy.in',
+            to: email,
+            subject: `${documentType} PDF Document`,
+            text: `Please find attached the ${documentType} PDF document.`,
+            attachments: [
+                {
+                    filename: `${documentType}.pdf`,
+                    content: bufferContent,
+                    type: "application/pdf",
+                    disposition: "attachment",
+                },
+            ],
+        });
+
         return {
             sucess: true,
             message: "Email Send Succesfully"

@@ -20,10 +20,10 @@ export async function POST(req, res) {
 
     const { userId, warningMessage } = await req.json();
     console.log(userId);
-    
+
     const user = await userModel.findById(userId);
     console.log(user);
-    
+
     const isFormFilled = await isAutherized.isFormCompleted;
     if (!isFormFilled) {
       return Response.json(
@@ -35,18 +35,17 @@ export async function POST(req, res) {
       );
     }
 
-    console.log("message",user.email);
-    const message= await WarningMail(warningMessage, user.email);
-    
-     if(!message.sucess){
-        return Response.json(
-            {
-              sucess: true,
-              message: "Warning not sent",
-            },
-            { status: 400 }
-          );
-     }
+    const message = await WarningMail(warningMessage, user.email);
+
+    if (!message.sucess) {
+      return Response.json(
+        {
+          sucess: false,
+          message: "Warning not sent",
+        },
+        { status: 400 }
+      );
+    }
     return Response.json(
       {
         sucess: true,

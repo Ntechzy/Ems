@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        Experience Letter
+    </title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            background-color: #fff;
+            width: 800px;
+            padding: 40px;
+            border: 1px solid #ddd;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            margin: 0 auto;
+            position: relative;
+            min-height: 100vh;
+            box-sizing: border-box;
+            padding-bottom: 100px;
+            /* Space for footer */
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo img {
+            width: 100px;
+        }
+
+        .date {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+
+        .title {
+            text-align: center;
+            font-weight: bold;
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 30px;
+            letter-spacing: 1px;
+        }
+
+        .content {
+            font-size: 16px;
+            line-height: 1.6;
+            text-align: justify;
+            margin-bottom: 40px;
+        }
+
+        .signature-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 50px;
+        }
+
+        .signature {
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .signature img {
+            width: 100px;
+            margin-bottom: 5px;
+        }
+
+        /* Fixed footer */
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 800px;
+            background-color: #fff;
+            padding: 10px 0;
+            border-top: 1px solid #ddd;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .contact-section {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            text-align: center;
+        }
+
+        .contact-item img {
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+
+
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="<%= company==='Ntechzy' ?'https://cdn.search.brave.com/serp/v2/_app/immutable/assets/brave-logo-dark.Bg87GL4b.svg' : 'https://careerkick.in/wp-content/uploads/2023/08/careerkicklogo.png'  %>"
+                alt="Logo">
+        </div>
+
+
+        <%  
+            var currDate = new Date();
+            var day = ("0" + currDate.getDate()).slice(-2);
+            var month = ("0" + (currDate.getMonth() + 1)).slice(-2);  
+            var year = currDate.getFullYear();
+            var formattedDate = month + "/" + day + "/" + year;
+        %>
+
+        <div class="date">
+            Date: <%= formattedDate %>
+        </div>
+
+        <div class="title">Experience and Relieving Letter</div>
+        <div class="subtitle">TO WHOMSOEVER IT MAY CONCERN</div>
+        <div class="content">
+            This is to certify that <%= name %> has worked with <%= company %> Limited as a <%= position %> from <%=
+                            from %> to <%= to %>. During their time with us, <%= name %> consistently demonstrated
+                                    excellent technical skills, professionalism, and a strong work ethic. They
+                                    handled
+                                    their responsibilities effectively and were a valuable contributor to our team.
+                                    Their problem-solving abilities, dedication, and positive attitude were highly
+                                    appreciated. In addition to their skills, <%= name %> was known for their
+                                        integrity,
+                                        reliability, and team spirit. They were well-liked by their colleagues and
+                                        always willing to help others, contributing to a positive and collaborative
+                                        work
+                                        environment. We wish them continued success in their future endeavors.
+        </div>
+        <div class="signature-section">
+            <div class="signature">
+                <img src="https://example.com/signatures/johndoe.png" alt="Signature">
+                <div>Sneha Awasthi</div>
+                <div>Human Resource</div>
+            </div>
+            <div class="signature">
+                <div>Accepted and Agreed</div>
+                <div>
+                    <%= name %>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="contact-section">
+            <div class="contact-item">
+                <div>+123-456-7890</div>
+            </div>
+            <div class="contact-item">
+                <div>hello@reallygreatsite.com</div>
+            </div>
+            <div class="contact-item">
+                <div>123 Anywhere St., Any City, ST 12345</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

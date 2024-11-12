@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Appointment Letter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 25px;
+        }
+
+        .header,
+        .footer {
+            border-top: 1px solid #ddd;
+            text-align: center;
+        }
+
+        .header img {
+            width: 150px;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .content {
+            line-height: 1.4;
+        }
+
+        .details,
+        .appointment-details {
+            margin-top: 20px;
+        }
+
+        .details {
+            display: flex;
+            gap: 10px;
+            flex-direction: column;
+        }
+
+        .details p {
+            margin: 0;
+        }
+
+        .appointment-details ul {
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+
+        .signature {
+            margin-top: 40px;
+        }
+
+        .footer-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            margin-top: 15px;
+        }
+
+        .footer-info div {
+            text-align: center;
+        }
+
+        .signature img {
+            width: 100px;
+        }
+
+        .detail_container {
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <img src="<%= company==='Ntechzy' ?'https://cdn.search.brave.com/serp/v2/_app/immutable/assets/brave-logo-dark.Bg87GL4b.svg' : 'https://careerkick.in/wp-content/uploads/2023/08/careerkicklogo.png'  %>"
+            alt="Logo">
+    </div>
+
+    <div class="title">
+        APPOINTMENT LETTER
+    </div>
+
+    <div class="detail_container">
+        <div class="details">
+            <p> <b>Letter to:</b> <br /><br />
+                <%= employeeName %>
+            </p>
+
+            <p>Human Resource<br /><br />
+                <%= company %><br />
+                <%= companyAddress %>
+            </p>
+        </div>
+
+        <%  
+        var currDate = new Date();
+        var day = ("0" + currDate.getDate()).slice(-2);
+        var month = ("0" + (currDate.getMonth() + 1)).slice(-2);  
+        var year = currDate.getFullYear();
+        var formattedDate = month + "/" + day + "/" + year;
+        %>
+        <div>
+            <p>
+                Date: <%= formattedDate %>
+            </p>
+        </div>
+    </div>
+
+    <div class="content">
+        <p><strong>To <%= employeeName %>,</strong></p>
+        <p>Congratulations on successfully completing your probationary period! We are pleased to officially appoint you
+            as a permanent member of our team in the position of <%= jobTitle %>, effective immediately.</p>
+
+        <div class="appointment-details">
+            <p>Appointment Details:</p>
+            <ul>
+                <li>
+                    Position: <%= jobTitle %>
+                </li>
+                <li>
+                    Department: <%= departmentName %>
+                </li>
+                <li>
+                    Start Date: <%= startDate %>
+                </li>
+            </ul>
+        </div>
+
+        <div class="benefits">
+            <p>Benefits:</p>
+            <ul>
+                <li>Provisional Fund</li>
+                <li>Paid Time Off: <%= paidDaysOff %> days of paid leave annually, plus public holidays.</li>
+                <li>Performance Bonuses: Opportunities for bonuses based on performance.</li>
+            </ul>
+        </div>
+
+        <div class="additional-info">
+            <p>Additional Information:</p>
+            <ul>
+                <li>Tenure Bond: A tenure bond of <%= bondYears %> years is required, with a fee of <%= bondAmount %> if
+                            you leave early.</li>
+                <li>Notice Period: The notice period for resignation is <%= noticePeriod %> weeks/months.</li>
+            </ul>
+        </div>
+
+        <p>We are excited to have you on board and look forward to your contributions. If you have any questions, please
+            reach out.</p>
+
+        <div class="signature">
+            <p>Best Regards,</p>
+            <p><img src="https://example.com/signatures/johndoe.png" alt="Signature"></p>
+            <p>
+                Sneha Awasthi<br>Human Resources
+            </p>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="footer-info">
+            <div>
+                <p>+7894459564
+                </p>
+                <p>+7894459564
+                </p>
+            </div>
+            <div>
+                <p>
+                    tecpankaj24@gmail.com
+                </p>
+                <p>
+                    tecpankaj24@gmail.com
+                </p>
+            </div>
+            <div>
+                <p>
+                    this so an so ...
+                </p>
+                <p>
+                    this so an so ...
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

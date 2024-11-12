@@ -39,7 +39,7 @@ function Navbar() {
                             <div className="hidden md:flex items-center space-x-8">
                                 <Link href="/all-employees" className="text-gray-200 hover:text-white">EMPLOYEES</Link>
                                 <Link href="/tickets" className="text-gray-200 hover:text-white uppercase">Raised Ticket</Link>
-                                <Link href="/" className="text-gray-200 hover:text-white uppercase">Offer Letter</Link>
+                                <Link href="/documents" className="text-gray-200 hover:text-white uppercase">Send Documents</Link>
                                 <Link href="/birthdays" className="text-gray-200 hover:text-white uppercase">BirthDays</Link>
                                 <Link href="/leave" className="text-gray-200 hover:text-white uppercase">Leave</Link>
                             </div>
@@ -63,7 +63,7 @@ function Navbar() {
                         <div className="md:hidden mt-4 space-y-2 flex flex-col gap-2">
                             <Link href="/all-employees" className="text-gray-200 hover:text-white">EMPLOYEES</Link>
                             <Link href="/tickets" className="text-gray-200 hover:text-white uppercase">Raised Ticket</Link>
-                            <Link href="/" className="text-gray-200 hover:text-white uppercase">Offer Letter</Link>
+                            <Link href="/documents" className="text-gray-200 hover:text-white uppercase">Send Documents</Link>
                             <Link href="/birthdays" className="text-gray-200 hover:text-white uppercase">BirthDays</Link>
                             <Link href="/leave" className="text-gray-200 hover:text-white uppercase">Leave</Link>
                         </div>

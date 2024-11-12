@@ -9,7 +9,7 @@ export async function middleware(request) {
 
     if (url.pathname.startsWith('/reset')) {
         return NextResponse.next();
-    }
+    } 
 
     if (!token && !url.pathname.startsWith('/login')) {
         return NextResponse.redirect(new URL('/login', request.url));

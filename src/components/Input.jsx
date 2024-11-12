@@ -1,5 +1,6 @@
-const Input = ({ label, handleChange, value, name, type,styles,inputName,labelStyles }) => {
-  // console.log(label);
+const Input = ({ label, handleChange, value, name, type, styles, inputName, labelStyles }) => {
+  console.log(value);
+
 
   return (
     <div className="relative my-3 flex justify-center items-center">

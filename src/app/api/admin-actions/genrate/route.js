@@ -48,7 +48,16 @@ export async function POST(req, res) {
             });
         });
 
-        const browser = await puppeteer.launch();
+        const browser = await puppeteer.launch({
+            headless: true,  // Run in headless mode (necessary for serverless)
+            executablePath: '/usr/bin/chromium',  // Path to Chromium (may need to be adjusted)
+            args: [
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--single-process',
+                '--disable-gpu'
+            ]
+        });
         const page = await browser.newPage();
         await page.setContent(html);
 

@@ -120,17 +120,30 @@
 <body>
     <div class="container">
         <div class="logo">
-            <img src="<%= company==='Ntechzy' ?'https://cdn.search.brave.com/serp/v2/_app/immutable/assets/brave-logo-dark.Bg87GL4b.svg' : 'https://careerkick.in/wp-content/uploads/2023/08/careerkicklogo.png'  %>"
+            <img src="<%= company==='Ntechzy' ?'https://res.cloudinary.com/dhlqc0ymy/image/upload/v1729940916/ems/jh2omdjjlqiywhqfufdy.png' : 'https://res.cloudinary.com/dhlqc0ymy/image/upload/v1731325192/ems/j1bd7cdfmtnklffqq8ld.png'  %>"
                 alt="Logo">
         </div>
 
 
         <%  
-            var currDate = new Date();
-            var day = ("0" + currDate.getDate()).slice(-2);
-            var month = ("0" + (currDate.getMonth() + 1)).slice(-2);  
-            var year = currDate.getFullYear();
-            var formattedDate = month + "/" + day + "/" + year;
+        var currDate = new Date();
+        var day = ("0" + currDate.getDate()).slice(-2);
+        var month = ("0" + (currDate.getMonth() + 1)).slice(-2);  
+        var year = currDate.getFullYear();
+        var formattedDate = day + "/" + month + "/" + year;
+
+
+        var fromDate = new Date(from);
+        var fromDay = ("0" + fromDate.getDate()).slice(-2);
+        var fromMonth = ("0" + (fromDate.getMonth() + 1)).slice(-2);
+        var fromYear = fromDate.getFullYear();
+        var formattedFromDate = fromDay + "/" + fromMonth + "/" + fromYear;
+
+        var toDate = new Date(to);
+        var toDay = ("0" + toDate.getDate()).slice(-2);
+        var toMonth = ("0" + (toDate.getMonth() + 1)).slice(-2);
+        var toYear = toDate.getFullYear();
+        var formattedToDate = toDay + "/" + toMonth + "/" + toYear;
         %>
 
         <div class="date">
@@ -141,7 +154,7 @@
         <div class="subtitle">TO WHOMSOEVER IT MAY CONCERN</div>
         <div class="content">
             This is to certify that <%= name %> has worked with <%= company %> Limited as a <%= position %> from <%=
-                            from %> to <%= to %>. During their time with us, <%= name %> consistently demonstrated
+            formattedFromDate %> to <%= formattedToDate %>. During their time with us, <%= name %> consistently demonstrated
                                     excellent technical skills, professionalism, and a strong work ethic. They
                                     handled
                                     their responsibilities effectively and were a valuable contributor to our team.
@@ -155,7 +168,7 @@
         </div>
         <div class="signature-section">
             <div class="signature">
-                <img src="https://example.com/signatures/johndoe.png" alt="Signature">
+                <img src="https://res.cloudinary.com/dhlqc0ymy/image/upload/v1731483587/Screenshot_2024-11-13_130926_adno8m.png" alt="Signature">
                 <div>Sneha Awasthi</div>
                 <div>Human Resource</div>
             </div>

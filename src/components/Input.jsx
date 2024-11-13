@@ -1,5 +1,4 @@
 const Input = ({ label, handleChange, value, name, type, styles, inputName, labelStyles }) => {
-  console.log(value);
 
 
   return (

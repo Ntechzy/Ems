@@ -13,10 +13,10 @@ const ShowLeaves = ({ showAllLeaves = false, month, id }) => {
     const [searchTerm, setSearchTerm] = useState("");
     const [leaveData, setLeaveData] = useState([]);
     const [leaveCount, setLeaveCount] = useState({
-        casual: 0,
-        absent: 0,
-        shortLeave: 0,
-        disapproved: 0
+        'casual': 0,
+        'absent': 0,
+        'short': 0,
+        'disapproved': 0
     })
     const { data: session, status } = useSession()
 
@@ -110,7 +110,7 @@ const ShowLeaves = ({ showAllLeaves = false, month, id }) => {
 
                     return (
                         <div key={key} className={`flex justify-between ${bgColor} rounded-md p-3 ${hoverBgColor} transition duration-200`}>
-                            <span className="font-medium text-gray-700">Monthly {key.charAt(0).toUpperCase() + key.slice(1)} Leave:</span>
+                            <span className="font-medium text-gray-700"> {key.charAt(0).toUpperCase() + key.slice(1) === "Disapproved" ? "" : "Monthly"} {key.charAt(0).toUpperCase() + key.slice(1)} Leave:</span>
                             <span className={`font-semibold ${textColor}`}>
                                 {value}
                                 {key === 'casual' ? '/1' : key === 'shortLeave' ? '/2' : ''}

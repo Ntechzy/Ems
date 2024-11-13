@@ -17,10 +17,7 @@ export async function POST(req, res) {
         const user = await isUserAuthenticated(req, res)
         const { leaveType, managerToAsk, startDate, endDate, reason, userId } = await req.json()
 
-        console.log("managerToAsk", leaveType);
 
-
-        console.log(user.id, "ye bvaala ");
         if (userId !== user.id && user.role !== "admin" && user.role !== "super_admin") {
             return Response.json({
                 success: false,

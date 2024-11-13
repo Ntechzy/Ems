@@ -79,7 +79,7 @@
 
 <body>
     <div class="header">
-        <img src="<%= company==='Ntechzy' ?'https://cdn.search.brave.com/serp/v2/_app/immutable/assets/brave-logo-dark.Bg87GL4b.svg' : 'https://careerkick.in/wp-content/uploads/2023/08/careerkicklogo.png'  %>"
+        <img src="<%= company==='Ntechzy' ?'https://res.cloudinary.com/dhlqc0ymy/image/upload/v1729940916/ems/jh2omdjjlqiywhqfufdy.png' : 'https://res.cloudinary.com/dhlqc0ymy/image/upload/v1731325192/ems/j1bd7cdfmtnklffqq8ld.png'  %>"
             alt="Logo">
     </div>
 
@@ -104,7 +104,14 @@
         var day = ("0" + currDate.getDate()).slice(-2);
         var month = ("0" + (currDate.getMonth() + 1)).slice(-2);  
         var year = currDate.getFullYear();
-        var formattedDate = month + "/" + day + "/" + year;
+        var formattedDate = day + "/" + month + "/" + year;
+
+        var startDate = new Date(startDate);
+        var startDateDay = ("0" + startDate.getDate()).slice(-2);
+        var startDateMonth = ("0" + (startDate.getMonth() + 1)).slice(-2);
+        var startDateYear = startDate.getFullYear();
+        var formattedstartDate = startDateDay + "/" + startDateMonth + "/" + startDateYear;
+       
         %>
         <div>
             <p>
@@ -128,7 +135,7 @@
                     Department: <%= departmentName %>
                 </li>
                 <li>
-                    Start Date: <%= startDate %>
+                    Start Date: <%= formattedstartDate %>
                 </li>
             </ul>
         </div>
@@ -156,7 +163,7 @@
 
         <div class="signature">
             <p>Best Regards,</p>
-            <p><img src="https://example.com/signatures/johndoe.png" alt="Signature"></p>
+            <p><img src="https://res.cloudinary.com/dhlqc0ymy/image/upload/v1731483587/Screenshot_2024-11-13_130926_adno8m.png" alt="Signature"></p>
             <p>
                 Sneha Awasthi<br>Human Resources
             </p>

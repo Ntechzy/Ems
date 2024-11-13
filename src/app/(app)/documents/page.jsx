@@ -72,7 +72,12 @@ const Page = () => {
 
             const pdfBlob = new Blob([response.data], { type: 'application/pdf' });
 
+            console.log(pdfBlob);
+
+
             const pdfUrl = URL.createObjectURL(pdfBlob);
+            console.log(pdfUrl);
+
             setPdfUrl(pdfUrl);
         } catch (err) {
             toast.error(err.message)
@@ -185,12 +190,15 @@ const Page = () => {
                             src={pdfUrl}
                             width="100%"
                             height="600px"
-                            style={{ border: 'none' }}
+                            style={{ border: 'none', marginTop: '10px' }}
                             title="PDF Preview"
-                        />
+                        >
+                            <p>Your browser does not support iframes.</p>
+                        </iframe>
+
 
                         {/* Download Button */}
-                        <a href={pdfUrl} download="generated-document.pdf">
+                        <a href={pdfUrl} download="document.pdf">
                             <button>Download PDF</button>
                         </a>
                     </>

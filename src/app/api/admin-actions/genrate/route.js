@@ -1,11 +1,31 @@
+import dbconn from '@/lib/dbconn';
+import { isUserAuthenticated } from '@/lib/helper/ValidateUser';
 import { sendDocument } from '@/lib/resend';
 import ejs from 'ejs';
 import path from 'path';
 import puppeteer from 'puppeteer';
-const tempStorage = {};
-export async function POST(req) {
+export async function POST(req, res) {
 
     try {
+        const authenticatedUser = await isUserAuthenticated(req, res);
+
+        if (!authenticatedUser) {
+            return Response.json(
+                {
+                    sucess: false,
+                    message: "You are not logged in to perform this action",
+                },
+                { status: 401 }
+            );
+        }
+
+        if (authenticatedUser.role === "user") {
+            return Response.json({
+                success: false,
+                message: 'You are not authorized to perform this action',
+            }, { status: 403 });
+        }
+
         const { action, documentType, formData, requestId } = await req.json();
 
 
@@ -17,7 +37,7 @@ export async function POST(req) {
                 },
                 { status: 400 }
             );
-        } 
+        }
 
         const template = templates[documentType];
 
@@ -37,7 +57,6 @@ export async function POST(req) {
 
 
         if (action == 'preview') {
-            tempStorage[requestId] = { pdfBuffer, formData, documentType };
 
             return new Response(pdfBuffer, {
                 status: 200,
@@ -51,7 +70,7 @@ export async function POST(req) {
 
         if (action === 'confirm') {
             const message = await sendDocument(documentType, formData.email, pdfBuffer)
-      
+
 
             if (!message.sucess) {
                 return Response.json(
@@ -73,7 +92,8 @@ export async function POST(req) {
         }
 
 
-    } catch (error) { 
+    } catch (error) {
+        console.log(error);
 
         return Response.json({ sucess: true, message: "Something went wrong" }, { status: 500 })
     }

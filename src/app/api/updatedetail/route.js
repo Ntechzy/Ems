@@ -1,16 +1,11 @@
-import mongoose from "mongoose";
 import dbconn from "@/lib/dbconn";
+import { encrypt } from "@/lib/encrypt";
+import dobModel from "@/modal/birthday";
 import employeeModel from "@/modal/employee";
+import userModel from "@/modal/user";
 import { getServerSession } from "next-auth";
 import { Option } from "../auth/[...nextauth]/option";
-import dobModel from "@/modal/birthday";
-import { encrypt } from "@/lib/encrypt";
-import userModel from "@/modal/user";
-import { date } from "yup";
 import { uploadToCloudinary } from "../upload/route";
-// import { getDataUri } from "@/lib/helper/dataUri";
-import { uploadToCloudinary } from "../upload/route";
-// import { getDataUri } from "@/lib/helper/dataUri";
 
 export async function PUT(req) {
   console.log("PUT request received");

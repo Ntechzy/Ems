@@ -20,6 +20,8 @@ import { deactivateUser, fetchUserDetails } from "../empl_dashboard_function/Fet
 import { getCurrentMonth } from "@/lib/helper/GetCurrentMonth";
 import WarningMail from "../empl_dashboard_modal/WarningMail";
 import { set } from "mongoose";
+import QrCode from "../empl_dashboard_component/QrCodeImage";
+import QrCodeCmp from "../empl_dashboard_component/QrCodeImage";
 
 const Dashboard = ({ userId }) => {
     const [leaveFormErrors, setLeaveFormErrors] = useState({});
@@ -261,7 +263,7 @@ console.log(data,"gfhjklhgjkytrhjygyrtfhdrytjyuyj5jujy");
                     {/* Tabs */}
                     <div className="bg-white rounded-lg shadow-md mb-6 p-4">
                         <ul className="flex border-b overflow-auto">
-                            {["Employees", "Hardware", "Software", "Leave"].map((tab) => (
+                            {["Employees", "Hardware", "Software", "Leave","Id Card"].map((tab) => (
                                 <li key={tab} className="mr-6">
                                     <button
                                         onClick={() => handleTabClick(tab)}
@@ -296,6 +298,7 @@ console.log(data,"gfhjklhgjkytrhjygyrtfhdrytjyuyj5jujy");
                         {activeTab === "Hardware" && <HardwareAssigned employee={employee} />}
                         {activeTab === "Software" && <SoftwareLicenses employee={employee} />}
                         {activeTab === "Leave" && <ShowLeaves month={getCurrentMonth()} id={userId} />}
+                        {activeTab === "Id Card" && <QrCodeCmp employee={employee} id={userId} />}
                     </div>
 
                     {isLeaveModalOpen && (

@@ -1,4 +1,5 @@
 import dbconn from "@/lib/dbconn";
+import { encrypt } from "@/lib/encrypt";
 import { sendOnboarding } from "@/lib/resend";
 import Department from "@/modal/department";
 import employeeModel from "@/modal/employee";
@@ -20,6 +21,7 @@ export async function POST(req) {
         const isUser = await userModel.findOne({ email, mobile_no });
 
         let user, employee;
+        const encryptSalary=encrypt(salary);
 
         if (isUser) {
             const isEmployee = await employeeModel.findOne({ user_id: isUser._id });
@@ -34,7 +36,6 @@ export async function POST(req) {
                     }
                 );
             }
-
 
             employee = await employeeModel.create({
                 user_id: isUser._id,
@@ -61,7 +62,7 @@ export async function POST(req) {
                 user_id: user._id,
                 alloted_hardwares,
                 alloted_softwares,
-                salary,
+                salary: encryptSalary,
                 interview_done_by,
                 who_finalized_salary: who_finalize_salary
             });

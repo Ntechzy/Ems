@@ -7,7 +7,8 @@ const Page = async ({ params }) => {
 
   return (
     <div>
-      <Dashboard userId={userId} />
+      <Dashboard userId={userId}  />
+      
     </div>
   );
 };

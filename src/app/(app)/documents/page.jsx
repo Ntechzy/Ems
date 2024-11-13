@@ -2,6 +2,7 @@
 import Input from '@/components/Input';
 import Loader from '@/components/Loader';
 import { documentFields } from '@/data/documentFields';
+import { documentValidationSchemas } from '@/Validation/LetterValidation';
 import axios from 'axios';
 import React, { useState } from 'react'
 import toast from 'react-hot-toast';
@@ -11,6 +12,8 @@ const Page = () => {
     const [documentType, setDocumentType] = useState('');
     const [formData, setFormData] = useState({});
     const [isLoading, setIsLoading] = useState(false);
+    const [formErrors, setFormErrors] = useState({});
+
 
     const handleInputChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -21,11 +24,40 @@ const Page = () => {
         setFormData({});
     }
 
+    const validateForm = async () => {
+        const schema = documentValidationSchemas[documentType];
+        if (!schema) {
+            console.error("Validation schema not found for document type:", documentType);
+            return false;
+        }
+    
+        try {
+            await schema.validate(formData, { abortEarly: false });
+            setFormErrors({}); // Clear errors if validation passes
+            return true;
+        } catch (error) {
+            const errors = {};
+            error.inner.forEach(err => {
+                errors[err.path] = err.message; // Map each field error to formErrors
+            });
+            setFormErrors(errors);
+            return false;
+        }
+    };
+    
+    
+
+   
 
     const [pdfUrl, setPdfUrl] = useState()
 
     const handlePreview = async () => {
+       const valid= await validateForm();
+        if(!valid){
+            return
+        }
         const requestId = uuidv4();
+
         try {
             const response = await axios.post('/api/admin-actions/genrate',
                 {
@@ -88,33 +120,38 @@ const Page = () => {
 
 
             {documentType && documentFields[documentType].map((field) => (
-                <div className="mb-4" key={field.name}>
-                    {field.type === 'select' ? (
-                        <div>
-                            <select
-                                name={field.name}
-                                value={formData[field.name] || ''}
-                                onChange={handleInputChange}
-                                className="mt-2 p-2 block w-full border border-gray-300 rounded-md"
-                            >
-                                <option value="">Select an option</option>
-                                {field.options.map(option => (
-                                    <option key={option} value={option}>{option}</option>
-                                ))}
-                            </select>
-                        </div>
-                    ) : (
-                        <Input
-                            label={field.label}
-                            handleChange={handleInputChange}
-                            value={formData[field.name]}
-                            name={field.name}
-                            inputName={field.name}
-                            type={field.type}
-                        />
-                    )}
-                </div>
-            ))}
+    <div className="mb-4" key={field.name}>
+        {field.type === 'select' ? (
+            <div>
+                <select
+                    name={field.name}
+                    value={formData[field.name] || ''}
+                    onChange={handleInputChange}
+                    className="mt-2 p-2 block w-full border border-gray-300 rounded-md"
+                >
+                    <option value="">Select an option</option>
+                    {field.options.map(option => (
+                        <option key={option} value={option}>{option}</option>
+                    ))}
+                </select>
+                {formErrors[field.name] && <p className="text-red-500">{formErrors[field.name]}</p>}
+            </div>
+        ) : (
+            <div>
+                <Input
+                    label={field.label}
+                    handleChange={handleInputChange}
+                    value={formData[field.name]}
+                    name={field.name}
+                    inputName={field.name}
+                    type={field.type}
+                />
+                {formErrors[field.name] && <p className="text-red-500">{formErrors[field.name]}</p>}
+            </div>
+        )}
+    </div>
+))}
+
 
 
             {

@@ -1,54 +1,62 @@
-"use client";
-import React, { useEffect, useState } from 'react';
-import QRCode from "react-qr-code";
+  // "use client";
+  // import React, { useEffect, useState } from 'react';
+  // import { rescueUser } from '@/components/empl_dashboard_function/FetchUserDetail';
+  // import QrCodeImage from '@/components/empl_dashboard_component/QrCodeImage';
 
-import { rescueUser } from '@/components/empl_dashboard_function/FetchUserDetail';
+  // const Page = ({ params }) => {
+  //   const [userData, setUserData] = useState(null);
+  //   const [loading, setLoading] = useState(true);
+  //   const [error, setError] = useState(null);
 
-const page = ({params}) => {
-  const [userData, setUserData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  //   const userId = params?.InfoId;
 
-  const userId = params?.InfoId;  
-  useEffect(() => {
-    if (userId) { 
-      const loadUserData = async () => {
-        try {
-          const data = await rescueUser(userId); // Call the function with userId
-          setUserData(data); // Set the data in the state
-        } catch (err) {
-          setError("Failed to fetch user details"); // Set error if fetch fails
-        } finally {
-          setLoading(false); // Set loading state to false once the request is completed
-        }
-      };
+  //   useEffect(() => {
+  //     if (userId) {
+  //       const loadUserData = async () => {
+  //         try {
+  //           const data = await rescueUser(userId);
+  //           setUserData(data);
+  //         } catch (err) {
+  //           setError("Failed to fetch user details");
+  //           console.error("Error fetching user data:", err); // Optional logging for debugging
+  //         } finally {
+  //           setLoading(false);
+  //         }
+  //       };
 
-      loadUserData(); // Fetch user data on component mount
-    }
-  }, [userId]); // Re-run the effect whenever userId changes
+  //       loadUserData();
+  //     }
+  //   }, [userId]);
 
-  if (loading) return <div>Loading...</div>; // Show loading state
-  if (error) return <div>{error}</div>; // Show error message if fetching fails
- 
-  const qrData = userData ? {
-    name: userData.name,
-    phone: userData.phone,
-    companyName: userData.companyName,
-    imageUrl: userData.profilePicture
-  } : '';
-  return (
-    <div>
-      {userData ? (
-        <div>
-          <h2>User QR Code</h2>
-          {/* QR Code with user data */}
-          <QRCode value={JSON.stringify(qrData)} size={256} />
-        </div>
-      ) : (
-        <div>No user data available</div> // If no data is available, show this message
-      )}
-    </div>
-  )
-}
+  //   if (loading) return <div>Loading...</div>;
+  //   if (error) return <div>{error}</div>;
 
-export default page 
+  //   const { name, phone, companyName, profilePicture } = userData || {};
+  //   const qrData = userData ? { name, phone, companyName, imageUrl: profilePicture } : null;
+
+  //   return (
+  //     <div>
+  //       {userData ? (
+  //         <div>
+  //           <h2>User QR Code</h2>
+  //           <QrCodeImage qrData={qrData} />
+  //         </div>
+  //       ) : (
+  //         <div>No user data available</div>
+  //       )}
+  //     </div>
+  //   );
+  // };
+
+  // export default Page;
+
+
+  import React from 'react'
+  
+  const Page = () => {
+    return (
+      <div>Nothing</div>
+    )
+  }
+  
+  export default Page

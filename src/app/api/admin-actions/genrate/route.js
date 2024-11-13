@@ -3,7 +3,9 @@ import { isUserAuthenticated } from '@/lib/helper/ValidateUser';
 import { sendDocument } from '@/lib/resend';
 import ejs from 'ejs';
 import path from 'path';
-import puppeteer from 'puppeteer';
+import { chromium } from 'playwright';
+// import puppeteer from 'puppeteer';
+import { Puppeteer } from 'puppeteer-core';
 export async function POST(req, res) {
 
     try {
@@ -48,15 +50,8 @@ export async function POST(req, res) {
             });
         });
 
-        const browser = await puppeteer.launch({
-            headless: true,  // Run in headless mode (necessary for serverless)
-            executablePath: '/usr/bin/chromium',  // Path to Chromium (may need to be adjusted)
-            args: [
-                '--no-sandbox',
-                '--disable-setuid-sandbox',
-                '--single-process',
-                '--disable-gpu'
-            ]
+        const browser = await chromium.launch({
+            headless: true, // Headless mode
         });
         const page = await browser.newPage();
         await page.setContent(html);

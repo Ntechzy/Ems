@@ -4,8 +4,5 @@
             "path": "/api/remove-leave",
             "schedule": "30 01 9 * *"
         }
-    ],
-    "env": {
-        "PLAYWRIGHT_BROWSERS_PATH": "0"
-    }
+    ]
 }

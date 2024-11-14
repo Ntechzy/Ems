@@ -5,7 +5,7 @@ import employeeModel from "@/modal/employee";
 import userModel from "@/modal/user";
 import { getServerSession } from "next-auth";
 import { Option } from "../auth/[...nextauth]/option";
-import { uploadToCloudinary } from "../upload/route";
+import { uploadToCloudinary } from "@/lib/helper/upload";
 
 export async function PUT(req) {
   console.log("PUT request received");

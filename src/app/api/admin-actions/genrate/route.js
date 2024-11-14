@@ -46,16 +46,15 @@ export async function POST(req, res) {
                 resolve(html);
             });
         });
-        console.log("ok  ");
+        const response = await axios.post("https://selectpdf.com/api2/convert", {
+            html,
+            key: "419e2aef-0c63-42e2-bcc2-fa5675ae4eb7"
+        }, { responseType: 'arraybuffer' }); // Expect an ArrayBuffer response
 
-        const browser = await puppeteer.launch({
-            headless: "new", // Alternatively, you can set it to true if "new" does not work for you
-            args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
-        });
-        console.log("ok niche aaya hai ");
-        
-        const page = await browser.newPage();
-        await page.setContent(html);
+        const pdfBuffer = Buffer.from(response.data);
+        // const browser = await puppeteer.launch({ headless: true });
+        // const page = await browser.newPage();
+        // await page.setContent(html);
 
         // const pdfBuffer = await page.pdf({ format: 'A4' });
         // await browser.close();

@@ -3,18 +3,16 @@ import { isUserAuthenticated } from '@/lib/helper/ValidateUser';
 import { sendDocument } from '@/lib/resend';
 import ejs from 'ejs';
 import path from 'path';
-import { chromium } from 'playwright';
-// import puppeteer from 'puppeteer';
-import { Puppeteer } from 'puppeteer-core';
-export async function POST(req, res) {
+import puppeteer from 'puppeteer';
 
+export async function POST(req, res) {
     try {
         const authenticatedUser = await isUserAuthenticated(req, res);
 
         if (!authenticatedUser) {
             return Response.json(
                 {
-                    sucess: false,
+                    success: false,
                     message: "You are not logged in to perform this action",
                 },
                 { status: 401 }
@@ -30,19 +28,17 @@ export async function POST(req, res) {
 
         const { action, documentType, formData, requestId } = await req.json();
 
-
         if (!requestId) {
             return Response.json(
                 {
-                    sucess: false,
-                    message: "No request id found",
+                    success: false,
+                    message: "No request ID found",
                 },
                 { status: 400 }
             );
         }
 
         const template = templates[documentType];
-
         const html = await new Promise((resolve, reject) => {
             ejs.renderFile(template.content_template, formData, (err, html) => {
                 if (err) reject(err);
@@ -50,18 +46,15 @@ export async function POST(req, res) {
             });
         });
 
-        const browser = await chromium.launch({
-            headless: true, // Headless mode
-        });
+        const browser = await puppeteer.launch({ headless: true });
         const page = await browser.newPage();
         await page.setContent(html);
 
         const pdfBuffer = await page.pdf({ format: 'A4' });
         await browser.close();
 
-
-        if (action == 'preview') {
-
+        if (action === 'download') {
+            // Return PDF for download
             return new Response(pdfBuffer, {
                 status: 200,
                 headers: {
@@ -69,50 +62,50 @@ export async function POST(req, res) {
                     'Content-Disposition': 'inline; filename="generated-document.pdf"',
                 },
             });
-
-        }
-
-        if (action === 'confirm') {
-            const message = await sendDocument(documentType, formData.email, pdfBuffer)
-
-
+        } else if (action === 'send') {
+            // Send PDF via email
+            const message = await sendDocument(documentType, formData.email, pdfBuffer);
+            console.log(message);
+            
             if (!message.sucess) {
                 return Response.json(
                     {
-                        sucess: false,
-                        message: "Warning not sent",
+                        success: false,
+                        message: "Email not sent",
                     },
                     { status: 400 }
                 );
             }
 
-
             return Response.json(
                 {
-                    sucess: true,
-                    message: "Email sent successfully"
-                }
-                , { status: 200 })
+                    success: true,
+                    message: "Email sent successfully",
+                },
+                { status: 200 }
+            );
+        } else {
+            return Response.json(
+                {
+                    success: false,
+                    message: "Invalid action specified",
+                },
+                { status: 400 }
+            );
         }
-
-
     } catch (error) {
         console.log(error);
-
-        return Response.json({ sucess: true, message: "Something went wrong" }, { status: 500 })
+        return Response.json({ success: false, message: "Something went wrong" }, { status: 500 });
     }
 }
 
-
 export const templates = {
-
     experienceLetter: {
         document_title: "Experience Letter",
         content_template: path.join(process.cwd(), 'src', 'template', 'Experience-letter.ejs'),
     },
     AppoinmentLetter: {
-        document_title: "Appoinment Letter",
+        document_title: "Appointment Letter",
         content_template: path.join(process.cwd(), 'src', 'template', 'AppoinmentLetter.ejs'),
-
     },
 };

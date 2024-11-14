@@ -41,7 +41,7 @@ export async function POST(req) {
                 user_id: isUser._id,
                 alloted_hardwares,
                 alloted_softwares,
-                salary,
+                salary:encryptSalary,
                 interview_done_by,
                 who_finalized_salary: who_finalize_salary
             });

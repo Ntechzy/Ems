@@ -53,15 +53,15 @@ export const associated_with = [
         "label": "Ntechzy",
     },
     {
-        "name": "Creerkick",
+        "name": "Careerkick",
         "label": "Careerkick",
     },
     {
         "name": "Spotlight With Nikhil",
-        "label": "Careerkick",
+        "label": "Spotlight With Nikhil",
     },
     {
         "name": "Sapna Healthcare",
-        "label": "Careerkick",
+        "label": "Sapna Healthcare",
     }
 ]   

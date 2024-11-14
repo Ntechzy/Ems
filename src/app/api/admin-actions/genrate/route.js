@@ -59,8 +59,8 @@ export async function POST(req, res) {
                 status: 200,
                 headers: {
                     'Content-Type': 'application/pdf',
-                    'Content-Disposition': 'inline; filename="generated-document.pdf"',
-                },
+                    'Content-Disposition': 'inline; filename="document.pdf"',
+                }
             });
         } else if (action === 'send') {
             // Send PDF via email

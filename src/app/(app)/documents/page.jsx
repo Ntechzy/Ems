@@ -49,7 +49,7 @@ const Page = () => {
         if (!valid) return;
 
         const requestId = uuidv4();
-
+        console.log(requestId);
         try {
             const response = await axios.post('/api/admin-actions/genrate', {
                 action: "download",

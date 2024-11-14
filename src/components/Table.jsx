@@ -195,6 +195,7 @@ const Table = ({ isModal, data, title = "Employees", subtitle = "Manage all your
         setFilteredData(filterData);
     }, [filters, data]);
 
+    console.log(filteredData);
 
     return (
         <div className="container mx-auto p-4">

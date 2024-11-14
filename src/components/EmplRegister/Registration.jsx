@@ -28,7 +28,11 @@ const Registration = ({ close }) => {
         interview_done_by: "",
         who_finalize_salary: ""
     })
- 
+
+
+    console.log(value);
+
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -45,6 +49,8 @@ const Registration = ({ close }) => {
 
 
     const handleChange = (e) => {
+        console.log(e.target.id, e.target.value);
+
         setValue({ ...value, [e.target.id]: e.target.value })
     }
 
@@ -58,7 +64,7 @@ const Registration = ({ close }) => {
     }
 
     const handleSubmit = async (e) => {
-        e.preventDefault(); 
+        e.preventDefault();
         try {
             await RegistrationValidate.validate(value, { abortEarly: false });
 
@@ -133,7 +139,7 @@ const Registration = ({ close }) => {
                                     options={associated_with.map(item => ({ value: item.name, label: item.name }))}
                                     value={value.associated_with}
                                     defaultOption="Select Associated With"
-                                    onChange={handleChange} 
+                                    onChange={handleChange}
                                 />
                                 {err && <div className='text-red-700 text-center'> {err["associated_with"]}</div>}
                             </div>
@@ -158,7 +164,7 @@ const Registration = ({ close }) => {
                                     options={
                                         data.department
                                             .filter(dep => dep._id === value.department)[0]?.designations
-                                            .map(des => ({ value: des._id, label: des.name })) || []
+                                            .map(des => ({ value: des.name, label: des.name })) || []
                                     }
                                     value={value.designation}
                                     onChange={handleChange}

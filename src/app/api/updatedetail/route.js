@@ -13,10 +13,10 @@ export async function PUT(req) {
   const session = await getServerSession(Option);
 
   try {
-   
+
     if (session && session.user && session.user.status) {
       const formData = await req.formData();
-      console.log([...formData.entries()]);
+
       const permanent_address = formData.get("permanent_address").trim();
       const correspondence_address = formData.get("correspondence_address").trim();
       const pan_card_no = formData.get("pan_card_no").trim();
@@ -62,11 +62,7 @@ export async function PUT(req) {
       let profilePhotoData = {};
 
       if (profile_photo && profile_photo.size > 0) {
-        // Convert the file to a Data URI
-        // const fileUri = await getDataUri(profile_photo);
-        // console.log("File being uploaded:", fileUri);
 
-        // Upload to Cloudinary
         const buffer = await profile_photo.arrayBuffer();
         const uploadResult = await uploadToCloudinary(Buffer.from(buffer), "ems");
         console.log(uploadResult, "uploadResult");
@@ -98,7 +94,7 @@ export async function PUT(req) {
 
       const doj = new Date(Date.now(date_of_joining));
 
-      const salarySlotTrimmed = salary_slot.trim(); // Ensure no leading/trailing spaces
+      const salarySlotTrimmed = salary_slot.trim();
       console.log("Salary slot after trimming:", salarySlotTrimmed);
 
       const [day, month, year] = salarySlotTrimmed.split("-").map(Number); // Split and convert to numbers
@@ -119,7 +115,7 @@ export async function PUT(req) {
 
       console.log("salary date", day);
 
-      //   const day  = salary_date.split('-')[2];
+      //  const day  = salary_date.split('-')[2];
       //  console.log("day",day);
 
       const id = session.user.id;
@@ -172,24 +168,26 @@ export async function PUT(req) {
       }
 
       return Response.json(
-        JSON.stringify(
-          {
-            success: true,
-            user: updatedUser,
-            message: "Details Updated Successfully",
-          },
-          {
-            status: 200,
-          }
-        )
+        {
+          success: true,
+          user: updatedUser,
+          message: "Details Updated Successfully",
+        },
+        {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        }
       );
     } else {
-      return (
-        Response.json({
+      return Response.json(
+        {
           success: false,
           message: "Please Login",
-        }),
-        { status: 401, headers: { "Content-Type": "application/json" } }
+        },
+        {
+          status: 401,
+          headers: { "Content-Type": "application/json" },
+        }
       );
     }
   } catch (error) {

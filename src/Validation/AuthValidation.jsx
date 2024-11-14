@@ -8,7 +8,7 @@ export const RegistrationValidate = Yup.object({
 
     who_finalize_salary: Yup.string().required("interview_done_by is required"),
 
-    email: Yup.string().email("Invalid email adress").required("Email is required"),
+    email: Yup.string().required("Email is required"),
 
     mobile_no: Yup.string().required('* mobile_no is required').required("* Enter Your mobile_no").matches(/^\d{10}$/, "* mobile_no  should be of 10 digit"),
 

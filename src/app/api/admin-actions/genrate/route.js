@@ -94,7 +94,7 @@ export async function POST(req, res) {
             );
         }
     } catch (error) {
-        console.log(error);
+        console.log("Error:", error);
         return Response.json({ success: false, message: error, }, { status: 500 });
     }
 }

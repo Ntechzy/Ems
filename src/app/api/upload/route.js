@@ -128,7 +128,7 @@ export const uploadToCloudinary = async (fileBuffer, folderPath) => {
           resolve({
             public_id: result.public_id,
             url: result.secure_url,
-          }); // Resolve with the result from Cloudinary
+          }); 
         }
       );
 
@@ -139,8 +139,8 @@ export const uploadToCloudinary = async (fileBuffer, folderPath) => {
       });
 
       // Send the buffer to Cloudinary
-      stream.end(fileBuffer); // Pass the fileBuffer directly
-      console.log("Stream ended"); // Add logging to confirm stream is ending
+      stream.end(fileBuffer); 
+      console.log("Stream ended"); 
     });
   } catch (error) {
     console.error("Error uploading to Cloudinary", error);

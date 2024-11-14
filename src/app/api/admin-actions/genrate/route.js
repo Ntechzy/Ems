@@ -1,6 +1,7 @@
 import dbconn from '@/lib/dbconn';
 import { isUserAuthenticated } from '@/lib/helper/ValidateUser';
 import { sendDocument } from '@/lib/resend';
+import axios from 'axios';
 import ejs from 'ejs';
 import path from 'path';
 import puppeteer from 'puppeteer';
@@ -45,13 +46,18 @@ export async function POST(req, res) {
                 resolve(html);
             });
         });
+        const response = await axios.post("https://selectpdf.com/api2/convert", {
+            html,
+            key: "419e2aef-0c63-42e2-bcc2-fa5675ae4eb7"
+        }, { responseType: 'arraybuffer' }); // Expect an ArrayBuffer response
 
-        const browser = await puppeteer.launch({ headless: true });
-        const page = await browser.newPage();
-        await page.setContent(html);
+        const pdfBuffer = Buffer.from(response.data);
+        // const browser = await puppeteer.launch({ headless: true });
+        // const page = await browser.newPage();
+        // await page.setContent(html);
 
-        const pdfBuffer = await page.pdf({ format: 'A4' });
-        await browser.close();
+        // const pdfBuffer = await page.pdf({ format: 'A4' });
+        // await browser.close();
 
         if (action === 'download') {
             // Return PDF for download

@@ -30,16 +30,17 @@ export async function GET(req, res) {
                 const userId = userIdArr[0];
                 if (!userId) {
                     throw new AppError("Please provide correct data", 400);
-                } 
+                }
                 const user = await employeeService.GetById(userId, req, res);
                 appResponse.data = user;
- 
+
 
 
             } else if (validateRole(sessionUser, ["super_admin", "admin"])) {
-                const pageNo = parseInt(searchParams.get("page")) || 1;
-                const limit = parseInt(searchParams.get("limit")) || 10;
+                const pageNo = parseInt(searchParams.get("page"));
+                const limit = parseInt(searchParams.get("limit"));
                 const offset = (pageNo - 1) * limit;
+
 
                 const all_users = await employeeService.GetAllWithPagination(offset, limit);
 
@@ -97,7 +98,7 @@ export async function PUT(req, res) {
     try {
         const appResponse = new AppResponse();
         await dbconn();
-   
+
         const { userId, name, email, mobile_no, correspondence_address, associated_with, account_holder_name, bank_name, ifsc_code, account_number, dob } = await req.json();
         const dataToUpdate = {};
 
@@ -106,7 +107,7 @@ export async function PUT(req, res) {
         if (name) dataToUpdate.name = name;
         if (email) dataToUpdate.email = email;
         console.log(email);
-        
+
         if (mobile_no) dataToUpdate.mobile_no = mobile_no;
         if (correspondence_address) dataToUpdate.correspondence_address = correspondence_address;
         if (associated_with) dataToUpdate.associated_with = associated_with;

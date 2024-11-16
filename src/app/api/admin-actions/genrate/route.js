@@ -1,11 +1,11 @@
-import dbconn from '@/lib/dbconn';
 import { isUserAuthenticated } from '@/lib/helper/ValidateUser';
 import { sendDocument } from '@/lib/resend';
 import axios from 'axios';
 import ejs from 'ejs';
 import path from 'path';
-import puppeteer from 'puppeteer';
 
+
+const url = process.env.PDF_API;
 export async function POST(req, res) {
     try {
         const authenticatedUser = await isUserAuthenticated(req, res);
@@ -46,32 +46,27 @@ export async function POST(req, res) {
                 resolve(html);
             });
         });
-        const response = await axios.post("https://selectpdf.com/api2/convert", {
+
+
+        console.log(url);
+
+        const response = await axios.post(url, {
             html,
-            key: "419e2aef-0c63-42e2-bcc2-fa5675ae4eb7"
-        }, { responseType: 'arraybuffer' }); // Expect an ArrayBuffer response
+        }, { responseType: 'arraybuffer' });
 
-        const pdfBuffer = Buffer.from(response.data);
-        // const browser = await puppeteer.launch({ headless: true });
-        // const page = await browser.newPage();
-        // await page.setContent(html);
 
-        // const pdfBuffer = await page.pdf({ format: 'A4' });
-        // await browser.close();
+        const pdfBuffer = response.data;
 
-        if (action === 'download') {
-            // Return PDF for download
+
+        if (action === 'preview') {
             return new Response(pdfBuffer, {
-                status: 200,
                 headers: {
                     'Content-Type': 'application/pdf',
-                    'Content-Disposition': 'inline; filename="document.pdf"',
-                }
+                },
             });
         } else if (action === 'send') {
-            // Send PDF via email
+
             const message = await sendDocument(documentType, formData.email, pdfBuffer);
-            console.log(message);
 
             if (!message.sucess) {
                 return Response.json(
@@ -100,7 +95,8 @@ export async function POST(req, res) {
             );
         }
     } catch (error) {
-        console.log("Error:", error);
+        console.log(error);
+
         return Response.json({ success: false, message: error, }, { status: 500 });
     }
 }
@@ -113,5 +109,9 @@ export const templates = {
     AppoinmentLetter: {
         document_title: "Appointment Letter",
         content_template: path.join(process.cwd(), 'src', 'template', 'AppoinmentLetter.ejs'),
+    },
+    JoiningLetter: {
+        document_title: "Joining  Letter",
+        content_template: path.join(process.cwd(), 'src', 'template', 'JoiningLetter.ejs'),
     },
 };

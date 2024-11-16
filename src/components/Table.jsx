@@ -195,7 +195,6 @@ const Table = ({ isModal, data, title = "Employees", subtitle = "Manage all your
         setFilteredData(filterData);
     }, [filters, data]);
 
-    console.log(filteredData);
 
     return (
         <div className="container mx-auto p-4">
@@ -234,7 +233,7 @@ const Table = ({ isModal, data, title = "Employees", subtitle = "Manage all your
                                 <td className="py-2 px-4 border">{employee.id}</td>
                                 <td className="py-2 px-4 border">
                                     <Link href={employee.link || "#"} className="flex flex-col md:flex-row items-center">
-                                        <img src="https://img.freepik.com/free-photo/beautiful-male-half-length-portrait-isolated-white-studio-background-young-emotional-hindu-man-blue-shirt-facial-expression-human-emotions-advertising-concept-standing-smiling_155003-25250.jpg?w=826&t=st=1727176643~exp=1727177243~hmac=d883f4c6ab692bb09bd6684c8e42efc270bca8adb3487e5b4b5a5eaaaf36fab3" alt={`Profile of ${employee.name}`} className="w-8 h-8 rounded-full mr-2 object-cover" />
+                                        <img src={employee.pic} alt={`Profile of ${employee.name}`} className="w-8 h-8 rounded-full mr-2 object-cover" />
                                         <div>
                                             <div className="font-bold">{employee.name}</div>
                                             <div className="text-gray-500 text-sm">{employee.title}</div>

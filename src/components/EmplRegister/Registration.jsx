@@ -29,11 +29,6 @@ const Registration = ({ close }) => {
         who_finalize_salary: ""
     })
 
-
-    console.log(value);
-
-
-
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -49,7 +44,6 @@ const Registration = ({ close }) => {
 
 
     const handleChange = (e) => {
-        console.log(e.target.id, e.target.value);
 
         setValue({ ...value, [e.target.id]: e.target.value })
     }

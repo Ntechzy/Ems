@@ -36,6 +36,8 @@ const Page = () => {
             employees = employees.data;
 
             const all_employees = employees?.map((obj) => {
+                console.log(obj);
+
                 let dt = new Date(obj?.user_id?.createdAt);
                 let joiningDate = `${dt.getDate().toString().padStart(2, "0")}-${(dt.getMonth() + 1).toString().padStart(2, "0")}-${dt.getFullYear()}`;
                 return {
@@ -48,7 +50,8 @@ const Page = () => {
                     status: (obj?.user_id?.status && obj?.user_id?.isFormCompleted) ? "Active" : obj?.user_id?.isFormCompleted ? "Inactive" : "Pending",
                     joiningDate: joiningDate,
                     link: `/employee/${obj?.user_id?._id}`,
-                    role: obj?.user_id?.role
+                    role: obj?.user_id?.role,
+                    pic: obj?.profile_photo?.cloud_url
                 }
             });
             setInitialTableData(all_employees);

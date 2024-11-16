@@ -22,11 +22,10 @@ export const fields = [
     },
 
     {
-        "name": "Salary",
+        "name": "Salary (per Month)",
         "label": "salary",
         "type": "number",
         "placeholder": "Enter Name",
-
     },
 ]
 

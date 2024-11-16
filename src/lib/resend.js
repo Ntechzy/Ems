@@ -95,14 +95,13 @@ export const WarningMail = async (warningMessage, email) => {
 }
 
 export const sendDocument = async (documentType, email, pdfBuffer) => {
-    console.log(pdfBuffer, "here you have to send this ");
     const bufferContent = Buffer.isBuffer(pdfBuffer) ? pdfBuffer : Buffer.from(pdfBuffer);
     try {
         const response = await resend.emails.send({
             from: 'admin@ems.ntechzy.in',
             to: email,
             subject: `${documentType} PDF Document`,
-            text: `Please find attached the ${documentType} PDF document.`,
+            text: `Please find attached the ${documentType} PDF document.  Thank you for your contributions.We will always remember the good times we shared together.We wish you the very best in your future endeavors.`,
             attachments: [
                 {
                     filename: `${documentType}.pdf`,

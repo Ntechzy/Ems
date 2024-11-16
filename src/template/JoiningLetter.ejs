@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joining Letter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+        }
+
+        .header img {
+            max-width: 150px;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin: 20px 0;
+            letter-spacing: 2px;
+        }
+
+        .details {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+        }
+
+        .details p {
+            margin: 0;
+        }
+
+        .content {
+            margin: 20px 0;
+        }
+
+        .footer {
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .footer .info {
+            font-size: 12px;
+            color: #555;
+        }
+
+        .footer .info p {
+            margin: 5px 0;
+        }
+
+        .signature {
+            margin-top: 40px;
+        }
+
+        .signature p {
+            margin: 0;
+        }
+
+        .signature h4 {
+            margin: 10px 0;
+        }
+
+        .contact-section {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            text-align: center;
+        }
+
+        .contact-item img {
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <%  
+    var currDate = new Date();
+    var day = ("0" + currDate.getDate()).slice(-2);
+    var month = ("0" + (currDate.getMonth() + 1)).slice(-2);  
+    var year = currDate.getFullYear();
+    var formattedDate = day + "/" + month + "/" + year;
+
+
+    var fromDate = new Date(startDate);
+    var fromDay = ("0" + fromDate.getDate()).slice(-2);
+    var fromMonth = ("0" + (fromDate.getMonth() + 1)).slice(-2);
+    var fromYear = fromDate.getFullYear();
+    var formattedFromDate = fromDay + "/" + fromMonth + "/" + fromYear;
+%>
+    <div class="container">
+        <div class="header">
+            <img src="<%= company==='NTechzy Pvt. Limited' ?'https://res.cloudinary.com/dhlqc0ymy/image/upload/v1729940916/ems/jh2omdjjlqiywhqfufdy.png' : 'https://res.cloudinary.com/dhlqc0ymy/image/upload/v1731325192/ems/j1bd7cdfmtnklffqq8ld.png'  %>"
+            alt="Logo">
+        </div>
+        <div class="title">JOINING LETTER</div>
+
+        <div class="details">
+            <div>
+                <p><strong>Letter to:</strong></p>
+                <p>
+                    <%= name %>
+                </p>
+            </div>
+            <div>
+                <p><strong>Date:</strong></p>
+                <p>
+                    <%= formattedDate %>
+                </p>
+            </div>
+        </div>
+
+        <p>Human Resource<br>
+            <%= company %><br>Address here
+        </p>
+
+        <div class="content">
+            <p>To <%= name %>,</p>
+            <p>We are excited to offer you the position of <strong>
+                    <%= position %>
+                </strong> at <%= company %> We believe your skills and passion will make a significant impact on our
+                    team, and we look forward to having you onboard.</p>
+            <p><strong>Offer Details:</strong></p>
+            <ul>
+                <li><strong>Position:</strong>
+                    <%= position %>
+                </li>
+                <li><strong>Start Date:</strong>
+                    <%= formattedFromDate %>
+                </li>
+                <li><strong>Salary:</strong>
+                    <%= salary %>
+                </li>
+                <li><strong>Probationary Period:</strong>
+                    <%= probationPeriod %> months
+                </li>
+            </ul>
+            <h4>Your Journey with Us:</h4>
+            <p>During your probationary period, you will receive guidance and support to help you thrive in your new
+                role. At the end of this period, your performance will be reviewed, and upon successful completion, you
+                will transition to a permanent position with us. We are committed to fostering your growth and success
+                within our organization.</p>
+            <p>As part of this commitment, you will receive an Employee Handbook outlining our company policies and
+                expectations to ensure a positive work environment. We believe that you will be a valuable addition to
+                our team, and we can’t wait for you to start this journey with us. If you have any questions, please
+                feel free to reach out.</p>
+        </div>
+
+        <div class="signature">
+            <p>Best Regards,</p>
+            <img src="https://res.cloudinary.com/dhlqc0ymy/image/upload/v1731483587/Screenshot_2024-11-13_130926_adno8m.png"
+                alt="Signature">
+            <h4>Sneha Awasthi</h4>
+            <p>Human Resource</p>
+        </div>
+
+        <div class="footer">
+            <div class="contact-section">
+                <div class="contact-item">
+                    <div>+123-456-7890</div>
+                </div>
+                <div class="contact-item">
+                    <div>hello@reallygreatsite.com</div>
+                </div>
+                <div class="contact-item">
+                    <div>123 Anywhere St., Any City, ST 12345</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

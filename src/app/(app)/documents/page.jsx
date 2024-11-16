@@ -4,6 +4,7 @@ import Loader from '@/components/Loader';
 import { documentFields } from '@/data/documentFields';
 import { documentValidationSchemas } from '@/Validation/LetterValidation';
 import axios from 'axios';
+import { set } from 'mongoose';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { v4 as uuidv4 } from 'uuid';
@@ -23,7 +24,7 @@ const Page = () => {
     const handleDocumentTypeChange = (e) => {
         setDocumentType(e.target.value);
         setFormData({});
-        setIsPdfGenerated(false); // Reset PDF generation status on type change
+        setIsPdfGenerated(false);
     };
 
     const validateForm = async () => {
@@ -45,56 +46,60 @@ const Page = () => {
     };
 
     const handleDownloadPdf = async () => {
-        const valid = await validateForm();
-        if (!valid) return;
 
+
+
+        const link = document.createElement('a');
+        link.href = pdfUrl;
+        link.download = 'document.pdf';
+        link.click();
+        URL.revokeObjectURL(pdfUrl);
+    };
+
+    const handleViewPdf = async () => {
         const requestId = uuidv4();
-        console.log(requestId);
         try {
+            setIsLoading(true)
             const response = await axios.post('/api/admin-actions/genrate', {
-                action: "download",
+                action: "preview",
                 documentType,
                 formData,
                 requestId
-            }, { responseType: 'blob' });
+            }, { responseType: 'arraybuffer' });
 
             const pdfBlob = new Blob([response.data], { type: 'application/pdf' });
+
             const pdfUrl = URL.createObjectURL(pdfBlob);
+
+
             setPdfUrl(pdfUrl);
-            setIsPdfGenerated(true); // Set PDF generation status to true
-
-            // Trigger download
-            const link = document.createElement('a');
-            link.href = pdfUrl;
-            link.download = 'document.pdf';
-            link.click();
-            URL.revokeObjectURL(pdfUrl);
-
+            setIsLoading(false)
+            setIsPdfGenerated(true);
         } catch (err) {
+            setIsLoading(false)
             toast.error('Failed to generate PDF');
-        } 
-        // finally{
-        //     setFormData({})
-        // }
+            console.error(err);
+        }
     };
+
 
     const handleSendDocument = async () => {
         const requestId = uuidv4();
 
         try {
+            setIsLoading(true)
             const response = await axios.post('/api/admin-actions/genrate', {
                 action: 'send',
                 documentType,
                 formData,
                 requestId
             });
+            setIsLoading(false)
             toast.success(response.data.message);
         } catch (err) {
+            setIsLoading(false)
             toast.error('Failed to send document');
-        } 
-        // finally{
-        //     setFormData({})
-        // }
+        }
     };
 
     return (
@@ -111,6 +116,7 @@ const Page = () => {
                     <option value="">Select a document</option>
                     <option value="experienceLetter">Experience Letter</option>
                     <option value="AppoinmentLetter">Appointment Letter</option>
+                    <option value="JoiningLetter">Joining Letter</option>
                 </select>
             </div>
 
@@ -151,7 +157,7 @@ const Page = () => {
                 documentType &&
 
 
-                <div className="flex justify-center items-center m-auto ">
+                <div className="flex md: justify-center items-center m-auto my-4">
                     <button
                         className='bg-button_blue p-2 md:w-auto flex justify-center items-center m-auto rounded-xl text-white text-lg'
                         onClick={handleSendDocument}
@@ -161,13 +167,39 @@ const Page = () => {
                     </button>
                     <button
                         className='bg-button_blue p-2 md:w-auto flex justify-center items-center m-auto rounded-xl text-white text-lg'
-                        onClick={handleDownloadPdf}
+                        onClick={handleViewPdf}
                         disabled={isLoading}
                     >
-                        {isLoading ? <Loader /> : 'Download PDF'}
+                        Preview
+                    </button>
+
+
+                    {/* download pdf from url */}
+                    <button
+                        className='bg-button_blue p-2 md:w-auto flex justify-center items-center m-auto rounded-xl text-white text-lg'
+
+                        onClick={handleDownloadPdf}
+                    >Download
+
                     </button>
                 </div>
+
+
             }
+
+            {isLoading ? <Loader /> : (
+                isPdfGenerated && (
+                    <iframe
+                        src={pdfUrl}
+                        width="100%"
+                        height="600px"
+                        aria-label="PDF Preview"
+                        title="PDF Preview"
+                    />
+
+                )
+
+            )}
         </div>
     );
 };

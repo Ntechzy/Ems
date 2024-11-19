@@ -64,7 +64,7 @@ const Dashboard = ({ userId }) => {
         dob: employee?.dob,
         pan_card_no: employee?.pan_card_no,
         aadhaar_no: employee?.aadhaar_no,
-        designation: employee?.designation, 
+        designation: employee?.designation,
     });
 
 
@@ -95,7 +95,7 @@ const Dashboard = ({ userId }) => {
     };
     const toggleHandleWarning = () => {
         window.scrollTo({ top: 0 });
-       setIsWarningModalOpen(!isWarningModalOpen);
+        setIsWarningModalOpen(!isWarningModalOpen);
         document.body.style.overflow = !isWarningModalOpen ? "hidden" : "auto";
     };
 
@@ -116,11 +116,11 @@ const Dashboard = ({ userId }) => {
     const getData = async (userId) => {
         try {
             const data = await fetchUserDetails(userId)
-console.log(data,"gfhjklhgjkytrhjygyrtfhdrytjyuyj5jujy");
+            console.log(data, "gfhjklhgjkytrhjygyrtfhdrytjyuyj5jujy");
 
             setEmployee(data);
-           
-            
+
+
             setBasicDetails({
                 firstName: data?.firstName,
                 lastName: data?.lastName,
@@ -142,7 +142,7 @@ console.log(data,"gfhjklhgjkytrhjygyrtfhdrytjyuyj5jujy");
                 accountNumber: data?.accountDetails.accountNumber,
             });
 
-                // console.log(basicDetails.designation, "employee");
+            // console.log(basicDetails.designation, "employee");
         } catch (err) {
             toast.error("Something Went Wrong ")
             console.error(err);
@@ -207,30 +207,30 @@ console.log(data,"gfhjklhgjkytrhjygyrtfhdrytjyuyj5jujy");
                                     )
                                 }
 
-                                {!(
-                                    session?.user?.role == "admin" && session?.user?.id != userId
+                                {(
+                                    session?.user?.role == "user" && session?.user?.id != userId
                                 ) ? (
-                                    <>
-                                        <button
-                                            onClick={toggleLeaveModal}
-                                            className="bg-button_blue text-white p-2 md:py-2  md:px-4 rounded mr-4 flex gap-2 items-center "
-                                        >
-                                            <span className="md:flex hidden">
-                                                <FaRegCalendarAlt />
-                                            </span>
-                                            Apply Leave
-                                        </button>
-                                        <button
-                                            onClick={toggleTicketModal}
-                                            className="bg-yellow-600 text-white py-1 md:py-2 px-3 md:px-4 rounded flex gap-2 items-center"
-                                        >
-                                            <span className="md:flex hidden">
-                                                <FaTicketAlt />
-                                            </span>
-                                            Raise Ticket
-                                        </button>
-                                    </>
-                                ) : null}
+                                    null
+                                ) : <>
+                                    <button
+                                        onClick={toggleLeaveModal}
+                                        className="bg-button_blue text-white p-2 md:py-2  md:px-4 rounded mr-4 flex gap-2 items-center "
+                                    >
+                                        <span className="md:flex hidden">
+                                            <FaRegCalendarAlt />
+                                        </span>
+                                        Apply Leave
+                                    </button>
+                                    <button
+                                        onClick={toggleTicketModal}
+                                        className="bg-yellow-600 text-white py-1 md:py-2 px-3 md:px-4 rounded flex gap-2 items-center"
+                                    >
+                                        <span className="md:flex hidden">
+                                            <FaTicketAlt />
+                                        </span>
+                                        Raise Ticket
+                                    </button>
+                                </>}
                             </div>
                         </div>
                         {/* Manager, Department, and Status */}
@@ -264,7 +264,7 @@ console.log(data,"gfhjklhgjkytrhjygyrtfhdrytjyuyj5jujy");
                     {/* Tabs */}
                     <div className="bg-white rounded-lg shadow-md mb-6 p-4">
                         <ul className="flex border-b overflow-auto">
-                            {["Employees", "Hardware", "Software", "Leave","Id Card","Salary Slip"].map((tab) => (
+                            {["Employees", "Hardware", "Software", "Leave", "Id Card", "Salary Slip"].map((tab) => (
                                 <li key={tab} className="mr-6">
                                     <button
                                         onClick={() => handleTabClick(tab)}

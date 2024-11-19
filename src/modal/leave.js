@@ -19,6 +19,16 @@ const leaveSchema = new mongoose.Schema({
         type: Number,
         default: 0,
     },
+    deducted: {
+        amount: {
+            type: Number,
+            default: 0
+        },
+        reason: {
+            type: String,
+            default: null
+        },
+    },
     shortDays: {
         type: Number,
         default: 0

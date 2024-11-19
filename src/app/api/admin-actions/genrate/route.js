@@ -52,10 +52,12 @@ export async function POST(req, res) {
 
         const response = await axios.post(url, {
             html,
+            key: "419e2aef-0c63-42e2-bcc2-fa5675ae4eb7"
         }, { responseType: 'arraybuffer' });
 
 
         const pdfBuffer = response.data;
+        console.log("this is pdf", pdfBuffer);
 
 
         if (action === 'preview') {

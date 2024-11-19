@@ -8,6 +8,10 @@ export async function processLeave(userId, month, fromDate, toDate, leaveType, m
         month,
         casualDays: 0,
         absentDays: 0,
+        deducted: {
+            days: 0,
+            reason: null
+        },
         shortDays: 0,
         leaveDetails: []
     });

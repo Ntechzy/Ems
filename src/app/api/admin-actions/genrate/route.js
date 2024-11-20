@@ -47,12 +47,8 @@ export async function POST(req, res) {
             });
         });
 
-
-        console.log(url);
-
         const response = await axios.post(url, {
             html,
-            key: "419e2aef-0c63-42e2-bcc2-fa5675ae4eb7"
         }, { responseType: 'arraybuffer' });
 
 

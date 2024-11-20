@@ -46,9 +46,6 @@ const Page = () => {
     };
 
     const handleDownloadPdf = async () => {
-
-
-
         const link = document.createElement('a');
         link.href = pdfUrl;
         link.download = 'document.pdf';
@@ -71,15 +68,18 @@ const Page = () => {
 
             const pdfUrl = URL.createObjectURL(pdfBlob);
 
-
             setPdfUrl(pdfUrl);
             setIsLoading(false)
             setIsPdfGenerated(true);
         } catch (err) {
             setIsLoading(false)
-            toast.error('Failed to generate PDF');
-            console.error(err);
+            toast.error('Ooopss! Page will be refresh in 5 sec. Please Hold Tight server is low');
+            setTimeout(() => { 
+                toast.success("");
+                window.location.reload();
+            }, 5000);
         }
+
     };
 
 

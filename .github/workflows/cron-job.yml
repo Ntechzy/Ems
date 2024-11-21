@@ -1,0 +1,12 @@
+name: Run Cron Job to Delete Leave Data
+
+on:
+  schedule:
+    - cron: '30 01 9 * *'     
+jobs:
+  delete-leave-data:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Make GET request to delete leave data
+        run: |
+          curl -X GET https://your-vercel-deployment-url.vercel.app/api/delete-leave-data

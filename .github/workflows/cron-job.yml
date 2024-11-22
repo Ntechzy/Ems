@@ -2,7 +2,7 @@ name: Run Cron Job to Delete Leave Data
 
 on:
   schedule:
-    - cron: '*/15 * * * *'  
+    - cron: '5 * * * *'  
     
 jobs:
   delete-leave-data:

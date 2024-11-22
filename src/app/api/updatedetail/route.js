@@ -6,9 +6,9 @@ import userModel from "@/modal/user";
 import { getServerSession } from "next-auth";
 import { Option } from "../auth/[...nextauth]/option";
 import { uploadToCloudinary } from "@/lib/helper/upload";
+import { date } from "yup";
 
 export async function PUT(req) {
-  console.log("PUT request received");
   await dbconn();
   const session = await getServerSession(Option);
 
@@ -73,8 +73,6 @@ export async function PUT(req) {
           cloud_url: uploadResult.url,
         };
       }
-      console.log("profilePhotoData", profilePhotoData);
-
 
 
 
@@ -86,40 +84,33 @@ export async function PUT(req) {
       const encryptedAccountNumber = encrypt(account_number);
 
       // console.log(session.user);
-      const dob_date = new Date(Date.now(dob));
+      const dob_date = new Date(dob);
       const dob_id = await dobModel.create({
         name: session.user.username,
         date: dob_date,
       });
 
-      const doj = new Date(Date.now(date_of_joining));
+      const doj = new Date(date_of_joining).getDate();
 
-      const salarySlotTrimmed = salary_slot.trim();
-      console.log("Salary slot after trimming:", salarySlotTrimmed);
 
-      const [day, month, year] = salarySlotTrimmed.split("-").map(Number); // Split and convert to numbers
 
-      console.log(day, month, year);
-      // Create a new Date object (month is 0-indexed in JavaScript)
-      const dateObject = new Date(year, month - 1, day);
+      // console.log("salary_slot", new Date(salary_slot).getDate());
 
-      // // Validate that the date is valid
-      if (isNaN(dateObject.getTime())) {
-        return new Response("Invalid date format", { status: 400 });
-      }
+      // const salarySlotTrimmed = salary_slot.trim();
 
-      // // Extract the day from the Date object
-      const extractedDay = dateObject.getDate(); // This gets the day (1-31)
+      // const [day, month, year] = salarySlotTrimmed.split("-").map(Number); // Split and convert to numbers
 
-      console.log("extractedDay", extractedDay);
+      // console.log(day, month, year);
+      // const dateObject = new Date(Date.now(year, month - 1, day));
+      // console.log("dateObject", dateObject);
 
-      console.log("salary date", day);
+      // if (isNaN(dateObject.getTime())) {
+      //   return new Response("Invalid date format", { status: 400 });
+      // }
 
-      //  const day  = salary_date.split('-')[2];
-      //  console.log("day",day);
+      const extractedDay = new Date(salary_slot).getDate();
 
       const id = session.user.id;
-      console.log("user id", id);
 
       const updatedUser = await employeeModel.findOneAndUpdate(
         { user_id: id },
@@ -145,6 +136,7 @@ export async function PUT(req) {
         },
         { new: true }
       );
+
       const updatedIt = await userModel.findByIdAndUpdate(
         { _id: id },
         {
@@ -191,7 +183,6 @@ export async function PUT(req) {
       );
     }
   } catch (error) {
-    console.error("Error while processing request:", error);
     return Response.json(
       {
         success: false,

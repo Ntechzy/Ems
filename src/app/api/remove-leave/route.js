@@ -2,29 +2,40 @@ import dbconn from "@/lib/dbconn";
 import Leave from "@/modal/leave";
 
 export async function DELETE(req) {
-    await dbconn()
+    await dbconn(); // Ensure the database connection is established
+
     try {
         const todayDate = new Date();
-        const previousMonth = todayDate.getMonth() - 1;
-        const year = todayDate.getFullYear();
+        const previousYear = todayDate.getFullYear() - 1;
 
-        const StartOfPreviousMonth = new Date(year, previousMonth, 1);
-        const EndOfPreviousMonth = new Date(year, previousMonth + 1, 0);
-        const firstDayOfCurrentMonth = new Date(year, previousMonth + 1, 1);
-        await Leave.deleteMany({
-            leaveFrom: { $gte: StartOfPreviousMonth, $lte: EndOfPreviousMonth },
-            leaveTo: { $gte: StartOfPreviousMonth, $lt: firstDayOfCurrentMonth }
+        // Format months for the previous year (e.g., "2023-01", "2023-02", ...)
+        const monthsInPreviousYear = Array.from({ length: 12 }, (_, i) =>
+            `${previousYear}-${String(i + 1).padStart(2, "0")}`
+        );
+
+        // Delete documents where the `month` matches any month in the previous year
+        const result = await Leave.deleteMany({
+            month: { $in: monthsInPreviousYear }
         });
 
-        return Response.json({
-            success: true,
-            message: "Previous month's leave records deleted successfully"
-        }, { status: 200 })
+        // Return a success response with the count of deleted records
+        return new Response(
+            JSON.stringify({
+                success: true,
+                message: `Leave records for months in the previous year (${previousYear}) deleted successfully.`,
+                deletedCount: result.deletedCount
+            }),
+            { status: 200, headers: { "Content-Type": "application/json" } }
+        );
     } catch (error) {
-        return Response.json({
-            success: false,
-            message: "Something Went Wrong",
-            error: error
-        }, { status: 500 })
+        // Return an error response if something goes wrong
+        return new Response(
+            JSON.stringify({
+                success: false,
+                message: "Something went wrong while deleting leave records.",
+                error: error.message
+            }),
+            { status: 500, headers: { "Content-Type": "application/json" } }
+        );
     }
 }

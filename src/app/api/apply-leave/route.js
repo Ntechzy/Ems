@@ -26,9 +26,7 @@ export async function POST(req, res) {
         }
 
         const employee = await employeeModel.findOne({ user_id: userId })
-        const name = employee.populate('user_id').select('name')
-
-        console.log(name);
+        const name = await employee.populate('user_id', 'name')
 
         const leaveFrom = new Date(startDate)
         const leaveTo = new Date(endDate)
@@ -75,7 +73,7 @@ export async function POST(req, res) {
         let message = 'Leave request submitted successfully.';
 
 
-        const emailRes = await leaveMail(user.username, isManager.email, leaveType, leaveFrom_, leaveTo_, reason);
+        const emailRes = await leaveMail(name.user_id.name, isManager.email, leaveType, leaveFrom_, leaveTo_, reason);
 
         if (!emailRes.sucess) {
             return Response.json(

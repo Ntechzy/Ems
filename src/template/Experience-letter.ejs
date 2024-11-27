@@ -185,14 +185,23 @@
     <!-- Footer -->
     <div class="footer">
         <div class="contact-section">
-            <div class="contact-item">
-                <div>+123-456-7890</div>
+           <div class="contact-item">
+                <%= company==='NTechzy Pvt. Limited'
+                    ?'+91 9125886480'
+                    : '+91 9125886480' %>
             </div>
             <div class="contact-item">
-                <div>hello@reallygreatsite.com</div>
+                <%= company==='NTechzy Pvt. Limited'
+                ?'hr@careerkick.in'
+                : 'hr@careerkick.in' %>
             </div>
             <div class="contact-item">
-                <div>123 Anywhere St., Any City, ST 12345</div>
+                <div>
+                    <%= company === 'NTechzy Pvt. Limited'
+                    ?'GF 37,SNG Plaza Near-Pari Chowk'
+                    : 'GF 37,SNG Plaza Near-Pari Chowk' %>
+                </div>  <br>
+              
             </div>
         </div>
     </div>

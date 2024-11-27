@@ -2,8 +2,8 @@ name: Run Cron Job to Delete Leave Data
 
 on:
   schedule:
-    - cron: '2 * * * *'  
-    
+    - cron: '0 1 15 1 *'  
+
 jobs:
   delete-leave-data:
     runs-on: ubuntu-latest
@@ -12,3 +12,9 @@ jobs:
       - name: Make DELETE request to remove leave data
         run: |
           curl -X DELETE https://ems.ntechzy.in/api/remove-leave
+
+
+
+
+
+

@@ -255,6 +255,8 @@ const Table = ({ isModal, data, title = "Employees", subtitle = "Manage all your
                                         {employee.status}
                                     </div>
                                 </td>
+
+ 
                             </tr>
 
 

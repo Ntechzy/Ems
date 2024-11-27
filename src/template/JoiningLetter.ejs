@@ -16,8 +16,8 @@
 
         .container {
             max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
+            margin: 10px auto;
+            padding: 5px;
             border: 1px solid #ddd;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
@@ -34,14 +34,14 @@
             text-align: center;
             font-size: 24px;
             font-weight: bold;
-            margin: 20px 0;
+            margin: 5px 0;
             letter-spacing: 2px;
         }
 
         .details {
             display: flex;
             justify-content: space-between;
-            margin: 20px 0;
+            margin: 5px 0;
         }
 
         .details p {
@@ -49,12 +49,12 @@
         }
 
         .content {
-            margin: 20px 0;
+            margin: 5px 0;
         }
 
         .footer {
             text-align: center;
-            margin: 40px 0;
+            margin: 10px 0;
         }
 
         .footer .info {
@@ -67,7 +67,7 @@
         }
 
         .signature {
-            margin-top: 40px;
+            margin-top: 10px;
         }
 
         .signature p {
@@ -78,9 +78,10 @@
             margin: 10px 0;
         }
 
-        .contact-section {
+        .contact-section { 
+            border-top: 2px  solid gray;
             display: flex;
-            justify-content: space-around;
+            justify-content: space-between;
             align-items: center;
         }
 
@@ -181,14 +182,23 @@
 
         <div class="footer">
             <div class="contact-section">
-                <div class="contact-item">
-                    <div>+123-456-7890</div>
+               <div class="contact-item">
+                    <%= company==='NTechzy Pvt. Limited'
+                        ?'+91 9125886480'
+                        : '+91 9125886480' %>
                 </div>
                 <div class="contact-item">
-                    <div>hello@reallygreatsite.com</div>
+                    <%= company==='NTechzy Pvt. Limited'
+                    ?'hr@careerkick.in'
+                    : 'hr@careerkick.in' %>
                 </div>
                 <div class="contact-item">
-                    <div>123 Anywhere St., Any City, ST 12345</div>
+                    <div>
+                        <%= company === 'NTechzy Pvt. Limited'
+                        ?'GF 37,SNG Plaza Near-Pari Chowk'
+                        : 'GF 37,SNG Plaza Near-Pari Chowk' %>
+                    </div>  <br>
+                  
                 </div>
             </div>
         </div>

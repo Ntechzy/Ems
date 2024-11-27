@@ -95,29 +95,20 @@
 
             <p>Human Resource<br /><br />
                 <%= company %><br />
-                <%= companyAddress %>
+                    <%= companyAddress %>
             </p>
         </div>
 
-        <%  
-        var currDate = new Date();
-        var day = ("0" + currDate.getDate()).slice(-2);
-        var month = ("0" + (currDate.getMonth() + 1)).slice(-2);  
-        var year = currDate.getFullYear();
-        var formattedDate = day + "/" + month + "/" + year;
-
-        var startDate = new Date(startDate);
-        var startDateDay = ("0" + startDate.getDate()).slice(-2);
-        var startDateMonth = ("0" + (startDate.getMonth() + 1)).slice(-2);
-        var startDateYear = startDate.getFullYear();
-        var formattedstartDate = startDateDay + "/" + startDateMonth + "/" + startDateYear;
-       
-        %>
-        <div>
-            <p>
-                Date: <%= formattedDate %>
-            </p>
-        </div>
+        <% var currDate=new Date(); var day=("0" + currDate.getDate()).slice(-2); var month=("0" + (currDate.getMonth()
+            + 1)).slice(-2); var year=currDate.getFullYear(); var formattedDate=day + "/" + month + "/" + year; var
+            startDate=new Date(startDate); var startDateDay=("0" + startDate.getDate()).slice(-2); var
+            startDateMonth=("0" + (startDate.getMonth() + 1)).slice(-2); var startDateYear=startDate.getFullYear(); var
+            formattedstartDate=startDateDay + "/" + startDateMonth + "/" + startDateYear; %>
+            <div>
+                <p>
+                    Date: <%= formattedDate %>
+                </p>
+            </div>
     </div>
 
     <div class="content">
@@ -163,7 +154,8 @@
 
         <div class="signature">
             <p>Best Regards,</p>
-            <p><img src="https://res.cloudinary.com/dhlqc0ymy/image/upload/v1731483587/Screenshot_2024-11-13_130926_adno8m.png" alt="Signature"></p>
+            <p><img src="https://res.cloudinary.com/dhlqc0ymy/image/upload/v1731483587/Screenshot_2024-11-13_130926_adno8m.png"
+                    alt="Signature"></p>
             <p>
                 Sneha Awasthi<br>Human Resources
             </p>
@@ -173,26 +165,22 @@
     <div class="footer">
         <div class="footer-info">
             <div>
-                <p>+7894459564
-                </p>
-                <p>+7894459564
-                </p>
+                <%= company==='NTechzy Pvt. Limited'
+                    ?'+91 9125886480'
+                    : '+91 9125886480' %>
+            </div>
+            <div>
+                <%= company==='NTechzy Pvt. Limited'
+                ?'hr@careerkick.in'
+                : 'hr@careerkick.in' %>
             </div>
             <div>
                 <p>
-                    tecpankaj24@gmail.com
-                </p>
-                <p>
-                    tecpankaj24@gmail.com
-                </p>
-            </div>
-            <div>
-                <p>
-                    this so an so ...
-                </p>
-                <p>
-                    this so an so ...
-                </p>
+
+                    <%= company==='NTechzy Pvt. Limited'
+                    ?'GF 37,SNG Plaza Near-Pari Chowk'
+                    : 'GF 37,SNG Plaza Near-Pari Chowk' %>
+                </p>  
             </div>
         </div>
     </div>

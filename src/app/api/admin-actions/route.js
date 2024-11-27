@@ -60,6 +60,32 @@ export async function PUT(req, res) {
     }
 }
 
+
+
+// export async function DELETE(req, res) {
+//     await dbconn();
+
+//     try {
+//         const isUserAuthenticated = await isUserAuthenticated(req, res);
+//         if (authenticatedUser.role === "user") {
+//             return Response.json({
+//                 success: false,
+//                 message: 'You are not authorized to perform this action',
+//             }, { status: 403 });
+//         }
+
+
+
+//     }
+//     catch (error) {
+//         return Response.json({
+//             success: false,
+//             message: "Some error occurred",
+//             error: error.message,
+//         }, { status: 500 });
+//     }
+// }
+
 // for adding official leave
 
 export async function POST(req, res) {

@@ -26,6 +26,9 @@ export async function POST(req, res) {
         }
 
         const employee = await employeeModel.findOne({ user_id: userId })
+        const name = employee.populate('user_id').select('name')
+
+        console.log(name);
 
         const leaveFrom = new Date(startDate)
         const leaveTo = new Date(endDate)

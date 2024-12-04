@@ -62,9 +62,9 @@ const BasicDetails = ({ employee, toggleDetailsModal, isUpdatePass, setisUpdateP
                     <p className="text-gray-500">Pan Card Number</p>
                     <p>{employee?.pan_card_no}</p>
                 </div>
-               
+
                 <div>
-                    <p className="text-gray-500">Date of Birth</p>
+                    <p className="text-gray-500">Date of Birth ( MM/DD/YY )</p>
                     <p>{new Date(employee?.dob).toLocaleDateString()}</p>
                 </div>
             </div>

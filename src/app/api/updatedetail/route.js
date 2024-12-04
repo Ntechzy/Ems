@@ -90,8 +90,10 @@ export async function PUT(req) {
         date: dob_date,
       });
 
-      const doj = new Date(date_of_joining).getDate();
+      const doj = new Date(date_of_joining);
+      console.log("date_of_joining", date_of_joining);
 
+      console.log("doj", doj);
 
 
       // console.log("salary_slot", new Date(salary_slot).getDate());
@@ -144,7 +146,7 @@ export async function PUT(req) {
         },
         { new: true }
       );
-      console.log("updatedIt", updatedIt);
+
 
       if (!updatedUser) {
         return Response.json(

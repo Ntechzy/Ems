@@ -18,7 +18,7 @@ const JobDetails = ({ employee }) => {
                     <p>{employee?.employeeType}</p>
                 </div>
                 <div>
-                    <p className="text-gray-500">Start Date</p>
+                    <p className="text-gray-500">Start Date ( MM/DD/YY )</p>
                     <p>{employee?.startDate}</p>
                 </div>
                 <div>

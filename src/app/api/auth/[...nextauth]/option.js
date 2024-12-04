@@ -80,5 +80,5 @@ export const Option = {
     secret: process.env.NEXTAUTH_SECRET,
     page: {
         signIn: "/login"
-    }
+    } 
 } 

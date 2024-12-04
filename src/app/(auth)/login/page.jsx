@@ -7,7 +7,9 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { handleError } from '@/lib/helper/YupResponseHandler';
 import ResetPassword from '@/components/ResetPassword';
-import Loader from '@/components/Loader'; 
+import Loader from '@/components/Loader';
+import { FaEyeSlash } from "react-icons/fa";
+import { FaEye } from "react-icons/fa";
 
 const Page = () => {
     const router = useRouter()
@@ -15,6 +17,8 @@ const Page = () => {
         username: "",
         password: ""
     })
+
+    const [isVisible, setisVisible] = useState(false)
     const [err, seterr] = useState()
     const [openModal, setOpenModal] = useState(false)
     const [isLoading, setisLoading] = useState(false)
@@ -31,7 +35,7 @@ const Page = () => {
             })
             if (data.error) {
                 toast.error(data.error)
-                setisLoading(false) 
+                setisLoading(false)
             }
             else {
                 toast.success('Login successful')
@@ -75,8 +79,11 @@ const Page = () => {
                         {err && <div className='text-red-700 text-center'>{err["username"]}</div>}
                     </div>
 
-                    <div className="mb-4 md:mb-6">
-                        <Input label="password" handleChange={handleChange} value={value.password} name={"Enter your password"} />
+                    <div className="mb-4 md:mb-6 relative">
+                        <Input label="password" handleChange={handleChange} type={isVisible ? "text" : "password"} value={value.password} name={"Enter your password"} />
+                        <div onClick={() => setisVisible(!isVisible)} className='cursor-pointer absolute top-[15px] text-blue-900 font-bold right-2 ' >
+                            {isVisible ? <FaEye /> : <FaEyeSlash />}
+                        </div>
                         {err && <div className='text-red-700 text-center'>{err["password"]}</div>}
                     </div>
 

@@ -52,10 +52,7 @@ export async function POST(req, res) {
         }, { responseType: 'arraybuffer' });
 
 
-        const pdfBuffer = response.data;
-        console.log("this is pdf", pdfBuffer);
-
-
+        const pdfBuffer = response.data;  
         if (action === 'preview') {
             return new Response(pdfBuffer, {
                 headers: {

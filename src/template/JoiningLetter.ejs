@@ -31,7 +31,7 @@
             left: 0; /* Align it to the left of the viewport */
             right: 0; /* Align it to the right of the viewport */
             bottom: 0; /* Position at the bottom */
-            margin: 0 auto; /* Center it horizontally */
+            margin: auto; /* Center it horizontally */
             padding: 2px 5px; /* Add padding for better spacing */
             box-sizing: border-box; /* Include padding in total width calculation */
             text-align: center; /* Ensure content is centered properly */
@@ -50,7 +50,7 @@
         }
 
         .details {
-            display: flex;
+            display: flex; 
             justify-content: space-between;
             margin: 10px 0;
         }
@@ -72,24 +72,17 @@
             margin: 5px 0;
         }
 
-        .contact-section {
-            display: flex;
-            justify-content: flex-start;
-            align-items: flex-start;
-            margin: auto;
+        .contact-section { 
+            display: flex;  
             border-top: 2px solid gray;
             margin-top: 19px;
             padding-top: 18px;
             flex-wrap: wrap;
         }
 
-        .contact-item {
-            display: flex;
-            align-items: flex-start;
-            flex: 1;
-            text-align: left;
-            padding: 5px;
-            margin: 5px 0;
+        
+        .contact-item { 
+            padding: 5px; 
         }
 
         .contact-item span {
@@ -147,16 +140,18 @@
                 </div>
             </div>
 
-            <p>Human Resource<br>
-                <%= company %><br><br> <%= company==='NTechzy Pvt. Limited' ?'GF 37,SNG Plaza Pari Chowk' : 'GF 37,SNG Plaza Pari Chowk' %>
+            <p class="">Human Resource<br>
+                <%= company %><br>  <%- company === 'NTechzy Pvt. Limited' 
+                ? 'GF 31,SNG Plaza Near-Pari Chowk <br/> Greater Noida 201310' 
+                : 'GF 31,SNG Plaza Near-Pari Chowk <br/> Greater Noida 201310' %>
+              
             </p>
 
             <div class="content">
                 <p>To <%= name %>,</p>
                 <p>We are excited to offer you the position of <strong>
                         <%= position %>
-                    </strong> at <%= company %> We believe your skills and passion will make a significant impact on our
-                        team, and we look forward to having you onboard.</p>
+                    </strong> at <%= company %>. We believe your skills and passion will make a significant impact on our team, and we look forward to having you on board.</p>
                 <p><strong>Offer Details:</strong></p>
                 <ul>
                     <li><strong>Position:</strong>
@@ -210,7 +205,10 @@
                         <!-- Address Icon -->
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></svg>
                         <span>
-                            <%= company==='NTechzy Pvt. Limited' ?'GF 37,SNG Plaza Near-Pari Chowk' : 'GF 37,SNG Plaza Near-Pari Chowk' %>
+                            <%- company === 'NTechzy Pvt. Limited' 
+                            ? 'GF 31,SNG Plaza Near-Pari Chowk <br/> Greater Noida 201310' 
+                            : 'GF 31,SNG Plaza Near-Pari Chowk <br/> Greater Noida 201310' %>
+                          
                         </span>
                     </div>
                 </div>

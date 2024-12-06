@@ -104,6 +104,8 @@
 
         .contact-item {
             display: flex;
+            flex-direction: column;
+            justify-items: center;
             align-items: center;
             text-align: center;
         }
@@ -159,7 +161,7 @@
         <div class="title">Experience and Relieving Letter</div>
         <div class="subtitle">TO WHOMSOEVER IT MAY CONCERN</div>
         <div class="content">
-            This is to certify that <%= name %> has worked with <%= company %> Limited as a <%= position %> from <%=
+            This is to certify that <%= name %> has worked with <%= company %> as a <%= position %> from <%=
             formattedFromDate %> to <%= formattedToDate %>. During their time with us, <%= name %> consistently demonstrated
                                     excellent technical skills, professionalism, and a strong work ethic. They
                                     handled
@@ -205,7 +207,10 @@
                 <!-- Address Icon -->
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></svg>
                 <span>
-                    <%= company==='NTechzy Pvt. Limited' ?'GF 37,SNG Plaza Near-Pari Chowk' : 'GF 37,SNG Plaza Near-Pari Chowk' %>
+                    <%- company === 'NTechzy Pvt. Limited' 
+                ? 'GF 31,SNG Plaza Near-Pari Chowk <br/> Greater Noida 201310' 
+                : 'GF 31,SNG Plaza Near-Pari Chowk <br/> Greater Noida 201310' %>
+                  
                 </span>
             </div>
         </div>

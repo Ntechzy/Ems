@@ -6,7 +6,7 @@ export const documentFields = {
             label: "Company",
             name: "company",
             type: "select",
-            options: ["NTechzy Pvt. Limited", "Career Kick"]
+            options: ["NTechzy Pvt. Limited", "Careerkick Services"]
         },
         { label: "Position", name: "position", type: "text" },
         { label: "From", name: "from", type: "date" },
@@ -19,7 +19,7 @@ export const documentFields = {
             label: "Company",
             name: "company",
             type: "select",
-            options: ["NTechzy Pvt. Limited", "Career Kick"]
+            options: ["NTechzy Pvt. Limited", "Careerkick Services"]
         },
         { label: "Company Address", name: "companyAddress", type: "text" },
         { label: "Job Title", name: "jobTitle", type: "text" },
@@ -37,7 +37,7 @@ export const documentFields = {
             label: "Company",
             name: "company",
             type: "select",
-            options: ["NTechzy Pvt. Limited", "Career Kick"]
+            options: ["NTechzy Pvt. Limited", "Careerkick Services"]
         },
         { label: "Position", name: "position", type: "text" },
         { label: "From", name: "startDate", type: "date" },

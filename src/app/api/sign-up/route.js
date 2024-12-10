@@ -13,15 +13,15 @@ export async function POST(req) {
         const {
             name, email, password, mobile_no, role,
             designation, department, alloted_hardwares, alloted_softwares, associated_with,
-            salary, interview_done_by, who_finalize_salary
+            salary, interview_done_by, who_finalize_salary, location
         } = await req.json();
-        
+
 
         const employee_id = name.slice(0, 4) + mobile_no.slice(5, 10) + email.slice(0, 4);
         const isUser = await userModel.findOne({ email, mobile_no });
 
         let user, employee;
-        const encryptSalary=encrypt(salary);
+        const encryptSalary = encrypt(salary);
 
         if (isUser) {
             const isEmployee = await employeeModel.findOne({ user_id: isUser._id });
@@ -41,7 +41,7 @@ export async function POST(req) {
                 user_id: isUser._id,
                 alloted_hardwares,
                 alloted_softwares,
-                salary:encryptSalary,
+                salary: encryptSalary,
                 interview_done_by,
                 who_finalized_salary: who_finalize_salary
             });
@@ -55,6 +55,7 @@ export async function POST(req) {
                 associated_with,
                 role,
                 designation,
+                location,
                 department
             });
 

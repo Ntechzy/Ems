@@ -1,14 +1,13 @@
+import axiosRequest from "@/lib/axios";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
-import Input from "./Input";
+import toast from "react-hot-toast";
 import { FaFilter } from "react-icons/fa";
 import { IoIosArrowDown } from "react-icons/io";
-import Link from "next/link";
+import Input from "./Input";
 import Loader from "./Loader";
-import { SelectField } from "./EmplRegister/SelectField";
 import Select from "./Select";
-import axiosRequest from "@/lib/axios";
-import toast from "react-hot-toast";
-import { useSession } from "next-auth/react";
 
 const FilterComponent = ({ filters, handleFilterChange, handleClearFilters }) => {
     const [isLocationOpen, setLocationOpen] = useState(false);
@@ -149,6 +148,8 @@ const Table = ({ isModal, data, title = "Employees", subtitle = "Manage all your
         }
     }
     const handleRoleChangeDropdown = async (userId, role) => {
+
+
         try {
             const res = await toast.promise(
                 axiosRequest.patch("/user/updateRole", {
@@ -172,13 +173,42 @@ const Table = ({ isModal, data, title = "Employees", subtitle = "Manage all your
         }
     }
 
+    const handleAcess = async (user_id, acess) => {
+        try {
+            console.log("okok ");
+
+            const res = await toast.promise(
+                axiosRequest.patch("/user/updateAcess", {
+                    userId: user_id,
+                    acess
+                }),
+                {
+                    loading: "Updating User Acess..",
+                    success: "User Acess Updated Successfully",
+                    error: "Error While Updating User Role"
+                },
+                {
+                    position: "top-center"
+                }
+                // return res;
+            )
+
+        } catch (err) {
+            toast.error("Some Error Occured While Updating User Acess");
+            console.log(err);
+        }
+    }
+
     useEffect(() => {
         handlePrepareFilterOptions();
-        // remove Role from tableHeaders ( To be added)
         if ((session?.user.role == "super_admin") && data && data.length) {
             let arr = tableHeaders;
             if (!arr.find(elem => elem == "Role")) {
                 arr.splice(arr.length - 1, 0, "Role");
+                setTableHeaders(arr);
+            }
+            if (!arr.find(elem => elem == "Expense Access")) {
+                arr.splice(arr.length, 0, "Expense Access");
                 setTableHeaders(arr);
             }
         };
@@ -203,28 +233,33 @@ const Table = ({ isModal, data, title = "Employees", subtitle = "Manage all your
                     <h1 className="text-2xl font-bold">{title}</h1>
                     <p className="text-gray-500">{subtitle}</p>
                 </div>
-                <button onClick={() => isModal(true)} className="bg-[#1d6ba3] text-white px-4 py-2 rounded">+ {addBtnTitle}</button>
+                <div className="flex gap-4">
+
+                    <button onClick={() => isModal(true)} className="bg-[#1d6ba3] text-white px-4 py-2 rounded">+ {addBtnTitle}</button>
+                    <Link className="bg-[#1d6ba3] uppercase text-white px-4 py-2 rounded" href={"/expense"}> Add Expense </Link>
+                </div>
             </div>
             <div className="mb-4 flex justify-between">
                 <div className="">
                     <Input label={"Search ID, Name & Title"} name={"Search"} value={searchVal} handleChange={handleSearchSubmit} />
                 </div>
-                <div className="flex items-center justify-end relative">
+                <div className="flex gap-4 items-center justify-end relative">
                     <button className="bg-gray-200 text-gray-600 px-4  rounded flex items-center p-2 hover:bg-gray-300 cursor-pointer" onClick={() => setShowModal(!showModal)} disabled={loading}>
                         <FaFilter className="mr-2" /> FILTER
                     </button>
                     {showModal && <FilterComponent filters={filters} handleFilterChange={handleFilterChange} handleClearFilters={handleClearFilters} />}
+
                 </div>
             </div>
             <div className="overflow-x-auto">
                 <table className="min-w-full bg-white border rounded">
                     <thead>
                         <tr className="bg-gray-100">
-                            {
-                                tableHeaders.map((val, i) => (
+                            {tableHeaders.map((val, i) => (
+                                (val !== "Expense Access" || session?.user.role === "super_admin") && (
                                     <th className="py-2 px-4 border" key={i}>{val}</th>
-                                ))
-                            }
+                                )
+                            ))}
                         </tr>
                     </thead>
                     <tbody>
@@ -256,9 +291,14 @@ const Table = ({ isModal, data, title = "Employees", subtitle = "Manage all your
                                     </div>
                                 </td>
 
- 
-                            </tr>
+                                {
+                                    (session?.user.role == "super_admin") && <td className={`py-2 px-4 border font-semibold text-green-900 text-center capitalize`}>
+                                        <Select options={[{ label: 'Allow', value: 'allow' }, { label: 'Full Acess', value: 'full' }, { label: 'Restricted', value: "restricted" }]} selectedOptionValue={employee.expenseAcess} onChange={handleAcess} userId={employee.user_id} />
+                                    </td>
+                                }
 
+
+                            </tr>
 
                         )) :
                             !loading ?

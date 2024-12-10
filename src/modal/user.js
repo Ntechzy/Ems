@@ -49,6 +49,15 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: true
     },
+    location: {
+      type: String,
+      required: [true, "location is required"],
+    },
+    expenseAcess: {
+      type: String,
+      enum: ["allow", "restricted", "full"],
+      default: false
+    },
     department: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Department',

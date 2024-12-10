@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
 import { SelectField } from '../EmplRegister/SelectField';
-import DeductionModal from '@/modal/deduction';
+import DeductionModal from '@/components/empl_dashboard_modal/deduction';
 import toast from 'react-hot-toast';
 
 const SalarySlip = () => {

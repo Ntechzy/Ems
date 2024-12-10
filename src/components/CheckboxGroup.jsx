@@ -15,7 +15,7 @@ const CheckboxGroup = ({ options, selectedValues, handleChange, name }) => {
                         checked={selectedValues.includes(option._id)}
                         className='mr-2'
                     />
-                    <label htmlFor={option._id}>{option.name}</label>  {/* Show the name */}
+                    <label htmlFor={option._id}>{option.name}</label>  
                 </div>
             ))}
         </div>

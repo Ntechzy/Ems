@@ -6,11 +6,13 @@ import { AppResponse } from "@/lib/helper/responseJson";
 import { isUserAuthenticated, validateRole } from "@/lib/helper/ValidateUser"
 import { BirthDay, Department, Employee, User } from "@/lib/repositories";
 import { BirthDayService, DepartmentService, EmployeeService, UserService } from "@/lib/services";
+import { ExpenseService } from "@/lib/services/expense.service";
 
 const employeeService = new EmployeeService(new Employee());
 const birthDayService = new BirthDayService(new BirthDay(), employeeService);
 const departmentService = new DepartmentService(new Department());
 const userService = new UserService(new User(), departmentService);
+const expenseService = new ExpenseService(new User(), departmentService);
 let appResponse;
 
 export async function GET(req, res) {
@@ -79,12 +81,28 @@ export async function PATCH(req, res) {
             appResponse.message = "Role Updated Successfully";
             return Response.json(appResponse.getResponse());
         }
+        if (resource == "updateAcess") {
+            console.log("hello");
+
+            if (!reqBody.userId && !reqBody.acess) {
+                throw new AppError("Please Provide Complete Data", 400);
+            }
+
+
+
+            await expenseService.ChangeExpenseAcess(reqBody.userId, reqBody.acess, req, res);
+            console.log("weeee are here");
+            appResponse.status = true;
+            appResponse.message = "Acess Updated Successfully";
+            return Response.json(appResponse.getResponse());
+        }
 
     } catch (err) {
         appResponse = new AppResponse();
         appResponse.status = false;
         appResponse.message = "Error While Updating Items";
         appResponse.error = err.message;
+        console.log(err.message);
 
         return Response.json(appResponse.getResponse(),
             {
@@ -93,6 +111,7 @@ export async function PATCH(req, res) {
         )
     }
 }
+
 
 export async function PUT(req, res) {
     try {

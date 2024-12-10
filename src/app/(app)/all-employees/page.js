@@ -1,12 +1,13 @@
 'use client'
 import Registration from '@/components/EmplRegister/Registration';
 import Table from '@/components/Table';
-import axiosRequest from '@/lib/axios'; import { handleError, handleResponse } from '@/lib/helper/YupResponseHandler';
-import { FaCalendarDay } from "react-icons/fa6";
-import React, { useEffect, useState } from 'react'
+import axiosRequest from '@/lib/axios';
+import { handleError, handleResponse } from '@/lib/helper/YupResponseHandler';
+import { useEffect, useState } from 'react';
 import { DayPicker } from 'react-day-picker';
 import "react-day-picker/style.css";
 import toast from 'react-hot-toast';
+import { FaCalendarDay } from "react-icons/fa6";
 const Page = () => {
     const [tableData, setTableData] = useState([]);
     const [selected, setSelected] = useState();
@@ -36,8 +37,6 @@ const Page = () => {
             employees = employees.data;
 
             const all_employees = employees?.map((obj) => {
-                console.log(obj);
-
                 let dt = new Date(obj?.user_id?.createdAt);
                 let joiningDate = `${dt.getDate().toString().padStart(2, "0")}-${(dt.getMonth() + 1).toString().padStart(2, "0")}-${dt.getFullYear()}`;
                 return {
@@ -51,7 +50,8 @@ const Page = () => {
                     joiningDate: joiningDate,
                     link: `/employee/${obj?.user_id?._id}`,
                     role: obj?.user_id?.role,
-                    pic: obj?.profile_photo?.cloud_url
+                    pic: obj?.profile_photo?.cloud_url,
+                    expenseAcess: obj?.user_id?.expenseAcess
                 }
             });
             setInitialTableData(all_employees);
@@ -85,8 +85,6 @@ const Page = () => {
         }
 
         try {
-            console.log("selected", selected);
-
             const response = await axiosRequest.post('/admin-actions', { dates: selected });
             handleResponse(response)
             setSelected([]);
@@ -95,12 +93,11 @@ const Page = () => {
         }
     };
 
-
     return (
         <>
 
             <div className='p-10 relative'>
-                <div className='flex text-4xl text-button_blue justify-center '>
+                <div className='flex text-4xl text-button_blue justify-center gap-4 '>
                     <FaCalendarDay className='cursor-pointer' onClick={() => setisCalendar(!isCalendar)} />
                 </div>
                 {isCalendar &&
@@ -127,6 +124,7 @@ const Page = () => {
                     <Registration close={setisModal} />
                 </div>
             }
+
         </>
     )
 }

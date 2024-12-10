@@ -21,6 +21,7 @@ const Registration = ({ close }) => {
         role: "",
         designation: "",
         department: "",
+        location: "",
         alloted_hardwares: [],
         alloted_softwares: [],
         associated_with: "",
@@ -43,8 +44,7 @@ const Registration = ({ close }) => {
     }, [])
 
 
-    const handleChange = (e) => {
-
+    const handleChange = (e) => { 
         setValue({ ...value, [e.target.id]: e.target.value })
     }
 
@@ -166,6 +166,8 @@ const Registration = ({ close }) => {
                             </div>
                         </div>
 
+
+
                         {/* interview done by & who finalize salary */}
                         <div className='flex gap-3 my-3'>
 
@@ -214,6 +216,21 @@ const Registration = ({ close }) => {
                                     onChange={handleChange}
                                 />
                             </div>
+
+                            <div>
+                                <SelectField
+                                    label="Job Location"
+                                    id="location"
+                                    defaultOption="Job Location "
+                                    options={
+
+                                        [{ label: 'Noida', value: 'noida' }, { label: 'Kanpur', value: 'kanpur' }].map(obj => ({ value: obj.value, label: obj.label })) || []
+                                    }
+                                    value={value.location}
+                                    onChange={handleChange}
+                                />
+                            </div>
+
                         </div>
 
                         {/* allocated hardware & softwarre */}

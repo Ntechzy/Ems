@@ -1,6 +1,7 @@
+import { SelectField } from "../EmplRegister/SelectField";
 import Input from "../Input";
 
-const Modal = ({ tasks, onAddTask, onSave, onClose, taskInput, priceInput, setTaskInput, setPriceInput }) => {
+const Modal = ({ tasks, onAddTask, onSave, company, onClose, taskInput, priceInput, setTaskInput, setPriceInput, setCompany }) => {
     return (
         <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
             <div
@@ -30,6 +31,14 @@ const Modal = ({ tasks, onAddTask, onSave, onClose, taskInput, priceInput, setTa
                         value={priceInput}
                         name="Task Price"
                         type="number"
+                    />
+                    <SelectField
+                        label="Company"
+                        id="company"
+                        options={[{ name: "Ntechzy" }, { name: "Careerkick" }, { name: "Sapna HealthCare" }].map(item => ({ value: item.name, label: item.name }))}
+                        value={company}
+                        defaultOption={company}
+                        onChange={(e) => setCompany(e.target.value)}
                     />
                     <button
                         onClick={onAddTask}

@@ -16,10 +16,6 @@ const expenseSheetSchema = new mongoose.Schema(
         amount: {
             type: Number,
             required: true
-        },
-        remaining: {
-            type: Number,
-            required: true
         }
     }, { timestamps: true })
 

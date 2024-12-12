@@ -55,8 +55,8 @@ const userSchema = new mongoose.Schema(
     },
     expenseAcess: {
       type: String,
-      enum: ["allow", "restricted", "full"],
-      default: false
+      enum: ["allow", "restricted"],
+      default: 'restricted'
     },
     department: {
       type: mongoose.Schema.Types.ObjectId,

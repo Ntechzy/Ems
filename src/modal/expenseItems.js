@@ -20,6 +20,11 @@ const expenseSchema = new mongoose.Schema({
     location: {
         type: String,
         required: [true, "Location is required"]
+    },
+    createdBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true
     }
 }, { timestamps: true })
 

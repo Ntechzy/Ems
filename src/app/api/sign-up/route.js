@@ -4,7 +4,6 @@ import { sendOnboarding } from "@/lib/resend";
 import Department from "@/modal/department";
 import employeeModel from "@/modal/employee";
 import userModel from "@/modal/user";
-import mongoose from "mongoose";
 
 export async function POST(req) {
     await dbconn();

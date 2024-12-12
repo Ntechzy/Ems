@@ -236,7 +236,13 @@ const Table = ({ isModal, data, title = "Employees", subtitle = "Manage all your
                 <div className="flex gap-4">
 
                     <button onClick={() => isModal(true)} className="bg-[#1d6ba3] text-white px-4 py-2 rounded">+ {addBtnTitle}</button>
-                    <Link className="bg-[#1d6ba3] uppercase text-white px-4 py-2 rounded" href={"/expense"}> Add Expense </Link>
+                    {session?.user.role == "admin" &&
+                        <Link className="bg-[#1d6ba3] uppercase text-white px-4 py-2 rounded" href={"/expense"}> Add Expense </Link>
+                    }
+                    {session?.user.role == "super_admin" &&
+                        <Link className="bg-[#1d6ba3] uppercase text-white px-4 py-2 rounded" href={"/track-expense"}> Track Expense </Link>
+                    }
+
                 </div>
             </div>
             <div className="mb-4 flex justify-between">
@@ -293,7 +299,7 @@ const Table = ({ isModal, data, title = "Employees", subtitle = "Manage all your
 
                                 {
                                     (session?.user.role == "super_admin") && <td className={`py-2 px-4 border font-semibold text-green-900 text-center capitalize`}>
-                                        <Select options={[{ label: 'Allow', value: 'allow' }, { label: 'Full Acess', value: 'full' }, { label: 'Restricted', value: "restricted" }]} selectedOptionValue={employee.expenseAcess} onChange={handleAcess} userId={employee.user_id} />
+                                        <Select options={[{ label: 'Allow', value: 'allow' }, { label: 'Restricted', value: "restricted" }]} selectedOptionValue={employee.expenseAcess} onChange={handleAcess} userId={employee.user_id} />
                                     </td>
                                 }
 

@@ -17,10 +17,7 @@ export async function GET(req) {
     await dbconn();
 
     try {
-        const session = await getServerSession(Option);
-        console.log(session.user.status);
-
-
+        const session = await getServerSession(Option); 
         const id = req.nextUrl.searchParams.get('id');
 
         if (!session) {

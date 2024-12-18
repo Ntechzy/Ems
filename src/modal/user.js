@@ -53,6 +53,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "location is required"],
     },
+    empType: {
+      type: String,
+      required: [true, "Employment Type is required"],
+    },
     expenseAcess: {
       type: String,
       enum: ["allow", "restricted"],

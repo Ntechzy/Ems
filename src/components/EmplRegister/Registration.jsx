@@ -26,9 +26,13 @@ const Registration = ({ close }) => {
         alloted_softwares: [],
         associated_with: "",
         salary: "",
+        emp_type: "",
         interview_done_by: "",
         who_finalize_salary: ""
     })
+
+    console.log(value);
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -44,7 +48,7 @@ const Registration = ({ close }) => {
     }, [])
 
 
-    const handleChange = (e) => { 
+    const handleChange = (e) => {
         setValue({ ...value, [e.target.id]: e.target.value })
     }
 
@@ -161,6 +165,19 @@ const Registration = ({ close }) => {
                                             .map(des => ({ value: des.name, label: des.name })) || []
                                     }
                                     value={value.designation}
+                                    onChange={handleChange}
+                                />
+                            </div>
+
+                            <div>
+                                <SelectField
+                                    label="Employee Type"
+                                    id="emp_type"
+                                    defaultOption="Employee Type "
+                                    options={
+                                        [{ label: 'Parmanent', value: 'parmanent' }, { label: 'On probation ', value: 'on_probation ' }, { label: 'Intern', value: 'intern' }].map(obj => ({ value: obj.value, label: obj.label })) || []
+                                    }
+                                    value={value.emp_type}
                                     onChange={handleChange}
                                 />
                             </div>

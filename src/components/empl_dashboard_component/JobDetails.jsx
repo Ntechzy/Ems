@@ -1,6 +1,7 @@
 import React from 'react';
 
 const JobDetails = ({ employee }) => {
+
     return (
         <div>
             <h3 className="text-xl font-semibold text-gray-800">Job details</h3>
@@ -15,7 +16,7 @@ const JobDetails = ({ employee }) => {
                 </div>
                 <div>
                     <p className="text-gray-500">Employee Type</p>
-                    <p>{employee?.employeeType}</p>
+                    <p className=' capitalize'>{employee?.employeeType}</p>
                 </div>
                 <div>
                     <p className="text-gray-500">Start Date ( MM/DD/YY )</p>

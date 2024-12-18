@@ -67,7 +67,6 @@ const LeaveModal = ({ toggleLeaveModal, setLeaveFormErrors, handleInputChange, l
                             <option value="" disabled>Select Leave Type</option>
                             <option value="absent">Absent</option>
                             <option value="casual">Casual Leave</option>
-                            <option value="sick">Sick Leave</option>
                             <option value="short">Short Leave</option>
                         </select>
                         {leaveFormErrors.leaveType && (

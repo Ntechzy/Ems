@@ -9,7 +9,8 @@ export const fetchUserDetails = async (userId) => {
             throw new Error('Error fetching user details');
         }
 
-        const userDetails = await res.data.data 
+        const userDetails = await res.data.data
+        console.log(userDetails, "detial");
 
         const employee = {
             profilePicture:
@@ -29,7 +30,7 @@ export const fetchUserDetails = async (userId) => {
             phone: userDetails?.user_id?.mobile_no,
             address: userDetails.correspondence_address || "N/A",
             employeeID: userDetails?.user_id?.employee_id,
-            employeeType: "Permanent",
+            employeeType: userDetails?.user_id?.empType,
             startDate: userDetails.date_of_joining
                 ? new Date(userDetails.date_of_joining).toLocaleDateString()
                 : "N/A",
@@ -43,14 +44,14 @@ export const fetchUserDetails = async (userId) => {
                 ifscCode: userDetails.ifsc_code || "N/A",
                 accountNumber: userDetails.account_number || "N/A",
             },
-            aadhaarNo: userDetails.aadhaar_no || "N/A", 
-            pan_No: userDetails.pan_card_no || "N/A", 
+            aadhaarNo: userDetails.aadhaar_no || "N/A",
+            pan_No: userDetails.pan_card_no || "N/A",
             hardware:
                 userDetails.alloted_hardwares?.map((hardware) => ({
                     name: hardware.name,
                     model: hardware.model || "N/A",
                 })) || [],
-                
+
             software:
                 userDetails.alloted_softwares?.map((software) => ({
                     name: software.name,
@@ -65,9 +66,9 @@ export const fetchUserDetails = async (userId) => {
 };
 export const rescueUser = async (userId) => {
     try {
-        const res = await axiosRequest.get(`/user/${userId}`,{
+        const res = await axiosRequest.get(`/user/${userId}`, {
             params: {
-                barcodeOnly:true
+                barcodeOnly: true
             }
         });
 
@@ -75,19 +76,19 @@ export const rescueUser = async (userId) => {
             throw new Error('Error fetching user details');
         }
 
-        const userDetails = await res.data.data 
- 
-        
-            // Return only the details needed for the barcode
-           const userData= {
-                name: userDetails?.user_id?.name,
-                email: userDetails?.user_id?.email,
-                phone: userDetails?.user_id?.mobile_no,
-                companyName: userDetails?.user_id?.associated_with || "N/A"
-            };
-            return userData;
- 
-       
+        const userDetails = await res.data.data
+
+
+        // Return only the details needed for the barcode
+        const userData = {
+            name: userDetails?.user_id?.name,
+            email: userDetails?.user_id?.email,
+            phone: userDetails?.user_id?.mobile_no,
+            companyName: userDetails?.user_id?.associated_with || "N/A"
+        };
+        return userData;
+
+
     } catch (err) {
         console.error(err);
     }

@@ -115,8 +115,7 @@ const Dashboard = ({ userId }) => {
 
     const getData = async (userId) => {
         try {
-            const data = await fetchUserDetails(userId)
-            console.log(data, "gfhjklhgjkytrhjygyrtfhdrytjyuyj5jujy");
+            const data = await fetchUserDetails(userId) 
 
             setEmployee(data);
 

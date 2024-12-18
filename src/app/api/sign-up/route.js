@@ -12,7 +12,7 @@ export async function POST(req) {
         const {
             name, email, password, mobile_no, role,
             designation, department, alloted_hardwares, alloted_softwares, associated_with,
-            salary, interview_done_by, who_finalize_salary, location
+            salary, interview_done_by, who_finalize_salary, location, emp_type
         } = await req.json();
 
 
@@ -55,7 +55,8 @@ export async function POST(req) {
                 role,
                 designation,
                 location,
-                department
+                department,
+                empType: emp_type
             });
 
             employee = await employeeModel.create({

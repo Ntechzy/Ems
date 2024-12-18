@@ -65,7 +65,7 @@ export async function PUT(req) {
 
         const buffer = await profile_photo.arrayBuffer();
         const uploadResult = await uploadToCloudinary(Buffer.from(buffer), "ems");
-        console.log(uploadResult, "uploadResult");
+       
 
         // Store both client_id and cloud_url
         profilePhotoData = {
@@ -91,9 +91,7 @@ export async function PUT(req) {
       });
 
       const doj = new Date(date_of_joining);
-      console.log("date_of_joining", date_of_joining);
-
-      console.log("doj", doj);
+      
 
 
       // console.log("salary_slot", new Date(salary_slot).getDate());

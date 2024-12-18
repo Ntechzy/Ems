@@ -9,7 +9,7 @@ export async function middleware(request) {
 
     if (url.pathname.startsWith('/reset')) {
         return NextResponse.next();
-    } 
+    }
 
     if (!token && !url.pathname.startsWith('/login')) {
         return NextResponse.redirect(new URL('/login', request.url));
@@ -17,6 +17,8 @@ export async function middleware(request) {
 
     else if (token) {
         const { role, isFormCompleted } = token;
+        console.log(role);
+
         if (url.pathname.startsWith('/login')) {
             return NextResponse.redirect(new URL('/', request.url));
         }
@@ -45,19 +47,32 @@ export async function middleware(request) {
 
 
         // Admin Routes
-        if (role === 'admin' || role === 'super_admin') {
+        if (role === 'admin') { 
+            if (url.pathname === '/track-expense') {
+                return NextResponse.redirect(new URL('/', request.url));
+            }
+
             if (!isFormCompleted) {
                 if (url.pathname !== '/') {
                     return NextResponse.redirect(new URL('/', request.url));
                 }
                 return NextResponse.next();
             }
-            if (isFormCompleted && url.pathname === '/') { 
+
+            if (isFormCompleted && url.pathname === '/') {
                 return NextResponse.redirect(new URL(`/employee/${token.id}`, request.url));
             }
 
             return NextResponse.next();
         }
+
+        // Super Admin Routes
+        if (role === 'super_admin') { 
+            return NextResponse.next();
+        }
+
+
+
     }
 
     return NextResponse.next();

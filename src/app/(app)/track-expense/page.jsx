@@ -5,7 +5,7 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 
-const page = () => {
+const Page = () => {
     const [search, setSearch] = useState("");
     const [companyFilter, setCompanyFilter] = useState("");
     const [data, setData] = useState([])
@@ -136,4 +136,4 @@ const page = () => {
     );
 };
 
-export default page;
+export default Page;

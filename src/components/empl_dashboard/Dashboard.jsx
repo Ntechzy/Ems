@@ -299,7 +299,7 @@ const Dashboard = ({ userId }) => {
                         {activeTab === "Software" && <SoftwareLicenses employee={employee} />}
                         {activeTab === "Leave" && <ShowLeaves month={getCurrentMonth()} id={userId} />}
                         {activeTab === "Id Card" && <QrCodeCmp employee={employee} id={userId} />}
-                        {activeTab === "Salary Slip" && <SalarySlip employee={employee} id={userId} />}
+                        {/* {activeTab === "Salary Slip" && <SalarySlip employee={employee} id={userId} />} */}
                     </div>
 
                     {isLeaveModalOpen && (

@@ -31,14 +31,12 @@ const ShowLeaves = ({ showAllLeaves = false, month, id }) => {
                 let url = '';
 
                 if (showAllLeaves && (session?.user?.role === "admin" || session?.user?.role === "super_admin")) {
-
                     url = `/api/apply-leave?view=all&month=${month}`;
                 } else {
                     url = `/api/apply-leave?userId=${id}&month=${month}`;
                 }
 
-                const response = await axios.get(url);
-                console.log(response.data.leave)
+                const response = await axios.get(url); 
                 const transformedData = response.data.leave.map(leave => ({
                     id: leave._id,
                     name: leave.user?.name || "Unknown ! Connect To IT Team",
@@ -76,6 +74,8 @@ const ShowLeaves = ({ showAllLeaves = false, month, id }) => {
         }
 
         fetchLeaveData()
+        console.log(month);
+        
     }, [session, status, showAllLeaves, month])
 
 

@@ -24,6 +24,8 @@ const BirthdayCard = ({ name, userId }) => {
                 </h1>
             </div>
         </Link>
+
+
     );
 };
 

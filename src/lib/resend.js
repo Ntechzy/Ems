@@ -3,6 +3,7 @@ import { OnBoarding } from '../../email/Onboarding';
 import { Updatepassword } from '../../email/Updatepassword';
 import { LeaveRequestEmail } from '../../email/Leave';
 import { WarninTemplate } from '../../email/WarningTemplate';
+import { SalarySlipEmail } from '../../email/SalarySlipEmail';
 
 
 const resend = new Resend(process.env.API_KEY);
@@ -123,4 +124,40 @@ export const sendDocument = async (documentType, email, pdfBuffer) => {
             error
         }
     }
-} 
+}
+
+
+
+
+export const sendSlip = async (data) => {
+    const { name, month, baseSalary, totalAbsentDays, extraDeductionAmount, salary, reason, employeeEmail } = data;
+
+    try {
+        const response = await resend.emails.send({
+            from: 'admin@ems.ntechzy.in',
+            to: employeeEmail,
+            subject: `Salary Slip for ${month}`,
+            react: SalarySlipEmail({
+                name,
+                month,
+                baseSalary,
+                totalAbsentDays,
+                extraDeductionAmount,
+                salary,
+                reason
+            })
+
+        });
+
+        return {
+            success: true,
+            message: "Email Sent Successfully"
+        }
+    } catch (error) {
+        return {
+            success: false,
+            message: "Unable to send mail",
+            error
+        }
+    }
+}

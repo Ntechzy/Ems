@@ -115,7 +115,7 @@ const Dashboard = ({ userId }) => {
 
     const getData = async (userId) => {
         try {
-            const data = await fetchUserDetails(userId) 
+            const data = await fetchUserDetails(userId)
 
             setEmployee(data);
 
@@ -155,7 +155,6 @@ const Dashboard = ({ userId }) => {
             getData(userId);
         }
     }, [userId]);
-    console.log(employee, "employee");
 
     return (
         <div
@@ -166,7 +165,6 @@ const Dashboard = ({ userId }) => {
                 <Loader />
             ) : employee ? (
                 <>
-                    {/* Profile Header */}
                     <div className="bg-white p-6 rounded-lg shadow-md mb-6">
                         <div className="flex justify-between items-center flex-col gap-4 md:gap-0 md:flex-row">
                             {/* Profile Info */}
@@ -263,7 +261,7 @@ const Dashboard = ({ userId }) => {
                     {/* Tabs */}
                     <div className="bg-white rounded-lg shadow-md mb-6 p-4">
                         <ul className="flex border-b overflow-auto">
-                            {["Employees", "Hardware", "Software", "Leave", "Id Card", "Salary Slip"].map((tab) => (
+                            {["Employees", "Hardware", "Software", "Leave", "Id Card"].map((tab) => (
                                 <li key={tab} className="mr-6">
                                     <button
                                         onClick={() => handleTabClick(tab)}

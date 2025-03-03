@@ -175,7 +175,7 @@ const Registration = ({ close }) => {
                                     id="emp_type"
                                     defaultOption="Employee Type "
                                     options={
-                                        [{ label: 'Parmanent', value: 'parmanent' }, { label: 'On probation ', value: 'on_probation ' }, { label: 'Intern', value: 'intern' }].map(obj => ({ value: obj.value, label: obj.label })) || []
+                                        [{ label: 'Permanent', value: 'permanent' }, { label: 'On Probation ', value: 'on_probation ' }, { label: 'Intern', value: 'intern' }].map(obj => ({ value: obj.value, label: obj.label })) || []
                                     }
                                     value={value.emp_type}
                                     onChange={handleChange}

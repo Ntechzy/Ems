@@ -46,8 +46,7 @@ export async function GET(req) {
             }
 
             department = await fetchDepartment(user.department);
-            console.log(department);
-
+            
         } else {
             department = await fetchDepartment(id);
         }

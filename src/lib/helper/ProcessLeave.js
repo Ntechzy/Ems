@@ -3,9 +3,16 @@ import { countLeaveDays } from "./CalculateLeaveDays";
 import ExtraLeave from "@/modal/extrasLeave";
 
 export async function processLeave(userId, month, fromDate, toDate, leaveType, managerToAsk, reason) {
+    const formattedMonth = month.split('-');
+    if (formattedMonth[1].length === 1) {
+        formattedMonth[1] = formattedMonth[1].padStart(2, '0');
+    }
+    const formattedMonthString = `${formattedMonth[0]}-${formattedMonth[1]}`;
+
+
     let leaveDoc = await Leave.findOne({ user: userId, month }) || new Leave({
         user: userId,
-        month,
+        month: formattedMonthString,
         casualDays: 0,
         absentDays: 0,
         deducted: {

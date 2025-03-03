@@ -71,42 +71,48 @@ export async function GET(req, { params }) {
       const all_departments = await departmentService.GetAll();
       appResponse.data = all_departments;
 
-            return Response.json(appResponse.getResponse(), { status: 200 });
-        }
+      return Response.json(appResponse.getResponse(), { status: 200 });
+    }
 
 
-        else if (resourceName.toLowerCase() == "birthday") {
-            let date = searchParams.get("date");
-            if((new Date(date)) != "Invalid Date"){
-                date = new Date(date);
-                let month = date.getMonth();
-                let day = date.getDate();
-                const dates_birthday = await birthdayService.GetAllTodayBirthdays(month , day);
-                appResponse.data = dates_birthday;
-                return Response.json(appResponse.getResponse(),{status:200});
-            }
-            const all_birthdays = await birthdayService.GetAll();
-            appResponse.data = all_birthdays;
+    else if (resourceName.toLowerCase() == "birthday") {
+      let date = searchParams.get("date");
+      if ((new Date(date)) != "Invalid Date") {
+        date = new Date(date);
+        let month = date.getMonth() + 1;
+
+        const formattedMonth = month.toString().padStart(2, '0')
+        let day = date.getDate();
+
+
+        const dates_birthday = await birthdayService.GetAllTodayBirthdays(month, day);
+
+        appResponse.data = dates_birthday;
+        
+        return Response.json(appResponse.getResponse(), { status: 200 });
+      }
+      const all_birthdays = await birthdayService.GetAll();
+      appResponse.data = all_birthdays;
 
       return Response.json(appResponse.getResponse(), { status: 200 });
     } else if (resourceName.toLowerCase() == "ticket") {
       const session = await getServerSession(Option);
-    if(session.user.role == "super_admin"){
-      
- 
-      const all_tickets = await ticketService.GetAll();
-      appResponse.data = all_tickets; 
-      return Response.json(appResponse.getResponse(), { status: 200 });
-    }
-    else{
-      appResponse.status = false;
-      appResponse.message = "No Data for this resource";
-      appResponse.error = { message: "Not Authorized" };
+      if (session.user.role == "super_admin") {
 
-      return Response.json(appResponse.getResponse(), {
-        status: 400,
-      });
-    }
+
+        const all_tickets = await ticketService.GetAll();
+        appResponse.data = all_tickets;
+        return Response.json(appResponse.getResponse(), { status: 200 });
+      }
+      else {
+        appResponse.status = false;
+        appResponse.message = "No Data for this resource";
+        appResponse.error = { message: "Not Authorized" };
+
+        return Response.json(appResponse.getResponse(), {
+          status: 400,
+        });
+      }
     } else {
       appResponse.status = false;
       appResponse.message = "No Data for this resource";
@@ -171,7 +177,7 @@ export async function POST(req, res) {
         appResponse.data = resData;
 
         return Response.json(appResponse.getResponse(), { status: 201 });
-      } else if (resourceName.toLowerCase() == "software") { 
+      } else if (resourceName.toLowerCase() == "software") {
         data.version = reqBody.value;
         const resData = await softwareService.Create(data);
 
@@ -224,7 +230,7 @@ export async function DELETE(req, res) {
     return Response.json({
       status: 200,
       message: "ticket deleted successfully",
-    },{status:200});
+    }, { status: 200 });
   } catch (err) {
     return Response.json(
       { status: 500, message: err.message },

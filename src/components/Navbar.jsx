@@ -41,7 +41,7 @@ function Navbar() {
                                 <Link href="/tickets" className="text-gray-200 hover:text-white uppercase">Raised Ticket</Link>
                                 <Link href="/documents" className="text-gray-200 hover:text-white uppercase">Send Documents</Link>
                                 <Link href="/birthdays" className="text-gray-200 hover:text-white uppercase">BirthDays</Link>
-                                {/* <Link href="/salary" className="text-gray-200 hover:text-white uppercase">Salary Calculater</Link> */}
+                                <Link href="/salary" className="text-gray-200 hover:text-white uppercase">Salary Calculater</Link>
                                 <Link href="/leave" className="text-gray-200 hover:text-white uppercase">Leave</Link>
                             </div>
                         }

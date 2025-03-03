@@ -100,6 +100,7 @@ export async function POST(req, res) {
 export async function GET(req, res) {
     await dbconn()
     try {
+
         const user = await isUserAuthenticated(req, res)
 
         if (!user) {
@@ -118,6 +119,8 @@ export async function GET(req, res) {
         const userIdObjectId = userId && new mongoose.Types.ObjectId(userId);
         const view = url.searchParams.get('view') || 'self';
         const month = url.searchParams.get('month');
+        console.log(month);
+
 
         const nextMonth = getNextMonth(month);
 
@@ -217,7 +220,6 @@ export async function GET(req, res) {
                 },
             },
         ]);
-
 
 
         return Response.json({
